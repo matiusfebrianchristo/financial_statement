@@ -1,10 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
   <div class="container-fluid">
-    <!-- <div class="d-none button-close d-md-block">
-      <i @click="clicked" class="bi bi-justify"></i>
-    </div> -->
-    <router-link class="navbar-brand" to="/"><strong>Dashboard</strong></router-link>
+    
+    <router-link class="navbar-brand dash-p" :class="{ show :  isActive === true }" to="/"><strong>Dashboard</strong></router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -16,6 +14,9 @@
         
       </ul>
     </div>
+    <div class="ml-auto d-none button-close d-md-block">
+      <i @click="onClick" class="bi bi-justify"></i>
+    </div>
   </div>
 </nav>
 </template>
@@ -24,33 +25,41 @@
 import Sidebar from '@/components/Sidebar.vue'
 
 export default {
-    // props: ['isActive'],
+    props: ['isActive'],
     components: {
       Sidebar
     },
+    data(){
+      return {
+        isActiveNav : this.isActive
+      }
+    },
     methods:{
-      clicked(){
-        // if(this.isActive === 'active'){
-        //   this.isActive = 'not-active';
-        //   console.log(this.isActive)
-        // } else {
-        //   this.isActive = 'active';
-        //   console.log(this.isActive)
-        // }
+      onClick(){
         this.$emit('clicked')
       },
     },
-    watch:{
-      isActive: function (newVAl, oldVal) {
-        console.log(`New : ${newVAl}, old: ${oldVal}`)
-      }
-    }
+
 
 }
 </script>
 
 <style>
+
+    .dash-p{
+        transform: translateX(-250px);
+        transition: .3s ease-in-out;
+    }
+
+    .dash-p.show{
+        transform: translateY(0);
+    }
     
+    .navbar{
+      right: auto !important;
+      left: 0 !important;
+      background-color: #252636 !important;
+    }
 
     .button-close{
       margin-right: 20px ;
@@ -63,6 +72,7 @@ export default {
     }
 
     .bg-custom{
+      
         box-shadow: 0px 5px 2px rgba(0, 0, 0, 0.5);
     }
 </style>
