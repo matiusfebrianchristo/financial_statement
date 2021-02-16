@@ -23,147 +23,22 @@
 
     <div class="content wrapper" :class="{ full: isActiveNav }">
       <div class="title-page text-center mt-4">
-        <!-- <h2 class="title">Administrator</h2> -->
         <div class="bg-custom content-header rounded m-5 p-1">
-          <!-- <nav
-            class="road"
-            style="--bs-breadcrumb-divider: '>'"
-            aria-label="breadcrumb"
-          >
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <router-link to="/">Home</router-link>
-              </li>
-              <li class="breadcrumb-item " aria-current="page">
-                <router-link  @click.prevent to="/">Laporan Keuangan</router-link>
-              </li>
-            </ol>
-          </nav> -->
           <h2><strong>Welcome</strong></h2>
           <p>Hello admin, welcome to your dashboard.</p>
         </div>
       </div>
 
-      <!-- Button Add -->
-      <!-- Modals Add -->
-      <div class="mx-md-5 mt-5 mb-0 clearfix">
-        <button
-          type="button"
-          class="btn btn-success float-end"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          Add Transaksi
-        </button>
-      </div>
-
-      <!-- ====================================================================================== -->
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog text-dark modal-xl modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Tambah Transaksi
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <!-- Untuk nominal -->
-                <label for="nominal" class="form-label">Nominal</label>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">Rp. </span>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="nominal"
-                    placeholder="nominal..."
-                  />
-
-                  <!-- Untuk Status -->
-                </div>
-                <div class="mb-3">
-                  <label for="recipient-name" class="col-form-label"
-                    >Status</label
-                  >
-                  <select
-                    class="form-select"
-                    aria-label="Default select example"
-                  >
-                    <option selected>Status</option>
-                    <option value="1">Input</option>
-                    <option value="2">Output</option>
-                  </select>
-                </div>
-
-                <!-- Untuk Tanggal -->
-                <div class="mb-3">
-                  <label for="tanggal" class="form-label">Tanggal</label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="tanggal"
-                    v-model="tanggal"
-                    placeholder="DD/MM/YYYY"
-                    @change="getTgl()"
-                    max="2222-05-26"
-                  />
-                </div>
-
-                <!-- Untuk Deskripsi -->
-                <div class="mb-3">
-                  <label for="deskripsi" class="form-label">Deskripsi</label>
-                  <textarea
-                    class="form-control"
-                    id="Deskripsi"
-                    rows="3"
-                    placeholder="Isi deskripsi..."
-                  ></textarea>
-                </div>
-
-                <!-- Untuk Bukti / File foto -->
-                <div class="mb-3">
-                  <label for="formFile" class="form-label">Bukti</label>
-                  <input class="form-control" type="file" id="formFile" />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">Add</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Akhir Button Add -->
+      
 
       <!-- ============================================================================================= -->
       <!-- Content -->
       <!-- Grafik -->
-      <div class="mx-md-5 mt-2">
+      <!-- <div class="mx-md-5 mt-2">
         <div class="col bg-custom line-chart text-light rounded">
           <line-chart :chart-data="datacollection" :options="chartOption" />
         </div>
-      </div>
+      </div> -->
 
       <!-- Table -->
       <div class="m-md-5 m-3">
@@ -202,7 +77,7 @@
 
 <script>
 // @ is an alias to /src
-import LineChart from "@/components/LineChart.vue";
+// import LineChart from "@/components/LineChart.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 // import axios from "axios";
@@ -210,7 +85,7 @@ import Navbar from "@/components/Navbar.vue";
 export default {
   name: "Dashboard",
   components: {
-    LineChart,
+    // LineChart,
     Sidebar,
     Navbar,
   },
@@ -289,34 +164,34 @@ export default {
         ],
         datasets: [
           {
-            label: "Data 1",
+            label: "In",
             backgroundColor: "rgba(255, 0, 0, 0.2)",
             borderColor: "lightpink",
             pointBackgrounColor: "red",
             borderWidth: 2,
             pointBorderColor: "red",
             fill: false,
-            data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4],
+            data: this.income,
           },
           {
-            label: "Data 2",
+            label: "Out",
             backgroundColor: "rgba(0, 255, 0, 0.2)",
             borderColor: "lightgreen",
             pointBackgroundColor: "green",
             borderWidth: 2,
             pointBorderColor: "green",
             fill: false,
-            data: [4, 6, 4, 6, 4, 6, 4, 6, 4, 6, 7, 2],
+            data: this.outcome,
           },
           {
-            label: "Data 3",
+            label: "Untung",
             backgroundColor: "rgba(0, 0, 255, 0.2)",
             borderColor: "lightblue",
             pointBackgroundColor: "blue",
             borderWidth: 2,
             pointBorderColor: "blue",
             fill: false,
-            data: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 5, 7],
+            data: this.profit,
           },
         ],
       };

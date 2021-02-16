@@ -27,6 +27,17 @@
         class="side-btn"
       >
         <div class="link-container">
+          <i class="bi bi-cart3"></i> Dashboard
+        </div>
+      </router-link>
+      <router-link
+        to="/laporan_keuangan"
+        active-class="active"
+        exact
+        tag="button"
+        class="side-btn"
+      >
+        <div class="link-container">
           <i class="bi bi-cart3"></i> Laporan Keuangan
         </div>
       </router-link>

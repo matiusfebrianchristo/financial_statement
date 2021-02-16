@@ -14,7 +14,7 @@
         
       </ul>
     </div>
-    <div class="ml-auto d-none button-close d-md-block">
+    <div class="ml-auto d-none button-close d-lg-block">
       <i @click="onClick" class="bi bi-justify"></i>
     </div>
   </div>
