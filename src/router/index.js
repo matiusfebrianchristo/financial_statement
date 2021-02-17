@@ -7,28 +7,28 @@ import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'Dashboard',
     component: Dashboard,
-
+    
   },
   {
-    path : '/login',
+    path: '/login',
     name: 'Login',
     component: Login
   },
   {
     path: '/laporan_keuangan',
     name: 'LaporanKeuangan',
-    component: LaporanKeuangan
+    component: LaporanKeuangan,
+    children: [{
+      path: ':bulan',
+      name: 'DetailBulanan',
+      component: DetailBulanan
+    },]
   },
-  {
-    path: '/detail_bulanan',
-    name: 'DetailBulanan',
-    component: DetailBulanan
-  },
+
 ]
 
 const router = new VueRouter({
