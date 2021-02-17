@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LaporanKeuangan from '../views/LaporanKeuangan.vue'
+import LaporanHome from '../views/LaporanHome.vue'
 import DetailBulanan from '../views/DetailBulanan.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
@@ -23,10 +24,16 @@ const routes = [{
     name: 'LaporanKeuangan',
     component: LaporanKeuangan,
     children: [{
+      path: '',
+      name: 'LaporanHome',
+      component: LaporanHome
+
+    },
+    {
       path: ':bulan',
       name: 'DetailBulanan',
       component: DetailBulanan
-    },]
+    }]
   },
 
 ]

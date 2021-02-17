@@ -1,23 +1,5 @@
 <template>
   <div class="content">
-    <!-- Sidebar -->
-    <transition name="slide-fade">
-      <div
-        class="d-lg-block d-none fixed sidebar bg-custom"
-        :class="{ hide: isActiveNav, show: isMNavActive }"
-      >
-        <Sidebar />
-      </div>
-    </transition>
-
-    <!-- Navbar -->
-    <Navbar
-      class="wrapper"
-      :isActive="isActiveNav"
-      :class="{ full: isActiveNav }"
-      @clicked="clickedToggle"
-    />
-
     <!-- ==================================================================== -->
     <!-- Header -->
     <div class="content wrapper" :class="{ full: isActiveNav }">
@@ -43,100 +25,8 @@
 
       <!-- ====================================================================================== -->
       <!-- Modal -->
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog text-dark modal-xl modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Tambah Transaksi
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <!-- Untuk nominal -->
-                <label for="nominal" class="form-label">Nominal</label>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">Rp. </span>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="nominal"
-                    placeholder="nominal..."
-                  />
-
-                  <!-- Untuk Status -->
-                </div>
-                <div class="mb-3">
-                  <label for="recipient-name" class="col-form-label"
-                    >Status</label
-                  >
-                  <select
-                    class="form-select"
-                    aria-label="Default select example"
-                  >
-                    <option selected>Status</option>
-                    <option value="1">Input</option>
-                    <option value="2">Output</option>
-                  </select>
-                </div>
-
-                <!-- Untuk Tanggal -->
-                <div class="mb-3">
-                  <label for="tanggal" class="form-label">Tanggal</label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="tanggal"
-                    v-model="tanggal"
-                    placeholder="DD/MM/YYYY"
-                    @change="getTgl()"
-                    max="2222-05-26"
-                  />
-                </div>
-
-                <!-- Untuk Deskripsi -->
-                <div class="mb-3">
-                  <label for="deskripsi" class="form-label">Deskripsi</label>
-                  <textarea
-                    class="form-control"
-                    id="Deskripsi"
-                    rows="3"
-                    placeholder="Isi deskripsi..."
-                  ></textarea>
-                </div>
-
-                <!-- Untuk Bukti / File foto -->
-                <div class="mb-3">
-                  <label for="formFile" class="form-label">Bukti</label>
-                  <input class="form-control" type="file" id="formFile" />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">Add</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      
+      <Modals />
 
       <!-- Akhir Button Add -->
 
@@ -256,15 +146,16 @@
 <script>
 // @ is an alias to /src
 import LineChart from "@/components/LineChart.vue";
-import Sidebar from "@/components/Sidebar.vue";
-import Navbar from "@/components/Navbar.vue";
+import Modals from "@/components/Modals.vue"
+
 
 export default {
-  name: "Home",
+  name: "DetailBulanan",
+  props: ['isNav'],
   components: {
     LineChart,
-    Sidebar,
-    Navbar,
+    Modals
+
   },
   data() {
     return {
@@ -385,7 +276,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
 /* .dashboard {
   display: grid;
   grid-template-columns: 1fr 5fr;
