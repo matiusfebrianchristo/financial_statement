@@ -62,8 +62,6 @@ export default {
         this.isMNavActive = true;
       }
     },
-
-    
   },
 };
 </script>

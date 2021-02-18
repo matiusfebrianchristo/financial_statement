@@ -38,7 +38,7 @@
 
       <!-- ====================================================================================== -->
       <!-- Modal -->
-      
+
       <Modals @clicked="addTransaksi" />
 
       <!-- Akhir Button Add -->
@@ -77,7 +77,7 @@
                       class="btn btn-primary"
                       :to="{
                         name: 'DetailBulanan',
-                        params: { bulan: data.month.toLowerCase() },
+                        params: { bulan: data.month },
                       }"
                       >Detail</router-link
                     >
@@ -95,7 +95,7 @@
 <script>
 import LineChart from "@/components/LineChart.vue";
 import moment from "moment";
-import Modals from "@/components/Modals.vue"
+import Modals from "@/components/Modals.vue";
 import axios from "axios";
 
 export default {
@@ -103,7 +103,7 @@ export default {
   props: ["isNav"],
   components: {
     LineChart,
-    Modals
+    Modals,
   },
   data() {
     return {
@@ -144,6 +144,11 @@ export default {
       // =======================================================
       loaded: false,
       chartOption: {
+        title: {
+          display: true,
+          text: "Laporan Keuangan",
+          fontColor: "#fff",
+        },
         legend: {
           labels: {
             fontColor: "#fff",
@@ -183,7 +188,6 @@ export default {
     //Add Transaksi
     // ================================-===========
     async addTransaksi(value) {
-      console.log(value)
       if (
         value.nominal !== null &&
         value.status !== "none" &&
@@ -201,6 +205,7 @@ export default {
           .then(() => location.reload())
           .catch((err) => console.log(err));
       } else {
+        console.log(value);
         this.$toast.error("Lengkapi Data!!", {
           type: "error",
           position: "top-right",
@@ -209,11 +214,32 @@ export default {
         });
       }
     },
+    // ======================================
+    // Filter Data
+    // filterByValue(array, string, action, value) {
+    //   var data = array.filter(function (hero) {
+    //     return hero.month == string;
+    //   });
+
+      
+    //   if (action == "pemasukan") {
+    //     return {
+    //       income: data[0].income + value,
+    //       outcome: data[0].outcome,
+    //       profit: data[0].profit,
+    //       month: string
+    //     }
+    //   } else {
+    //     data[0].outcome + value;
+    //     data[0].profit = data[0].income - data[0].outcome;
+    //   }
+    // },
 
     // Data graphic
     // =======================================
 
     async loadedData() {
+      
       await axios
         .get("administration/administrationdataperyear/")
         .then((res) => {
@@ -236,6 +262,9 @@ export default {
                 .format("MMMM")),
             });
           }
+          // console.log(
+          //   this.filterByValue(this.fullDataChart, "January", "pemasukan", 2000)
+          // );
         })
         .catch((err) => console.log(err));
 
@@ -246,6 +275,7 @@ export default {
     // ================================================
     filldata() {
       this.datacollection = {
+        title: "Laporan Keuangan",
         labels: this.month,
         datasets: [
           {

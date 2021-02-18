@@ -13,8 +13,7 @@ const routes = [{
     name: 'LaporanKeuangan',
     component: LaporanKeuangan,
     redirect: '/dashboard',
-    children: [
-      {
+    children: [{
         path: '/dashboard',
         name: 'Dashboard',
         component: Dashboard
@@ -22,16 +21,15 @@ const routes = [{
       {
         path: '/laporan_keuangan',
         name: 'LaporanHome',
-        component: LaporanHome
-  
+        component: LaporanHome,
       },
       {
-        path: ':bulan',
+        path: '/laporan_keuangan/:bulan',
         name: 'DetailBulanan',
         component: DetailBulanan
       }
     ]
-    
+
   },
   {
     path: '/login',

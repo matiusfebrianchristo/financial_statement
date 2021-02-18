@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     onClick() {
-      this.$emit("clicked", {nominal: this.nominal, tipe: this.status, created_at: this.created_at, deskripsi: this.deskripsi});
+      this.$emit("clicked", {nominal: this.nominal, tipe: this.status, created_at: this.created_at, deskripsi: this.deskripsi, bukti: this.bukti});
     },
   },
 };

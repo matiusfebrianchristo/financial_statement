@@ -5,7 +5,9 @@
     <div class="content wrapper" :class="{ full: isActiveNav }">
       <div class="title-page text-center mt-4">
         <div class="bg-custom content-header rounded m-5 p-1">
-          <h2><strong>Welcome</strong></h2>
+          <h2>
+            <strong>{{ this.$route.params.bulan }}</strong>
+          </h2>
           <p>Hello admin, welcome to your dashboard.</p>
         </div>
       </div>
@@ -25,19 +27,13 @@
 
       <!-- ====================================================================================== -->
       <!-- Modal -->
-      
+
       <Modals />
 
       <!-- Akhir Button Add -->
 
       <!-- ============================================================================================= -->
       <!-- Content -->
-      <!-- Grafik -->
-      <div class="row mx-md-5 mt-2">
-        <div class="col bg-custom text-light rounded">
-          <line-chart :chart-data="datacollection" :options="chartOption" />
-        </div>
-      </div>
 
       <!-- Table -->
       <div class="m-md-5 m-3">
@@ -118,10 +114,7 @@
                         aria-labelledby="dropdownMenuButton1"
                       >
                         <li>
-                          <a
-                            class="dropdown-item btn btn-primary"
-                            href=""
-                            @click.prevent
+                          <a class="dropdown-item" href="" @click.prevent
                             ><i class="bi bi-pencil-square"></i> Edit</a
                           >
                         </li>
@@ -136,6 +129,7 @@
                 </tr>
               </tbody>
             </table>
+            <button @click="loadedData">Cek</button>
           </div>
         </div>
       </div>
@@ -145,53 +139,29 @@
 
 <script>
 // @ is an alias to /src
-import LineChart from "@/components/LineChart.vue";
-import Modals from "@/components/Modals.vue"
-
+import Modals from "@/components/Modals.vue";
+// import moment from "moment";
+import axios from "axios";
 
 export default {
   name: "DetailBulanan",
-  props: ['isNav'],
+  props: ["isNav"],
   components: {
-    LineChart,
-    Modals
-
+    Modals,
   },
   data() {
     return {
       datacollection: null,
       loaded: false,
       isActiveNav: false,
-      chartOption: {
-        legend: {
-          labels: {
-            fontColor: "#fff",
-          },
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                fontColor: "white",
-              },
-            },
-          ],
-          xAxes: [
-            {
-              ticks: {
-                fontColor: "white",
-              },
-            },
-          ],
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-      tanggal: "",
+      income: [],
+      outcome: [],
+      profit: [],
+      fullDataChart: [],
     };
   },
   mounted() {
-    this.filldata();
+    // this.loadedData();
   },
   methods: {
     getTgl() {
@@ -205,73 +175,26 @@ export default {
         this.isActiveNav = true;
       }
     },
-    filldata() {
-      this.datacollection = {
-        labels: [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18,
-          19,
-          20,
-          21,
-          22,
-          23,
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-        ],
-        datasets: [
-          {
-            label: "Data 1",
-            backgroundColor: "rgba(255, 0, 0, 0.2)",
-            borderColor: "lightpink",
-            pointBackgroundColor: "red",
-            borderWidth: 2,
-            pointBorderColor: "red",
-            fill: false,
-            data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4],
-          },
-          {
-            label: "Data 2",
-            backgroundColor: "rgba(0, 255, 0, 0.2)",
-            borderColor: "lightgreen",
-            pointBackgroundColor: "green",
-            borderWidth: 2,
-            pointBorderColor: "green",
-            fill: false,
-            data: [4, 6, 4, 6, 4, 6, 4, 6, 4, 6, 7, 2],
-          },
-          {
-            label: "Data 3",
-            backgroundColor: "rgba(0, 0, 255, 0.2)",
-            borderColor: "lightblue",
-            pointBackgroundColor: "blue",
-            borderWidth: 2,
-            pointBorderColor: "blue",
-            fill: false,
-            data: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 5, 7],
-          },
-        ],
-      };
+
+    // Data AXIOS
+    // =====================================
+    async loadedData() {
+
+      // let formdata = new FormData();
+      // formdata.append("year", "2021");
+      // formdata.append("month", "2");
+
+      // let requestOptions = {
+      //   method: "GET",
+      //   body: formdata,
+      //   redirect: "follow",
+      // };
+      await  axios.get("administration/administrationdetail/")
+        .then((res) => {
+
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
     },
   },
 };
