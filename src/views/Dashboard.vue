@@ -1,22 +1,5 @@
 <template>
   <div class="content">
-    <!-- Sidebar -->
-    <transition name="slide-fade">
-      <div
-        class="d-lg-block d-none fixed sidebar bg-custom"
-        :class="{ hide: isActiveNav, show: isMNavActive }"
-      >
-        <Sidebar />
-      </div>
-    </transition>
-
-    <!-- Navbar  -->
-    <Navbar
-      class="wrapper"
-      :isActive="isActiveNav"
-      :class="{ full: isActiveNav }"
-      @clicked="clickedToggle"
-    />
 
     <!-- ====================================================== -->
     <!-- Header -->
@@ -78,16 +61,14 @@
 <script>
 // @ is an alias to /src
 // import LineChart from "@/components/LineChart.vue";
-import Sidebar from "@/components/Sidebar.vue";
-import Navbar from "@/components/Navbar.vue";
+
 // import axios from "axios";
 
 export default {
   name: "Dashboard",
   components: {
     // LineChart,
-    Sidebar,
-    Navbar,
+
   },
   data() {
     return {

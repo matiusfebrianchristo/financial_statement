@@ -20,7 +20,7 @@
     <hr />
     <div class="menu-items">
       <router-link
-        to="/"
+        to="/dashboard"
         active-class="active"
         exact
         tag="button"

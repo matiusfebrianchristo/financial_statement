@@ -10,30 +10,33 @@ Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
-    name: 'Dashboard',
-    component: Dashboard,
+    name: 'LaporanKeuangan',
+    component: LaporanKeuangan,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: Dashboard
+      },
+      {
+        path: '/laporan_keuangan',
+        name: 'LaporanHome',
+        component: LaporanHome
+  
+      },
+      {
+        path: ':bulan',
+        name: 'DetailBulanan',
+        component: DetailBulanan
+      }
+    ]
     
   },
   {
     path: '/login',
     name: 'Login',
     component: Login
-  },
-  {
-    path: '/laporan_keuangan',
-    name: 'LaporanKeuangan',
-    component: LaporanKeuangan,
-    children: [{
-      path: '',
-      name: 'LaporanHome',
-      component: LaporanHome
-
-    },
-    {
-      path: ':bulan',
-      name: 'DetailBulanan',
-      component: DetailBulanan
-    }]
   },
 
 ]
