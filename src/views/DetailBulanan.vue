@@ -70,7 +70,7 @@
                     <a
                       v-if="d[1].bukti !== 'None'"
                       :href="`https://glacial-coast-08306.herokuapp.com${d[1].bukti}`"
-                      
+                      @click.prevent
                       target="_blank"
                       >IMG</a
                     >
