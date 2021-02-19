@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import LaporanKeuangan from '../views/LaporanKeuangan.vue'
 import LaporanHome from '../views/LaporanHome.vue'
 import DetailBulanan from '../views/DetailBulanan.vue'
+import BuktiDetailBulanan from '../views/BuktiDetailBulanan.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 
@@ -27,9 +28,15 @@ const routes = [{
         path: '/laporan_keuangan/:bulan',
         name: 'DetailBulanan',
         component: DetailBulanan
-      }
+      },
+      
     ]
 
+  },
+  {
+    path: '/laporan_keuangan/:bulan/:id',
+    name: 'BuktiDetailBulanan',
+    component: BuktiDetailBulanan
   },
   {
     path: '/login',

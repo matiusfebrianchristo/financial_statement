@@ -2,12 +2,20 @@
   <div class="content">
     <!-- ==================================================================== -->
     <!-- Header -->
-    <div class="content wrapper" :class="{ full: isActiveNav }">
+    <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
         <div class="bg-custom content-header rounded m-5 p-1">
-          <h2>
-            <strong>{{ this.$route.params.bulan }}</strong>
-          </h2>
+          <div class="row row-cols-5">
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col">
+              <h2>
+                <strong>{{ this.$route.params.bulan }}</strong>
+              </h2>
+            </div>
+            <div class="col"></div>
+            <div class="col"></div>
+          </div>
           <p>Hello admin, welcome to your dashboard.</p>
         </div>
       </div>
@@ -52,13 +60,22 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Rp. 7000</td>
-                  <td>Input</td>
-                  <td>20 Januari 2021</td>
-                  <td>Ini pemasukan</td>
-                  <td><a href="#" target="_blank">IMG</a></td>
+                <tr v-for="(d, index) in fullDataBulanan" :key="d.id">
+                  <th scope="row">{{ index + 1 }}</th>
+                  <td>Rp. {{ d[1].nominal }}</td>
+                  <td>{{ d[1].tipe }}</td>
+                  <td>{{ d[1].created_at }}</td>
+                  <td>{{ d[1].deskripsi }}</td>
+                  <td>
+                    <a
+                      v-if="d[1].bukti !== 'None'"
+                      :href="`https://glacial-coast-08306.herokuapp.com${d[1].bukti}`"
+                      
+                      target="_blank"
+                      >IMG</a
+                    >
+                    <p v-else>{{ d[1].bukti }}</p>
+                  </td>
                   <td>
                     <div class="dropdown">
                       <button
@@ -91,45 +108,8 @@
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Rp. 7000</td>
-                  <td>Input</td>
-                  <td>20 Januari 2021</td>
-                  <td>Ini pemasukan</td>
-                  <td><a href="#" target="_blank">IMG</a></td>
-                  <td>
-                    <div class="dropdown">
-                      <button
-                        class="btn btn-success dropdown-toggle"
-                        type="button"
-                        id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Action
-                      </button>
-                      <ul
-                        class="dropdown-menu"
-                        aria-labelledby="dropdownMenuButton1"
-                      >
-                        <li>
-                          <a class="dropdown-item" href="" @click.prevent
-                            ><i class="bi bi-pencil-square"></i> Edit</a
-                          >
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="" @click.prevent
-                            ><i class="bi bi-trash-fill"></i> Delete</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
               </tbody>
             </table>
-            <button @click="loadedData">Cek</button>
           </div>
         </div>
       </div>
@@ -140,7 +120,7 @@
 <script>
 // @ is an alias to /src
 import Modals from "@/components/Modals.vue";
-// import moment from "moment";
+import moment from "moment";
 import axios from "axios";
 
 export default {
@@ -157,11 +137,12 @@ export default {
       income: [],
       outcome: [],
       profit: [],
-      fullDataChart: [],
+      fullDataBulanan: [],
+      
     };
   },
   mounted() {
-    // this.loadedData();
+    this.loadedData();
   },
   methods: {
     getTgl() {
@@ -179,20 +160,30 @@ export default {
     // Data AXIOS
     // =====================================
     async loadedData() {
-
-      // let formdata = new FormData();
-      // formdata.append("year", "2021");
-      // formdata.append("month", "2");
-
-      // let requestOptions = {
-      //   method: "GET",
-      //   body: formdata,
-      //   redirect: "follow",
-      // };
-      await  axios.get("administration/administrationdetail/")
+      await axios
+        .get("administration/administrationdetail/", {
+          params: {
+            year: "2021",
+            month: moment().month(this.$route.params.bulan).format("M"),
+          },
+        })
         .then((res) => {
+          let dataDetail;
+          // let dataDetailTemp
 
-          console.log(res);
+          dataDetail = new Array(res.data);
+          // dataDetailTemp = new Array(dataDetail[0][0])
+          const hasil = Object.keys(dataDetail[0]).map((key) => [
+            Number(key),
+            dataDetail[0][key],
+          ]);
+          // for (let i = 0; i <= hasil.length - 1; i++) {
+          //   if(dataDetail[0][i] !== undefined ){
+          //   }
+
+          this.fullDataBulanan = hasil;
+          // }
+          console.log(this.fullDataBulanan);
         })
         .catch((err) => console.log(err));
     },

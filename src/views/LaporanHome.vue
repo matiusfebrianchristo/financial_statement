@@ -121,7 +121,6 @@ export default {
       // For chartjs
       fullDataChart: [],
       income: [],
-      incomeTes: [2000, 2000000, 10000, 2000],
       outcome: [],
       profit: [],
       dataMonth: {
