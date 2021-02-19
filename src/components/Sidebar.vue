@@ -27,29 +27,21 @@
         class="side-btn"
       >
         <div class="link-container">
-          <i class="bi bi-cart3"></i> Dashboard
+          <i class="bi bi-house-fill"></i> Dashboard
         </div>
       </router-link>
       <router-link
         to="/laporan_keuangan"
         active-class="active"
-        exact
+        
         tag="button"
         class="side-btn"
       >
         <div class="link-container">
-          <i class="bi bi-cart3"></i> Laporan Keuangan
+          <i class="bi bi-journal-text"></i> Laporan Keuangan
         </div>
       </router-link>
-      <router-link
-        to="/detail_bulanan"
-        active-class="active"
-        exact
-        tag="button"
-        class="side-btn"
-      >
-        <div class="link-container">About</div>
-      </router-link>
+      
     </div>
   </div>
 </template>

@@ -25,7 +25,7 @@ const routes = [{
         component: LaporanHome,
       },
       {
-        path: '/laporan_keuangan/:bulan',
+        path: '/laporan_keuangan/:tahun-:bulan',
         name: 'DetailBulanan',
         component: DetailBulanan
       },

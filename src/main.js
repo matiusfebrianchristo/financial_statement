@@ -8,6 +8,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import '@/assets/css/main.css'
 import 'vue2-datepicker/index.css'
 
+import 'moment/locale/id.js'
+
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 

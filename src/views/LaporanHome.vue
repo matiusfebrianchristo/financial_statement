@@ -18,8 +18,8 @@
               </li>
             </ol>
           </nav> -->
-          <h2><strong>Welcome</strong></h2>
-          <p>Hello admin, welcome to your dashboard.</p>
+          <h2><strong>Tahun {{ new Date().getFullYear()}}</strong></h2>
+          <p>Data laporan keuangan tahun {{ new Date().getFullYear()}}.</p>
         </div>
       </div>
 
@@ -77,7 +77,7 @@
                       class="btn btn-primary"
                       :to="{
                         name: 'DetailBulanan',
-                        params: { bulan: data.month },
+                        params: { bulan: data.month, tahun : 2021},
                       }"
                       >Detail</router-link
                     >
@@ -256,7 +256,7 @@ export default {
               income: this.income[i],
               outcome: this.outcome[i],
               profit: this.profit[i],
-              month: (hasil[i][1].month = moment()
+              month: (hasil[i][1].month = moment().locale('id')
                 .month(bulan - 1)
                 .format("MMMM")),
             });
