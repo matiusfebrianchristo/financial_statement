@@ -112,7 +112,10 @@
                           >
                         </li>
                         <li>
-                          <a class="dropdown-item" href="" @click.prevent
+                          <a
+                            class="dropdown-item"
+                            href=""
+                            @click.prevent="deleteData(d[0])"
                             ><i class="bi bi-trash-fill"></i> Delete</a
                           >
                         </li>
@@ -169,11 +172,10 @@ export default {
       }
     },
     // Get image name
-    getImgName(value){
-      let str = value.split("/").slice(-1).join(" ")
-      return str
+    getImgName(value) {
+      let str = value.split("/").slice(-1).join(" ");
+      return str;
     },
-
 
     // Change Tanggal
     GantiTgl(value) {
@@ -186,6 +188,28 @@ export default {
       } else {
         this.isActiveNav = true;
       }
+    },
+
+    // Delete Data Bulanan
+    deleteData(value) {
+
+      console.log(value)
+      // axios
+      //   .delete(
+      //     `https://glacial-coast-08306.herokuapp.com/api/v1/administration/deleteadministration/?id=${value}`
+      //   )
+      //   .then(() => {
+      //     this.$toast.success("Data berhasil dihapus!", {
+      //       type: "success",
+      //       position: "top-right",
+      //       duration: 3000,
+      //       dismissible: true,
+      //     });
+      //     setTimeout(function () {
+      //       location.reload();
+      //     }, 4000);
+      //   })
+      //   .catch( err => console.log(err))
     },
 
     // Data AXIOS

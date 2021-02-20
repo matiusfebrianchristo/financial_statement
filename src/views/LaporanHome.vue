@@ -208,14 +208,15 @@ export default {
                 }
           })
           .then(() => {
-            // Set timeout for location reload
-            setTimeout(location.reload(), 3000);
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
               position: "top-right",
               duration: 3000,
               dismissible: true,
             });
+            
+            // Set timeout for location reload
+            setTimeout(location.reload(), 5000);
           })
           .catch((err) => {
             console.log(err)
