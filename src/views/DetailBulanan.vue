@@ -6,18 +6,28 @@
       <div class="title-page text-center mt-4">
         <div class="bg-custom content-header rounded m-5 p-1">
           <div class="row row-cols-5">
-            <div class="col"><i @click="$router.go(-1)" class="bi bi-arrow-left back-arrow"></i></div>
+            <div class="col">
+              <i
+                @click="$router.go(-1)"
+                class="bi bi-arrow-left back-arrow"
+              ></i>
+            </div>
             <div class="col"></div>
             <div class="col">
               <h2>
-                <strong>{{ this.$route.params.bulan }} {{ this.$route.params.tahun }} </strong>
+                <strong
+                  >{{ this.$route.params.bulan }} {{ this.$route.params.tahun }}
+                </strong>
               </h2>
             </div>
             <div class="col"></div>
             <div class="col"></div>
           </div>
-          <hr>
-          <p>Data laporan keuangan pada bulan {{ this.$route.params.bulan}} tahun {{ this.$route.params.tahun }}.</p>
+          <hr />
+          <p>
+            Data laporan keuangan pada bulan
+            {{ this.$route.params.bulan }} tahun {{ this.$route.params.tahun }}.
+          </p>
         </div>
       </div>
 
@@ -64,18 +74,19 @@
                 <tr v-for="(d, index) in fullDataBulanan" :key="d.id">
                   <th scope="row">{{ index + 1 }}</th>
                   <td>Rp. {{ d[1].nominal }}</td>
-                  <td> <p :class="CekStatus(d[1].tipe)">{{ d[1].tipe }} </p></td>
+                  <td>
+                    <p :class="CekStatus(d[1].tipe)">{{ d[1].tipe }}</p>
+                  </td>
                   <td>{{ GantiTgl(d[1].created_at) }}</td>
                   <td>{{ d[1].deskripsi }}</td>
                   <td>
                     <a
                       v-if="d[1].bukti !== 'None'"
                       :href="`https://glacial-coast-08306.herokuapp.com${d[1].bukti}`"
-                      
                       target="_blank"
-                      >Bukti</a
+                      >{{ getImgName(d[1].bukti) }}</a
                     >
-                    <p v-else>{{ d[1].bukti }}</p>
+                    <p v-else>Tidak ada bukti</p>
                   </td>
                   <td>
                     <div class="dropdown">
@@ -150,18 +161,24 @@ export default {
     },
 
     // Status Method
-      CekStatus(value){
-        if(value === 'pemasukan'){
-          return value
-        } else {
-          return value
-        }
-      },
+    CekStatus(value) {
+      if (value === "pemasukan") {
+        return value;
+      } else {
+        return value;
+      }
+    },
+    // Get image name
+    getImgName(value){
+      let str = value.split("/").slice(-1).join(" ")
+      return str
+    },
 
-      // Change Tanggal
-      GantiTgl(value){
-return moment(value, 'YYYY-MM-DD').format('Do MMMM YYYY')
-      },
+
+    // Change Tanggal
+    GantiTgl(value) {
+      return moment(value, "YYYY-MM-DD").format("Do MMMM YYYY");
+    },
     // Hide Sidebar opsi
     clickedToggle() {
       if (this.isActiveNav === true) {

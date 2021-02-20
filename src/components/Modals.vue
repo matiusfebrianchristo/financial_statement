@@ -18,7 +18,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form>
+          <form enctype="multipart/form-data">
             <!-- Untuk nominal -->
             <label for="nominal" class="form-label">Nominal</label>
             <div class="input-group mb-3">
@@ -73,7 +73,13 @@
             <!-- Untuk Bukti / File foto -->
             <div class="mb-3">
               <label for="formFile" class="form-label">Bukti</label>
-              <input class="form-control" type="file" id="formFile" />
+              <input
+                class="form-control"
+                type="file"
+                @change="imageUpload"
+                id="formFile"
+                accept="image/*"
+              />
             </div>
           </form>
         </div>
@@ -106,15 +112,25 @@ export default {
   data() {
     return {
       nominal: null,
-      status: 'none',
-      created_at: moment().format('YYYY-MM-DD'),
-      deskripsi: '',
+      status: "none",
+      created_at: moment().format("YYYY-MM-DD"),
+      deskripsi: "",
       bukti: null,
+      data: new FormData(),
     };
   },
   methods: {
+    imageUpload(event) {
+      this.data.append("tipe", this.status);
+      this.data.append("nominal", this.nominal);
+      this.data.append(
+        "bukti", event.target.files[0]);
+      this.data.append("deskripsi", this.deskripsi);
+      this.data.append("created_at", this.created_at);
+    },
+
     onClick() {
-      this.$emit("clicked", {nominal: this.nominal, tipe: this.status, created_at: this.created_at, deskripsi: this.deskripsi, bukti: this.bukti});
+      this.$emit("clicked", this.data);
     },
   },
 };

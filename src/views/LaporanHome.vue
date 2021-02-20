@@ -18,8 +18,10 @@
               </li>
             </ol>
           </nav> -->
-          <h2><strong>Tahun {{ new Date().getFullYear()}}</strong></h2>
-          <p>Data laporan keuangan tahun {{ new Date().getFullYear()}}.</p>
+          <h2>
+            <strong>Tahun {{ new Date().getFullYear() }}</strong>
+          </h2>
+          <p>Data laporan keuangan tahun {{ new Date().getFullYear() }}.</p>
         </div>
       </div>
 
@@ -77,7 +79,7 @@
                       class="btn btn-primary"
                       :to="{
                         name: 'DetailBulanan',
-                        params: { bulan: data.month, tahun : 2021},
+                        params: { bulan: data.month, tahun: 2021 },
                       }"
                       >Detail</router-link
                     >
@@ -200,9 +202,30 @@ export default {
         //   deskripsi: this.deskripsi,
         // };
         await axios
-          .post("administration/addadministration/", value)
-          .then(() => location.reload())
-          .catch((err) => console.log(err));
+          .post("administration/addadministration/", value, {
+            headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+          })
+          .then(() => {
+            // Set timeout for location reload
+            setTimeout(location.reload(), 3000);
+            this.$toast.success("Data berhasil ditambahkan!", {
+              type: "success",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
+            });
+          })
+          .catch((err) => {
+            console.log(err)
+            this.$toast.error("Terjadi kesalahan", {
+              type: "error",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
+            });
+          });
       } else {
         console.log(value);
         this.$toast.error("Lengkapi Data!!", {
@@ -213,6 +236,7 @@ export default {
         });
       }
     },
+
     // ======================================
     // Filter Data
     // filterByValue(array, string, action, value) {
@@ -220,7 +244,6 @@ export default {
     //     return hero.month == string;
     //   });
 
-      
     //   if (action == "pemasukan") {
     //     return {
     //       income: data[0].income + value,
@@ -238,7 +261,6 @@ export default {
     // =======================================
 
     async loadedData() {
-      
       await axios
         .get("administration/administrationdataperyear/")
         .then((res) => {
@@ -256,7 +278,8 @@ export default {
               income: this.income[i],
               outcome: this.outcome[i],
               profit: this.profit[i],
-              month: (hasil[i][1].month = moment().locale('id')
+              month: (hasil[i][1].month = moment()
+                .locale("id")
                 .month(bulan - 1)
                 .format("MMMM")),
             });
