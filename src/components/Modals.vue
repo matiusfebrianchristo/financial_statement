@@ -106,6 +106,7 @@ import moment from "moment";
 
 export default {
   name: "Modals",
+  props: ["isEdit", "dataEdited", 'cekImg'],
   components: {
     DatePicker,
   },
@@ -116,21 +117,50 @@ export default {
       created_at: moment().format("YYYY-MM-DD"),
       deskripsi: "",
       bukti: null,
+      cek: this.cekImg,
       data: new FormData(),
     };
   },
+  mounted() {
+    this.isEdited();
+  },
   methods: {
-    imageUpload(event) {
+    isEdited() {
+      if (this.isEdit === true) {
+        console.log(this.dataEdited);
+      }
+    },
+    cekData() {
+      if (this.cek === false) {
+        return {
+          nominal: this.nominal,
+          tipe: this.status,
+          bukti: this.bukti,
+          deskripsi: this.deskripsi,
+          created_at: this.created_at,
+        };
+      } else {
+        return this.data;
+      }
+    },
+    onClickSv() {
       this.data.append("tipe", this.status);
       this.data.append("nominal", this.nominal);
-      this.data.append(
-        "bukti", event.target.files[0]);
+      this.data.append("bukti", this.bukti);
+      this.data.append("deskripsi", this.deskripsi);
+      this.data.append("created_at", this.created_at);
+    },
+    imageUpload(event) {
+      this.cek = true
+      this.data.append("tipe", this.status);
+      this.data.append("nominal", this.nominal);
+      this.data.append("bukti", event.target.files[0]);
       this.data.append("deskripsi", this.deskripsi);
       this.data.append("created_at", this.created_at);
     },
 
     onClick() {
-      this.$emit("clicked", this.data);
+      this.$emit("clicked", this.cekData());
     },
   },
 };

@@ -47,7 +47,7 @@
       <!-- ====================================================================================== -->
       <!-- Modal -->
 
-      <Modals />
+      <Modals @clicked="addTransaksi" :isEdit="isEdited" :dataEdited="dataEdit" />
 
       <!-- Akhir Button Add -->
 
@@ -107,7 +107,10 @@
                           <a
                             class="dropdown-item btn btn-primary"
                             href=""
-                            @click.prevent
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            @click.prevent="editData(d[0], d[1].nominal, d[1].tipe, d[1].created_at, d[1].deskripsi, d[1].bukti)"
                             ><i class="bi bi-pencil-square"></i> Edit</a
                           >
                         </li>
@@ -148,6 +151,9 @@ export default {
     return {
       datacollection: null,
       loaded: false,
+      // For edited Data
+      isEdited: false,
+      dataEdit: null,
       isActiveNav: false,
       income: [],
       outcome: [],
@@ -190,26 +196,94 @@ export default {
       }
     },
 
+    // Add Laporan Keuangan
+    async addTransaksi(value) {
+      if (
+        value.nominal !== null &&
+        value.status !== "none" &&
+        value.created_at !== null &&
+        value.deskripsi !== null
+      ) {
+        await axios
+          .post("administration/addadministration/", value)
+          .then(() => {
+            this.$toast.success("Data berhasil ditambahkan!", {
+              type: "success",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
+            });
+
+        if(this.cek === true){
+        this.cek = false
+      }
+            
+            // Set timeout for location reload
+            setTimeout(function() {
+              location.reload()
+            }, 2000);
+          })
+          .catch((err) => {
+            console.log(err)
+            this.$toast.error("Terjadi kesalahan", {
+              type: "error",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
+            });
+          });
+      } else {
+        console.log(value);
+        this.$toast.error("Lengkapi Data!!", {
+          type: "error",
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
+      }
+
+      if(this.cek === true){
+        this.cek = false
+      }
+    },
+
+    // ==============================================
+    // Edit data bulanan
+    editData(id, nominal, status, tanggal, deskripsi, bukti){
+      this.isEdited = true;
+      this.dataEdit = {
+        administration_id: id,
+        nominal: nominal,
+        tipe: status,
+        created_at: tanggal,
+        deskripsi: deskripsi,
+        bukti: bukti
+      }
+    },
+
+
+
+
+    // ==============================================
     // Delete Data Bulanan
     deleteData(value) {
-
-      console.log(value)
-      // axios
-      //   .delete(
-      //     `https://glacial-coast-08306.herokuapp.com/api/v1/administration/deleteadministration/?id=${value}`
-      //   )
-      //   .then(() => {
-      //     this.$toast.success("Data berhasil dihapus!", {
-      //       type: "success",
-      //       position: "top-right",
-      //       duration: 3000,
-      //       dismissible: true,
-      //     });
-      //     setTimeout(function () {
-      //       location.reload();
-      //     }, 4000);
-      //   })
-      //   .catch( err => console.log(err))
+      // console.log(value)
+      axios
+        .delete(
+          `https://glacial-coast-08306.herokuapp.com/api/v1/administration/deleteadministration/?administration_id=${value}`
+        )
+        .then(() => {
+          this.$toast.success("Data berhasil dihapus!", {
+            type: "success",
+            position: "top-right",
+            duration: 3000,
+            dismissible: true,
+          });
+          setTimeout(function () {
+            location.reload();
+          }, 2000);
+        })
+        .catch((err) => console.log(err));
     },
 
     // Data AXIOS

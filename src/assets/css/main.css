@@ -64,7 +64,7 @@ body{
       transform: translateX(0);
     position: fixed;
     
-background: linear-gradient(180deg, rgba(37,38,54,1) 0%, rgba(77,78,98,1) 50%, rgba(27,28,34,0.9248074229691877) 100%);
+background: linear-gradient(180deg, rgba(37,38,54,1) 0%,rgba(53,54,71,1) 100%);
     }
     
     .wrapper{

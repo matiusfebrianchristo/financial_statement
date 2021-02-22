@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <div
-      class="sidebar-header d-flex justify-content-center align-items-center px-3 py-4"
+      class="sidebar-header d-flex justify-content-center align-items-left px-3 py-4"
     >
       <img
         class="rounded-pill img-fluid"
@@ -26,8 +26,8 @@
         tag="button"
         class="side-btn"
       >
-        <div class="link-container">
-          <i class="bi bi-house-fill"></i> Dashboard
+        <div class="link-container" >
+          <i class="bi bi-house"></i> <span >Dashboard</span>
         </div>
       </router-link>
       <router-link
@@ -38,7 +38,7 @@
         class="side-btn"
       >
         <div class="link-container">
-          <i class="bi bi-journal-text"></i> Laporan Keuangan
+          <i class="bi bi-journal-text"></i> <span>Laporan Keuangan</span>
         </div>
       </router-link>
       
@@ -61,17 +61,27 @@ export default {
   color: #9ca3af;
   font-size: 0.825rem;
 }
+.link-container i{
+margin-left: 30px;
+}
+.link-container span{
+  color: var(--dk-gray-300);
+  margin-left: 10px;
+  
+}
 
 .menu-items {
   display: flex;
   flex-direction: column;
   margin-top: 35px;
+  
 
   /* padding: 0px 10px; */
 }
 
 .menu-items > * {
   margin-top: 10px;
+  text-align: left;
   text-shadow: 2px 2px 4px black;
   /* border-radius: 20px; */
 }
@@ -80,6 +90,10 @@ export default {
     background-image: linear-gradient(to right, rgba(94, 96, 130, 0.5) , rgba(23, 31, 39, 0.5));
     border-right: 2px solid white;
     font-weight: bold;
+}
+
+.side-btn.active .link-container span{
+  color:white;
 }
 
 .side-btn:focus {

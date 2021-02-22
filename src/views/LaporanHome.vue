@@ -41,7 +41,7 @@
       <!-- ====================================================================================== -->
       <!-- Modal -->
 
-      <Modals @clicked="addTransaksi" />
+      <Modals @clicked="addTransaksi" :cekImg="cek" />
 
       <!-- Akhir Button Add -->
 
@@ -116,6 +116,7 @@ export default {
       tanggal: null,
       deskripsi: null,
       bukti: null,
+      cek: false,
       // ====================================
       dataGraphic: {},
       datacollection: null,
@@ -195,18 +196,8 @@ export default {
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
-        // const dataPostTransaksi = {
-        //   nominal: this.nominal,
-        //   tipe: this.status,
-        //   created_at: this.tanggal,
-        //   deskripsi: this.deskripsi,
-        // };
         await axios
-          .post("administration/addadministration/", value, {
-            headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-          })
+          .post("administration/addadministration/", value)
           .then(() => {
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
@@ -214,9 +205,15 @@ export default {
               duration: 3000,
               dismissible: true,
             });
+
+        if(this.cek === true){
+        this.cek = false
+      }
             
             // Set timeout for location reload
-            setTimeout(location.reload(), 5000);
+            setTimeout(function() {
+              location.reload()
+            }, 2000);
           })
           .catch((err) => {
             console.log(err)
@@ -235,6 +232,10 @@ export default {
           duration: 3000,
           dismissible: true,
         });
+      }
+
+      if(this.cek === true){
+        this.cek = false
       }
     },
 
@@ -303,21 +304,21 @@ export default {
         datasets: [
           {
             label: "In",
-            backgroundColor: "rgba(255, 0, 0, 0.2)",
-            borderColor: "lightpink",
-            pointBackgroundColor: "red",
-            borderWidth: 2,
-            pointBorderColor: "red",
-            fill: false,
-            data: this.income,
-          },
-          {
-            label: "Out",
             backgroundColor: "rgba(0, 255, 0, 0.2)",
             borderColor: "lightgreen",
             pointBackgroundColor: "green",
             borderWidth: 2,
             pointBorderColor: "green",
+            fill: false,
+            data: this.income,
+          },
+          {
+            label: "Out",
+            backgroundColor: "rgba(255, 0, 0, 0.2)",
+            borderColor: "lightpink",
+            pointBackgroundColor: "red",
+            borderWidth: 2,
+            pointBorderColor: "red",
             fill: false,
             data: this.outcome,
           },
