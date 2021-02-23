@@ -1,34 +1,42 @@
 <template>
-  <div class="login">
-    <div class="container">
-      <div class="card bg-cusm mb-3 mt-5">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <!-- <img src="..." alt="..." /> -->
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <div class="form-floating mb-3">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="floatingInput"
-                  placeholder="name@example.com"
-                />
-                <label for="floatingInput">Email address</label>
-              </div>
-              <div class="form-floating">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="floatingPassword"
-                  placeholder="Password"
-                />
-                <label for="floatingPassword">Password</label>
+  <div class="login-form">
+    <div class="justify-content-center">
+      <div class="row">
+        <div class="col-md-6">
+          <form>
+            <div class="mb-3">
+              <input
+                type="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+              />
+              <div id="emailHelp" class="form-text">
+                We'll never share your email with anyone else.
               </div>
             </div>
-          </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label"
+                >Password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="exampleInputPassword1"
+              />
+            </div>
+            <div class="mb-3 form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="exampleCheck1"
+              />
+              <label class="form-check-label" for="exampleCheck1"
+                >Check me out</label
+              >
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
         </div>
       </div>
     </div>
@@ -40,15 +48,8 @@ export default {
   name: "Login",
 };
 </script>
-
 <style>
-/* body{
-  color: black;
-  background-color: black;
-} */
-
-.bg-cusm{
-  background-color: rgba(250, 250, 250, 0.5);
+body{
+    background-color: blue;
 }
-
 </style>

@@ -72,9 +72,13 @@ export default {
   float: right;
 }
 
+.bg-title{
+  background: linear-gradient(180deg, rgba(100,93,209,1) 0%, rgba(161,156,242,0.9444152661064426) 100%);
+}
+
 .bg-custom {
   /* background-color: #121729; */
-  background-color: var(--dk-dark-bg);
+  background-color: var(--sidebar-bg-color)!important;
 }
 
 .title::after {

@@ -7,11 +7,14 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import '@/assets/css/main.css'
 import 'vue2-datepicker/index.css'
-
 import 'moment/locale/id.js'
-
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
+
+
+Vue.component('v-select', vSelect)
 
 Vue.use(VueToast);
 

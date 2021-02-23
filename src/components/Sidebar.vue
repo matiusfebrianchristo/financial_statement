@@ -27,7 +27,7 @@
         class="side-btn"
       >
         <div class="link-container" >
-          <i class="bi bi-house"></i> <span >Dashboard</span>
+          <i class="bi bi-house"></i> <span >Dashboard</span> 
         </div>
       </router-link>
       <router-link
@@ -38,7 +38,7 @@
         class="side-btn"
       >
         <div class="link-container">
-          <i class="bi bi-journal-text"></i> <span>Laporan Keuangan</span>
+          <i class="bi bi-journal-text"></i> <span>Laporan Keuangan</span> 
         </div>
       </router-link>
       
@@ -87,7 +87,7 @@ margin-left: 30px;
 }
 
 .side-btn.active {
-    background-image: linear-gradient(to right, rgba(94, 96, 130, 0.5) , rgba(23, 31, 39, 0.5));
+    background-color: #6159d0;
     border-right: 2px solid white;
     font-weight: bold;
 }

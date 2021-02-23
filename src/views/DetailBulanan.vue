@@ -4,7 +4,7 @@
     <!-- Header -->
     <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
-        <div class="bg-custom content-header rounded m-5 p-1">
+        <div class="bg-title content-header rounded m-5 p-1">
           <div class="row row-cols-5">
             <div class="col">
               <i

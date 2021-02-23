@@ -3,7 +3,7 @@
     <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
         <!-- <h2 class="title">Administrator</h2> -->
-        <div class="bg-custom content-header rounded m-5 p-1">
+        <div class="bg-title content-header rounded m-5 p-1">
           <!-- <nav
             class="road"
             style="--bs-breadcrumb-divider: '>'"
@@ -34,7 +34,7 @@
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >
-          Add Transaksi
+          Tambah Transaksi
         </button>
       </div>
 
@@ -161,12 +161,12 @@ export default {
             {
               ticks: {
                 fontColor: "white",
-                suggestedMin: -500000,
+                suggestedMin: -400000,
                 suggestedMax: 500000,
               },
               scaleLabel: {
                 display: true,
-                labelString: "Rp. " + "Value",
+                labelString: "Jumlah",
               },
             },
           ],
@@ -192,7 +192,7 @@ export default {
     async addTransaksi(value) {
       if (
         value.nominal !== null &&
-        value.status !== "none" &&
+        value.status !== null &&
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
@@ -305,7 +305,7 @@ export default {
           {
             label: "In",
             backgroundColor: "rgba(0, 255, 0, 0.2)",
-            borderColor: "lightgreen",
+            borderColor: "rgba(0, 255, 0, 0.8)",
             pointBackgroundColor: "green",
             borderWidth: 2,
             pointBorderColor: "green",
@@ -315,7 +315,7 @@ export default {
           {
             label: "Out",
             backgroundColor: "rgba(255, 0, 0, 0.2)",
-            borderColor: "lightpink",
+            borderColor: "rgba(255, 0, 0, 0.8)",
             pointBackgroundColor: "red",
             borderWidth: 2,
             pointBorderColor: "red",
@@ -325,7 +325,7 @@ export default {
           {
             label: "Untung",
             backgroundColor: "rgba(0, 0, 255, 0.2)",
-            borderColor: "lightblue",
+            borderColor: "rgba(0, 0, 255, 0.7)",
             pointBackgroundColor: "blue",
             borderWidth: 2,
             pointBorderColor: "blue",

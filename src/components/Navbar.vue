@@ -1,5 +1,6 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+<div class="navbar-customize">
+<nav class="navbar navbar-expand-lg navbar-dark bg-custom">
     <div class="container-fluid">
       <router-link
         class="navbar-brand dash-p"
@@ -37,6 +38,8 @@
       </div>
     </div>
   </nav>
+</div>
+  
 </template>
 
 <script>
@@ -108,7 +111,7 @@ export default {
 }
 
 .dash-p {
-  transform: translateX(-250px);
+  transform: translateX(-200px);
   transition: 0.3s ease-in-out;
 }
 
@@ -119,7 +122,7 @@ export default {
 .navbar {
   right: auto !important;
   left: 0 !important;
-  background-color: #252636 !important;
+  background-color: var(--sidebar-bg-color) !important;
 }
 
 /* .button-close {

@@ -22,38 +22,6 @@
           <line-chart :chart-data="datacollection" :options="chartOption" />
         </div>
       </div> -->
-
-      <!-- Table -->
-      <div class="m-md-5 m-3">
-        <div class="row bg-custom shadow-lg rounded">
-          <div class="col pt-3 table-responsive">
-            <table class="table text-light text-center">
-              <thead>
-                <tr>
-                  <th>Bulan</th>
-                  <th>Input</th>
-                  <th>Output</th>
-                  <th>Untung</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Januari</th>
-                  <td>Rp. 7000</td>
-                  <td>Rp. 2000</td>
-                  <td>Rp. 5000</td>
-                  <td>
-                    <router-link class="btn btn-primary" to="/detail_bulanan"
-                      >Detail</router-link
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>

@@ -9,7 +9,7 @@
     <div class="modal-dialog text-dark modal-xl modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Tambah Transaksi</h5>
+          <h5 class="modal-title" id="exampleModalLabel"><strong>Tambah Transaksi</strong></h5>
           <button
             type="button"
             class="btn-close"
@@ -35,23 +35,18 @@
             </div>
             <div class="mb-3">
               <label for="recipient-name" class="col-form-label">Status</label>
-              <select
-                class="form-select"
-                aria-label="Default select example"
+              <v-select
                 v-model="status"
-              >
-                <option value="none" selected>Status</option>
-                <option value="pemasukan">Input</option>
-                <option value="pengeluaran">Output</option>
-              </select>
+                @input="getStatus"
+                :options="['Pemasukan', 'Pengeluaran']"
+              ></v-select>
             </div>
 
             <!-- Untuk Tanggal -->
             <div class="mb-3">
               <label for="tanggal" class="form-label">Tanggal</label>
               <date-picker
-                class="form-control"
-                id="tanggal"
+                class="form-primary w-100"
                 v-model="created_at"
                 format="DD-MM-YYYY"
                 valueType="YYYY-MM-DD"
@@ -92,8 +87,8 @@
             Close
           </button>
           <button type="button" class="btn btn-primary" @click="onClick">
-            Add
-          </button>
+            Add</button
+          >
         </div>
       </div>
     </div>
@@ -106,14 +101,14 @@ import moment from "moment";
 
 export default {
   name: "Modals",
-  props: ["isEdit", "dataEdited", 'cekImg'],
+  props: ["isEdit", "dataEdited", "cekImg"],
   components: {
     DatePicker,
   },
   data() {
     return {
       nominal: null,
-      status: "none",
+      status: null,
       created_at: moment().format("YYYY-MM-DD"),
       deskripsi: "",
       bukti: null,
@@ -125,6 +120,12 @@ export default {
     this.isEdited();
   },
   methods: {
+    getStatus(value) {
+      if (value != null) {
+        this.status = value.toLowerCase();
+      }
+      console.log(this.status);
+    },
     isEdited() {
       if (this.isEdit === true) {
         console.log(this.dataEdited);
@@ -151,7 +152,7 @@ export default {
       this.data.append("created_at", this.created_at);
     },
     imageUpload(event) {
-      this.cek = true
+      this.cek = true;
       this.data.append("tipe", this.status);
       this.data.append("nominal", this.nominal);
       this.data.append("bukti", event.target.files[0]);
