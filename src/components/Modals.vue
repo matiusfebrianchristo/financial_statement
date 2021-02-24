@@ -9,7 +9,9 @@
     <div class="modal-dialog text-dark modal-xl modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><strong>Tambah Transaksi</strong></h5>
+          <h5 class="modal-title" id="exampleModalLabel">
+            <strong>Tambah Transaksi</strong>
+          </h5>
           <button
             type="button"
             class="btn-close"
@@ -75,6 +77,7 @@
                 id="formFile"
                 accept="image/*"
               />
+              <p v-if="isEdit === true" class="text-danger">*Isi field ini jika ingin menganti gambar!</p>
             </div>
           </form>
         </div>
@@ -86,9 +89,12 @@
           >
             Close
           </button>
-          <button type="button" class="btn btn-primary" @click="onClick">
-            Add</button
-          >
+          <button v-if="isEdit === false" type="button" class="btn btn-primary" @click="onClick">
+            Add
+          </button>
+          <button v-else type="button" class="btn btn-primary" @click="onClickSvData">
+            Save
+          </button>
         </div>
       </div>
     </div>
@@ -113,11 +119,9 @@ export default {
       deskripsi: "",
       bukti: null,
       cek: this.cekImg,
+      id: null,
       data: new FormData(),
     };
-  },
-  mounted() {
-    this.isEdited();
   },
   methods: {
     getStatus(value) {
@@ -126,17 +130,22 @@ export default {
       }
       console.log(this.status);
     },
-    isEdited() {
-      if (this.isEdit === true) {
-        console.log(this.dataEdited);
-      }
+    isEdited(value) {
+      console.log(value);
+      this.id = value.administration_id
+      this.nominal = value.nominal
+      this.status = value.tipe
+      this.created_at = moment(value.created_at, "YYYY-M-D").format("YYYY-MM-DD");
+      this.deskripsi = value.deskripsi
+      this.bukti = value.bukti
     },
     cekData() {
       if (this.cek === false) {
         return {
+          administration_id: this.id,
           nominal: this.nominal,
+          bukti: this.bukti.split("/").slice(-2).join("/"),
           tipe: this.status,
-          bukti: this.bukti,
           deskripsi: this.deskripsi,
           created_at: this.created_at,
         };
@@ -153,6 +162,11 @@ export default {
     },
     imageUpload(event) {
       this.cek = true;
+      if(this.isEdit === true ){
+        this.data.append("administration_id", this.id)
+      }
+
+      console.log(event.target.files[0])
       this.data.append("tipe", this.status);
       this.data.append("nominal", this.nominal);
       this.data.append("bukti", event.target.files[0]);
@@ -162,6 +176,9 @@ export default {
 
     onClick() {
       this.$emit("clicked", this.cekData());
+    },
+    onClickSvData() {
+      this.$emit("clickedSv", this.cekData());
     },
   },
 };

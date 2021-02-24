@@ -3,7 +3,7 @@
     <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
         <!-- <h2 class="title">Administrator</h2> -->
-        <div class="bg-title content-header rounded m-5 p-1">
+        <div class="bg-title content-header rounded m-md-5 p-1">
           <!-- <nav
             class="road"
             style="--bs-breadcrumb-divider: '>'"
@@ -161,8 +161,8 @@ export default {
             {
               ticks: {
                 fontColor: "white",
-                suggestedMin: -400000,
-                suggestedMax: 500000,
+                min: -400000,
+                max: 500000,
               },
               scaleLabel: {
                 display: true,
@@ -206,17 +206,17 @@ export default {
               dismissible: true,
             });
 
-        if(this.cek === true){
-        this.cek = false
-      }
-            
+            if (this.cek === true) {
+              this.cek = false;
+            }
+
             // Set timeout for location reload
-            setTimeout(function() {
-              location.reload()
+            setTimeout(function () {
+              location.reload();
             }, 2000);
           })
           .catch((err) => {
-            console.log(err)
+            console.log(err);
             this.$toast.error("Terjadi kesalahan", {
               type: "error",
               position: "top-right",
@@ -234,8 +234,8 @@ export default {
         });
       }
 
-      if(this.cek === true){
-        this.cek = false
+      if (this.cek === true) {
+        this.cek = false;
       }
     },
 

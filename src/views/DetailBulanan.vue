@@ -4,7 +4,7 @@
     <!-- Header -->
     <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
-        <div class="bg-title content-header rounded m-5 p-1">
+        <div class="bg-title content-header rounded m-md-5 p-1">
           <div class="row row-cols-5">
             <div class="col">
               <i
@@ -37,17 +37,18 @@
         <button
           type="button"
           class="btn btn-success float-end"
+          @click="clickAddTrans"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >
-          Add Transaksi
+          Tambah Transaksi
         </button>
       </div>
 
       <!-- ====================================================================================== -->
       <!-- Modal -->
 
-      <Modals @clicked="addTransaksi" :isEdit="isEdited" :dataEdited="dataEdit" />
+      <Modals @clicked="addTransaksi" @clickedSv="saveDataEdit" ref="editButton" :cekImg="cek" :isEdit="isEdited" :dataEdited="dataEdit" />
 
       <!-- Akhir Button Add -->
 
@@ -84,7 +85,7 @@
                       v-if="d[1].bukti !== 'None'"
                       :href="`https://glacial-coast-08306.herokuapp.com${d[1].bukti}`"
                       target="_blank"
-                      >{{ getImgName(d[1].bukti) }}</a
+                      >{{ d[1].bukti }}</a
                     >
                     <p v-else>Tidak ada bukti</p>
                   </td>
@@ -156,6 +157,7 @@ export default {
       dataEdit: null,
       isActiveNav: false,
       income: [],
+      cek: false,
       outcome: [],
       profit: [],
       fullDataBulanan: [],
@@ -167,6 +169,11 @@ export default {
   methods: {
     getTgl() {
       console.log(this.tanggal);
+    },
+
+    // =================
+    clickAddTrans(){
+      this.isEdited = false
     },
 
     // Status Method
@@ -196,11 +203,41 @@ export default {
       }
     },
 
+
+    // ===================================================
+    // Edit data Detail Bulanan
+    async saveDataEdit(value){
+      console.log(value)
+      if (
+        value.nominal !== null &&
+        value.status !== null &&
+        value.created_at !== null &&
+        value.deskripsi !== null
+      ){
+        await axios
+        .post("administration/updateadministration/", value)
+        .then( res => console.log(res))
+        .catch( err => console.log(err))
+      } else {
+         this.$toast.error("Lengkapi Data!!", {
+          type: "error",
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
+
+        if (this.cek === true && this.isEdited === true ) {
+        this.cek = false;
+        this.isEdited = false;
+        }
+      }
+    },
+
     // Add Laporan Keuangan
     async addTransaksi(value) {
       if (
         value.nominal !== null &&
-        value.status !== "none" &&
+        value.status !== null &&
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
@@ -214,17 +251,17 @@ export default {
               dismissible: true,
             });
 
-        if(this.cek === true){
-        this.cek = false
-      }
-            
+            if (this.cek === true) {
+              this.cek = false;
+            }
+
             // Set timeout for location reload
-            setTimeout(function() {
-              location.reload()
+            setTimeout(function () {
+              location.reload();
             }, 2000);
           })
           .catch((err) => {
-            console.log(err)
+            console.log(err);
             this.$toast.error("Terjadi kesalahan", {
               type: "error",
               position: "top-right",
@@ -242,16 +279,15 @@ export default {
         });
       }
 
-      if(this.cek === true){
-        this.cek = false
+      if (this.cek === true) {
+        this.cek = false;
       }
     },
-
     // ==============================================
     // Edit data bulanan
     editData(id, nominal, status, tanggal, deskripsi, bukti){
       this.isEdited = true;
-      this.dataEdit = {
+      const data = {
         administration_id: id,
         nominal: nominal,
         tipe: status,
@@ -259,6 +295,8 @@ export default {
         deskripsi: deskripsi,
         bukti: bukti
       }
+
+      this.$refs.editButton.isEdited(data)
     },
 
 

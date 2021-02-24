@@ -48,7 +48,7 @@ export default {
   name: "Login",
 };
 </script>
-<style>
+<style >
 body{
     background-color: blue;
 }
