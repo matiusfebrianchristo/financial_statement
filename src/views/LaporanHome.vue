@@ -3,7 +3,7 @@
     <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
         <!-- <h2 class="title">Administrator</h2> -->
-        <div class="bg-title content-header rounded m-md-5 p-1">
+        <div class="light-mode content-header rounded m-md-5 p-1">
           <!-- <nav
             class="road"
             style="--bs-breadcrumb-divider: '>'"
@@ -23,13 +23,14 @@
           </h2>
           <p>Data laporan keuangan tahun {{ new Date().getFullYear() }}.</p>
         </div>
+        <hr>
       </div>
-
       <!-- Button Add -->
       <!-- Modals Add -->
       <div class="mx-md-5 mt-5 mb-0 clearfix">
         <button
           type="button"
+          @click="clickAddTrans"
           class="btn btn-success float-end"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
@@ -41,7 +42,7 @@
       <!-- ====================================================================================== -->
       <!-- Modal -->
 
-      <Modals @clicked="addTransaksi" :cekImg="cek" />
+      <Modals @clicked="addTransaksi" :cekImg="cek" :isEdit="isEdited" />
 
       <!-- Akhir Button Add -->
 
@@ -49,16 +50,16 @@
       <!-- Content -->
       <!-- Grafik -->
       <div class="mx-md-5 mt-2">
-        <div class="col bg-custom line-chart text-light rounded">
+        <div class="col bg-graphic line-chart text-light rounded">
           <line-chart :chart-data="datacollection" :options="chartOption" />
         </div>
       </div>
 
       <!-- Table -->
       <div class="m-md-5 m-3">
-        <div class="row bg-custom shadow-lg rounded">
+        <div class="row bg-table shadow-lg rounded">
           <div class="col pt-3 table-responsive">
-            <table class="table text-light text-center">
+            <table class="table text-center">
               <thead>
                 <tr>
                   <th>Bulan</th>
@@ -120,6 +121,7 @@ export default {
       // ====================================
       dataGraphic: {},
       datacollection: null,
+      isEdited: false,
       // ===============================
       // For chartjs
       fullDataChart: [],
@@ -149,18 +151,18 @@ export default {
         title: {
           display: true,
           text: "Laporan Keuangan",
-          fontColor: "#fff",
+          fontColor: "grey",
         },
         legend: {
           labels: {
-            fontColor: "#fff",
+            fontColor: "grey",
           },
         },
         scales: {
           yAxes: [
             {
               ticks: {
-                fontColor: "white",
+                fontColor: "grey",
                 min: -400000,
                 max: 500000,
               },
@@ -173,7 +175,7 @@ export default {
           xAxes: [
             {
               ticks: {
-                fontColor: "white",
+                fontColor: "grey",
               },
             },
           ],
@@ -187,6 +189,11 @@ export default {
     this.loadedData();
   },
   methods: {
+    // =================
+    clickAddTrans() {
+      this.isEdited = false;
+    },
+
     //Add Transaksi
     // ================================-===========
     async addTransaksi(value) {

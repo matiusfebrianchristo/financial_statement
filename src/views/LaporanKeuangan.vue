@@ -12,7 +12,6 @@
 
     <!-- Navbar  -->
     <Navbar
-      class="wrapper"
       :isActive="isActiveNav"
       :class="{ full: isActiveNav }"
       @clicked="clickedToggle"
@@ -67,6 +66,31 @@ export default {
 </script>
 <style>
 /* Content */
+
+.bg-graphic{
+  /* background: linear-gradient(0deg, rgba(76,209,209,1) 0%, rgba(118,220,220,1) 100%); */
+  background-color: #f8f9fa;
+  box-shadow: 1px 1px 20px 1px rgba(10,10,10,0.5);
+  /* border: 1px solid black; */
+}
+
+.light-mode{
+  background-color: #f3f7f9;
+  color: #2f495e ;
+}
+
+.btn-success{
+  background-color: var(--button-bg-color)!important;
+  border: none;
+  color: white;
+  font-weight: 600!important;
+}
+
+.bg-table{
+  background-color: #f8f9fa;
+  box-shadow: 1px 1px 20px 1px rgba(10,10,10,0.5);
+  color: grey;
+}
 
 .btn-add {
   float: right;

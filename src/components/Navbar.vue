@@ -1,45 +1,46 @@
 <template>
-<div class="navbar-customize">
-<nav class="navbar navbar-expand-lg navbar-dark bg-custom">
-    <div class="container-fluid">
-      <router-link
-        class="navbar-brand dash-p"
-        :class="{ show: isActive === true }"
-        to="/"
-        ><strong>Dashboard</strong></router-link
-      >
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto justify-content-end mb-2 mb-lg-0">
-          <li class="nav-item d-lg-none d-sm-block">
-            <Sidebar />
-          </li>
-        </ul>
-      </div>
-      <div class="ml-auto d-none button-close d-lg-block">
-        <!-- <i @click="onClick" class="bi bi-justify"></i> -->
-        <div class="wrapper-nav" @click="onClick">
-          <div class="circle icon" :class="{ close : isActive === false}">
-            <span class="line top"></span>
-            <span class="line middle"></span>
-            <span class="line bottom"></span>
+  <div class="navbar-customize">
+    <nav
+      class="navbar wrapper navbar-expand-lg navbar-dark"
+      :class="{ full: isActive }"
+    >
+      <div class="container-fluid">
+        <div class="d-none button-close d-lg-block">
+          <div class="wrapper-nav" @click="onClick">
+            <div class="circle icon" :class="{ close: isActive === false }">
+              <span class="line top"></span>
+              <span class="line middle"></span>
+              <span class="line bottom"></span>
+            </div>
           </div>
         </div>
+        <!-- <router-link
+          class="navbar-brand dash-p"
+          :class="{ show: isActive === true }"
+          to="/"
+          ><strong>Dashboard</strong></router-link
+        > -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto justify-content-end mb-2 mb-lg-0">
+            <li class="nav-item d-lg-none d-sm-block">
+              <Sidebar />
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
-</div>
-  
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -64,12 +65,13 @@ export default {
 </script>
 
 <style>
+
 .wrapper-nav {
-  background: rgba(30, 30, 30, 0.9);
+  /* background: rgba(30, 30, 30, 0.9); */
   display: inline-block;
-  border: 1px solid rgba(30, 30, 30, 0.9) ;
+  /* border: 1px solid rgba(30, 30, 30, 0.9); */
   border-radius: 500px;
-  margin-right: 20px;
+  margin-left: 20px;
   position: relative;
   padding: 9px;
   cursor: pointer;
@@ -100,6 +102,8 @@ export default {
   top: 78%;
 }
 
+
+
 .icon.close .top {
   transform: rotate(45deg);
   top: 48%;
@@ -110,7 +114,11 @@ export default {
   top: 48%;
 }
 
+@media (min-width: 992px){
+  
+}
 .dash-p {
+  margin-left: 50px;
   transform: translateX(-200px);
   transition: 0.3s ease-in-out;
 }

@@ -1,5 +1,8 @@
 <template>
   <div class="sidebar">
+    <!-- <div class="sidebar-title d-flex justify-content-center align-items-center">
+      <h5><strong> Laporan Keuangan </strong></h5>
+    </div> -->
     <div
       class="sidebar-header d-flex justify-content-center align-items-left px-3 py-4"
     >
@@ -26,22 +29,20 @@
         tag="button"
         class="side-btn"
       >
-        <div class="link-container" >
-          <i class="bi bi-house"></i> <span >Dashboard</span> 
+        <div class="link-container">
+          <i class="bi bi-house"></i> <span>Dashboard</span>
         </div>
       </router-link>
       <router-link
         to="/laporan_keuangan"
         active-class="active"
-        
         tag="button"
         class="side-btn"
       >
         <div class="link-container">
-          <i class="bi bi-journal-text"></i> <span>Laporan Keuangan</span> 
+          <i class="bi bi-journal-text"></i> <span>Laporan Keuangan</span>
         </div>
       </router-link>
-      
     </div>
   </div>
 </template>
@@ -53,6 +54,12 @@ export default {
 </script>
 
 <style>
+
+.sidebar-title{
+  height: 65px;
+  background-color: #2ec2b8;
+}
+
 .sidebar .sidebar-header h5 a {
   color: #d1d5db;
 }
@@ -61,20 +68,18 @@ export default {
   color: #9ca3af;
   font-size: 0.825rem;
 }
-.link-container i{
-margin-left: 30px;
+.link-container i {
+  margin-left: 30px;
 }
-.link-container span{
+.link-container span {
   color: var(--dk-gray-300);
   margin-left: 10px;
-  
 }
 
 .menu-items {
   display: flex;
   flex-direction: column;
   margin-top: 35px;
-  
 
   /* padding: 0px 10px; */
 }
@@ -82,18 +87,20 @@ margin-left: 30px;
 .menu-items > * {
   margin-top: 10px;
   text-align: left;
-  text-shadow: 2px 2px 4px black;
+  text-shadow: 1px 1px 4px black;
   /* border-radius: 20px; */
 }
 
 .side-btn.active {
-    background-color: #6159d0;
-    border-right: 2px solid white;
-    font-weight: bold;
+  background-color: #3bd1c7;
+  border-top: 1px solid white ;
+  border-bottom: 1px solid white ;
+  border-left: 3px solid white;
+  font-weight: bold;
 }
 
-.side-btn.active .link-container span{
-  color:white;
+.side-btn.active .link-container span {
+  color: white;
 }
 
 .side-btn:focus {

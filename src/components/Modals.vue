@@ -141,14 +141,26 @@ export default {
     },
     cekData() {
       if (this.cek === false) {
-        return {
-          administration_id: this.id,
-          nominal: this.nominal,
-          bukti: this.bukti.split("/").slice(-2).join("/"),
-          tipe: this.status,
-          deskripsi: this.deskripsi,
-          created_at: this.created_at,
-        };
+        if(this.isEdit === true){
+          return {
+
+            administration_id: this.id,
+            nominal: this.nominal,
+            bukti: this.bukti.split("/").slice(-2).join("/"),
+            tipe: this.status,
+            deskripsi: this.deskripsi,
+            created_at: this.created_at,
+          }
+        } else {
+          return {
+            administration_id: this.id,
+            nominal: this.nominal,
+            bukti: this.bukti,
+            tipe: this.status,
+            deskripsi: this.deskripsi,
+            created_at: this.created_at,
+          }
+        }
       } else {
         return this.data;
       }

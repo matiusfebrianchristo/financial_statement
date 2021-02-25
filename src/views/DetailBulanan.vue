@@ -4,7 +4,7 @@
     <!-- Header -->
     <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
-        <div class="bg-title content-header rounded m-md-5 p-1">
+        <div class="light-mode content-header rounded m-md-5 p-1">
           <div class="row row-cols-5">
             <div class="col">
               <i
@@ -48,7 +48,14 @@
       <!-- ====================================================================================== -->
       <!-- Modal -->
 
-      <Modals @clicked="addTransaksi" @clickedSv="saveDataEdit" ref="editButton" :cekImg="cek" :isEdit="isEdited" :dataEdited="dataEdit" />
+      <Modals
+        @clicked="addTransaksi"
+        @clickedSv="saveDataEdit"
+        ref="editButton"
+        :cekImg="cek"
+        :isEdit="isEdited"
+        :dataEdited="dataEdit"
+      />
 
       <!-- Akhir Button Add -->
 
@@ -57,9 +64,9 @@
 
       <!-- Table -->
       <div class="m-md-5 m-3">
-        <div class="row bg-custom shadow-lg rounded">
+        <div class="row bg-table shadow-lg rounded">
           <div class="col pt-3 table-responsive">
-            <table class="table text-light text-center">
+            <table class="table  text-center">
               <thead>
                 <tr>
                   <th>No.</th>
@@ -74,18 +81,19 @@
               <tbody>
                 <tr v-for="(d, index) in fullDataBulanan" :key="d.id">
                   <th scope="row">{{ index + 1 }}</th>
-                  <td>Rp. {{ d[1].nominal }}</td>
-                  <td>
-                    <p :class="CekStatus(d[1].tipe)">{{ d[1].tipe }}</p>
+                  <td class="text-wrapper text-start">Rp. {{ d[1].nominal }}</td>
+                  <td class="text-wrapper">
+                    <p class="text-light" :class="CekStatus(d[1].tipe)">{{ d[1].tipe }}</p>
                   </td>
-                  <td>{{ GantiTgl(d[1].created_at) }}</td>
-                  <td>{{ d[1].deskripsi }}</td>
-                  <td>
+                  <td class="text-wrapper">{{ GantiTgl(d[1].created_at) }}</td>
+                  <td class="text-wrapper">{{ d[1].deskripsi }}</td>
+                  <td class="text-wrapper">
                     <a
                       v-if="d[1].bukti !== 'None'"
+                      
                       :href="`https://glacial-coast-08306.herokuapp.com${d[1].bukti}`"
                       target="_blank"
-                      >{{ d[1].bukti }}</a
+                      >{{ getImgName(d[1].bukti) }}</a
                     >
                     <p v-else>Tidak ada bukti</p>
                   </td>
@@ -111,7 +119,16 @@
                             type="button"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
-                            @click.prevent="editData(d[0], d[1].nominal, d[1].tipe, d[1].created_at, d[1].deskripsi, d[1].bukti)"
+                            @click.prevent="
+                              editData(
+                                d[0],
+                                d[1].nominal,
+                                d[1].tipe,
+                                d[1].created_at,
+                                d[1].deskripsi,
+                                d[1].bukti
+                              )
+                            "
                             ><i class="bi bi-pencil-square"></i> Edit</a
                           >
                         </li>
@@ -172,8 +189,8 @@ export default {
     },
 
     // =================
-    clickAddTrans(){
-      this.isEdited = false
+    clickAddTrans() {
+      this.isEdited = false;
     },
 
     // Status Method
@@ -203,32 +220,48 @@ export default {
       }
     },
 
-
     // ===================================================
     // Edit data Detail Bulanan
-    async saveDataEdit(value){
-      console.log(value)
+    async saveDataEdit(value) {
+      console.log(value);
       if (
         value.nominal !== null &&
         value.status !== null &&
         value.created_at !== null &&
         value.deskripsi !== null
-      ){
+      ) {
         await axios
-        .post("administration/updateadministration/", value)
-        .then( res => console.log(res))
-        .catch( err => console.log(err))
+          .post("administration/updateadministration/", value)
+          .then(() => {
+            this.$toast.success("Data berhasil di Edit!", {
+              type: "success",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
+            });
+
+            if (this.cek === true && this.isEdited === true) {
+              this.cek = false;
+              this.isEdited = false;
+            }
+
+            // Set timeout for location reload
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          })
+          .catch((err) => console.log(err));
       } else {
-         this.$toast.error("Lengkapi Data!!", {
+        this.$toast.error("Lengkapi Data!!", {
           type: "error",
           position: "top-right",
           duration: 3000,
           dismissible: true,
         });
 
-        if (this.cek === true && this.isEdited === true ) {
-        this.cek = false;
-        this.isEdited = false;
+        if (this.cek === true && this.isEdited === true) {
+          this.cek = false;
+          this.isEdited = false;
         }
       }
     },
@@ -285,7 +318,7 @@ export default {
     },
     // ==============================================
     // Edit data bulanan
-    editData(id, nominal, status, tanggal, deskripsi, bukti){
+    editData(id, nominal, status, tanggal, deskripsi, bukti) {
       this.isEdited = true;
       const data = {
         administration_id: id,
@@ -293,14 +326,11 @@ export default {
         tipe: status,
         created_at: tanggal,
         deskripsi: deskripsi,
-        bukti: bukti
-      }
+        bukti: bukti,
+      };
 
-      this.$refs.editButton.isEdited(data)
+      this.$refs.editButton.isEdited(data);
     },
-
-
-
 
     // ==============================================
     // Delete Data Bulanan
@@ -366,6 +396,12 @@ export default {
 /* height: 100vh; */
 /* width: 100vw; */
 /* } */
+
+.text-wrapper{
+  word-wrap: break-word;
+  min-width: 160px;
+  max-width: 160px;
+}
 
 .btn-add {
   float: right;
