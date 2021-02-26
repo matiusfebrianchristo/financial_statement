@@ -5,7 +5,8 @@ import LaporanHome from '../views/LaporanHome.vue'
 import DetailBulanan from '../views/DetailBulanan.vue'
 import BuktiDetailBulanan from '../views/BuktiDetailBulanan.vue'
 import Dashboard from '../views/Dashboard.vue'
-import Login from '../views/Login.vue'
+import Masuk from '../views/Masuk.vue'
+
 
 Vue.use(VueRouter)
 
@@ -39,10 +40,11 @@ const routes = [{
     component: BuktiDetailBulanan
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: '/masuk',
+    name: 'Masuk',
+    component: Masuk,
   },
+  
 
 ]
 

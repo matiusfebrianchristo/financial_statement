@@ -32,7 +32,7 @@ body {
   /* background-color: #252c4a; */
   background-color: #ecf0f5;
   position: relative;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat';
 }
 
 /* Scrollbar */
@@ -187,3 +187,43 @@ body {
 /* .datepicker{
   width: 200px !important;
 } */
+
+/* ================================================== */
+/* Login and Register */
+
+.login-form {
+  height: 100vh;
+}
+
+.form-control {
+  line-height: 2;
+}
+
+.bg-login {
+  background-color: #2fd1c8;
+}
+
+.button-login {
+  background-color: #3e3d56 !important;
+  color: #fff !important;
+}
+
+.button-login:hover {
+  background-color: #33313f !important;
+  color: #fff !important;
+}
+
+label {
+  color: #fff;
+}
+
+a,
+a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+}

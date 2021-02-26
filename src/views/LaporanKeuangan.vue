@@ -77,6 +77,7 @@ export default {
 .light-mode{
   background-color: #f3f7f9;
   color: #2f495e ;
+  box-shadow: 1px 1px 20px rgba(10,10,10,0.5);
 }
 
 .btn-success{
