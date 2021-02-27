@@ -66,7 +66,7 @@
       <div class="m-md-5 m-3">
         <div class="row bg-table shadow-lg rounded">
           <div class="col pt-3 table-responsive">
-            <table class="table  text-center">
+            <table class="table text-center">
               <thead>
                 <tr>
                   <th>No.</th>
@@ -79,18 +79,22 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(d, index) in fullDataBulanan" :key="d.id">
+                <tr v-for="(d, index) in getDataBulanan()" :key="d.id">
                   <th scope="row">{{ index + 1 }}</th>
-                  <td class="text-wrapper text-start">Rp. {{ d[1].nominal }}</td>
+                  <td class="text-wrapper text-start">
+                    Rp. {{ d[1].nominal }}
+                  </td>
                   <td class="text-wrapper">
-                    <p class="text-light" :class="CekStatus(d[1].tipe)">{{ d[1].tipe }}</p>
+                    <p class="text-light" :class="CekStatus(d[1].tipe)">
+                      {{ d[1].tipe }}
+                    </p>
                   </td>
                   <td class="text-wrapper">{{ GantiTgl(d[1].created_at) }}</td>
                   <td class="text-wrapper">{{ d[1].deskripsi }}</td>
                   <td class="text-wrapper">
                     <a
                       v-if="d[1].bukti !== 'None'"
-                      
+                      class="link-primary"
                       :href="`https://glacial-coast-08306.herokuapp.com${d[1].bukti}`"
                       target="_blank"
                       >{{ getImgName(d[1].bukti) }}</a
@@ -178,6 +182,7 @@ export default {
       outcome: [],
       profit: [],
       fullDataBulanan: [],
+      sortedDataBulanan: []
     };
   },
   mounted() {
@@ -191,6 +196,16 @@ export default {
     // =================
     clickAddTrans() {
       this.isEdited = false;
+    },
+
+    // ============================
+    // Get Data Bulaanan
+    getDataBulanan(){
+      const sorted = this.fullDataBulanan.slice()
+      const dataSorted = sorted.sort( (a, b) => {
+            return new Date(b[1].created_at) - new Date(a[1].created_at);
+          });
+        return dataSorted
     },
 
     // Status Method
@@ -276,7 +291,7 @@ export default {
       ) {
         await axios
           .post("administration/addadministration/", value)
-          .then(() => {
+          .then((res) => {
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
               position: "top-right",
@@ -288,10 +303,12 @@ export default {
               this.cek = false;
             }
 
+            console.log(JSON.parse(res.config.data))
+
             // Set timeout for location reload
-            setTimeout(function () {
-              location.reload();
-            }, 2000);
+            // setTimeout(function () {
+            //   location.reload();
+            // }, 2000);
           })
           .catch((err) => {
             console.log(err);
@@ -380,7 +397,6 @@ export default {
 
           this.fullDataBulanan = hasil;
           // }
-          console.log(this.fullDataBulanan);
         })
         .catch((err) => console.log(err));
     },
@@ -397,7 +413,7 @@ export default {
 /* width: 100vw; */
 /* } */
 
-.text-wrapper{
+.text-wrapper {
   word-wrap: break-word;
   min-width: 160px;
   max-width: 160px;

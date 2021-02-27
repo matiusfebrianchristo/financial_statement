@@ -23,7 +23,7 @@
           </h2>
           <p>Data laporan keuangan tahun {{ new Date().getFullYear() }}.</p>
         </div>
-        <hr>
+        <hr />
       </div>
       <!-- Button Add -->
       <!-- Modals Add -->
@@ -158,13 +158,19 @@ export default {
             fontColor: "grey",
           },
         },
+        hover: {
+          mode: 'label'
+        },
         scales: {
           yAxes: [
             {
               ticks: {
                 fontColor: "grey",
-                min: -400000,
-                max: 500000,
+                suggestedMin: -400000,
+                suggestedMax: 500000,
+                beginAtZero: true,
+                steps: 10,
+                stepValue: 1,
               },
               scaleLabel: {
                 display: true,

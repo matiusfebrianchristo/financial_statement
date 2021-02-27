@@ -40,13 +40,13 @@
     <button type="button" class="btn btn-primary btn-lg btn-block mt-3">
       Login
     </button>
-    <button
+    <!-- <button
       type="button"
       @click.prevent="moveForm"
       class="btn btn-secondary btn-lg float-end btn-block mt-3"
     >
       Register
-    </button>
+    </button> -->
   </form>
 </template>
 

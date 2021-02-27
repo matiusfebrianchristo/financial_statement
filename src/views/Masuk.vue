@@ -11,12 +11,12 @@
       >
         <!-- ===================================================================================== -->
         <transition name="slide-fade">
-          <Login v-if="login === true" @clicked="moveForm" />
+          <Login />
         </transition>
 
-        <transition name="slide-fade">
+        <!-- <transition name="slide-fade">
           <Register v-if="register === true" @clicked="moveForm" />
-        </transition>
+        </transition> -->
       </div>
     </div>
   </div>
@@ -24,13 +24,13 @@
 
 <script>
 import Login from "@/components/Login.vue";
-import Register from "@/components/Register.vue";
+// import Register from "@/components/Register.vue";
 
 export default {
   name: "Masuk",
   components: {
     Login,
-    Register,
+    // Register,
   },
   data() {
     return {
