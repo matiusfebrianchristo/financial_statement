@@ -291,7 +291,7 @@ export default {
       ) {
         await axios
           .post("administration/addadministration/", value)
-          .then((res) => {
+          .then(() => {
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
               position: "top-right",
