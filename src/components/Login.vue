@@ -1,10 +1,16 @@
 <template>
-  <form class="w-75 login-page needs-validation" novalidate :class="{ pageHidden : isLogin === false }">
+  <form
+    class="w-75 login-page needs-validation"
+    novalidate
+    :class="{ pageHidden: isLogin === false }"
+    @submit.prevent="login"
+  >
     <h2 class="fw-bolder header-masuk">Login</h2>
     <hr />
     <div class="mb-3">
       <label for="exampleFormControlInput1" class="form-label">Username</label>
       <input
+        v-model="username"
         type="text"
         class="form-control"
         id="exampleFormControlInput1"
@@ -15,6 +21,7 @@
     <div class="mb-3">
       <label for="exampleFormControlInput2" class="form-label">Password</label>
       <input
+        v-model="password"
         type="password"
         class="form-control"
         id="exampleFormControlInput2"
@@ -37,9 +44,25 @@
         </div> -->
       </div>
     </div>
-    <button type="button" class="btn btn-primary btn-lg btn-block mt-3">
-      Login
-    </button>
+    <button
+        v-if="progress === true"
+        class="btn btn-primary btn-lg btn-block mt-3"
+        type="button"
+        disabled
+      >
+        <span
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        <span class="visually-hidden">Loading...</span>
+      </button>
+      <button
+        v-else
+        class="btn btn-primary btn-lg btn-block mt-3"
+      >
+        Login
+      </button>
     <!-- <button
       type="button"
       @click.prevent="moveForm"
@@ -51,12 +74,38 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Login",
   props: ["isLogin"],
+  data() {
+    return {
+      username: "",
+      password: "",
+      progress: false,
+    };
+  },
   methods: {
     moveForm() {
       this.$emit("clicked");
+    },
+    async login() {
+      this.progress = true
+      await axios
+        .post("accounts/usertoken/", {
+          username: this.username,
+          password: this.password,
+        })
+        .then((res) => {
+          localStorage.setItem("token", res.data.access);
+          this.$router.push("/");
+          this.progress = false
+          console.log(localStorage.getItem('token'))
+        })
+        .catch(err => {
+          this.progress = false
+          console.log(err)
+        })
     },
   },
 };

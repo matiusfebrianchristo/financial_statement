@@ -143,13 +143,24 @@ export default {
       console.log(this.cek)
       if (this.cek === false) {
         if(this.isEdit === true){
-          return {
+          
+          if(this.bukti !== "None"){
+            return {
             administration_id: this.id,
             nominal: this.nominal,
             bukti: this.bukti.split("/").slice(-2).join("/"),
             tipe: this.status,
             deskripsi: this.deskripsi,
             created_at: this.created_at,
+          }
+          } else {
+            return {
+            administration_id: this.id,
+            nominal: this.nominal,
+            tipe: this.status,
+            deskripsi: this.deskripsi,
+            created_at: this.created_at,
+          }
           }
         } else {
           return {

@@ -245,6 +245,7 @@ export default {
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
+        // alert("Ok")
         await axios
           .post("administration/updateadministration/", value)
           .then(() => {
