@@ -158,9 +158,6 @@ export default {
             fontColor: "grey",
           },
         },
-        hover: {
-          mode: 'label'
-        },
         scales: {
           yAxes: [
             {

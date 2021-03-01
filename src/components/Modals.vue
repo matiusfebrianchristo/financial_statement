@@ -117,7 +117,7 @@ export default {
       status: null,
       created_at: moment().format("YYYY-MM-DD"),
       deskripsi: "",
-      bukti: null,
+      bukti: '',
       cek: this.cekImg,
       id: null,
       data: new FormData(),
@@ -140,10 +140,10 @@ export default {
       this.bukti = value.bukti
     },
     cekData() {
+      console.log(this.cek)
       if (this.cek === false) {
         if(this.isEdit === true){
           return {
-
             administration_id: this.id,
             nominal: this.nominal,
             bukti: this.bukti.split("/").slice(-2).join("/"),
@@ -155,7 +155,6 @@ export default {
           return {
             administration_id: this.id,
             nominal: this.nominal,
-            bukti: this.bukti,
             tipe: this.status,
             deskripsi: this.deskripsi,
             created_at: this.created_at,
@@ -174,6 +173,7 @@ export default {
     },
     imageUpload(event) {
       this.cek = true;
+      console.log('Jalo')
       if(this.isEdit === true ){
         this.data.append("administration_id", this.id)
       }
