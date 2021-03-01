@@ -303,12 +303,12 @@ export default {
               this.cek = false;
             }
 
-            // console.log(JSON.parse(res.config.data))
+            console.log(JSON.parse(res.config.data))
 
             // Set timeout for location reload
-            setTimeout(function () {
-              location.reload();
-            }, 2000);
+            // setTimeout(function () {
+            //   location.reload();
+            // }, 2000);
           })
           .catch((err) => {
             console.log(err);
