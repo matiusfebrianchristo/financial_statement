@@ -38,25 +38,33 @@ export default {
       register: false,
     };
   },
+  mounted() {
+    this.$toast.error("Login dahulu", {
+      type: "error",
+      position: "top-right",
+      duration: 3000,
+      dismissible: true,
+    });
+  },
   methods: {
     moveForm() {
       if (this.login === true && this.register === false) {
         this.login = false;
-        setTimeout(()=> {
+        setTimeout(() => {
           this.register = true;
-        }, 600)
+        }, 600);
       } else {
         this.register = false;
-        setTimeout(()=> {
+        setTimeout(() => {
           this.login = true;
-        }, 600)
+        }, 600);
       }
     },
   },
 };
 </script>
 <style>
-.main-form-content{
+.main-form-content {
   overflow: hidden;
 }
 
@@ -70,15 +78,14 @@ export default {
 
 /* Animation */
 .slide-fade-enter-active {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 .slide-fade-leave-active {
-  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(200px);
   opacity: 0;
 }
-
 </style>

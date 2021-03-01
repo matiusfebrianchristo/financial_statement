@@ -9,14 +9,14 @@
       <img
         class="rounded-pill img-fluid"
         width="65"
-        src="../assets/image/home.png"
+        src="../assets/image/user4.png"
         alt=""
       />
       <div class="ms-2">
         <h5 class="fs-6 mb-0">
-          <a class="text-decoration-none" @click.prevent href="">Dashboard</a>
+          <a class="text-decoration-none" @click.prevent href=""><strong>Admin</strong></a>
         </h5>
-        <p class="mt-1 mb-0">Aguna Course's Dashboard.</p>
+        <p class="mt-1 mb-0">Selamat Datang di Dashboard anda.</p>
       </div>
     </div>
 

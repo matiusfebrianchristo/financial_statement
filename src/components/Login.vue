@@ -97,10 +97,11 @@ export default {
           password: this.password,
         })
         .then((res) => {
-          localStorage.setItem("token", res.data.access);
+          localStorage.setItem("token_access", res.data.access);
+          localStorage.setItem("token_refresh", res.data.refresh);
+          console.log(res)
           this.$router.push("/");
           this.progress = false
-          console.log(localStorage.getItem('token'))
         })
         .catch(err => {
           this.progress = false

@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <transition name="slide-fade">
       <div
-        class="d-lg-block d-none fixed sidebar bg-custom"
+        class="d-lg-block d-none fixed sidebar"
         :class="{ hide: isActiveNav, show: isMNavActive }"
       >
         <Sidebar />
@@ -42,8 +42,16 @@ export default {
       isMNavActive: false,
     };
   },
-
+  mounted(){
+    this.cekLoginStatus()
+  },
   methods: {
+
+    cekLoginStatus(){
+      if(localStorage.getItem('token_access') === null ){
+        this.$router.push('/masuk')
+      }
+    },
 
     // Hide Sidebar opsi
     clickedToggle() {

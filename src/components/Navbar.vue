@@ -31,8 +31,16 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto justify-content-end mb-2 mb-lg-0">
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarSupportedContent"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <!-- <transition name="fade">
+    <img v-if="isActive" src="../assets/image/user4.png" alt="asd" class="img-svg ">
+  </transition> -->
+            </li>
             <li class="nav-item d-lg-none d-sm-block">
               <Sidebar />
             </li>
@@ -65,7 +73,6 @@ export default {
 </script>
 
 <style>
-
 .wrapper-nav {
   /* background: rgba(30, 30, 30, 0.9); */
   display: inline-block;
@@ -102,8 +109,6 @@ export default {
   top: 78%;
 }
 
-
-
 .icon.close .top {
   transform: rotate(45deg);
   top: 48%;
@@ -114,8 +119,7 @@ export default {
   top: 48%;
 }
 
-@media (min-width: 992px){
-  
+@media (min-width: 992px) {
 }
 .dash-p {
   margin-left: 50px;
@@ -145,5 +149,21 @@ export default {
 
 .bg-custom {
   box-shadow: 0px 5px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Image profile */
+.img-svg {
+  width: 50px;
+  margin-right: 40px;
+  cursor: pointer;
+}
+
+.nav-item {
+  visibility: visible;
+  transition: 0.5s;
+}
+
+.nav-item.hidepic {
+  visibility: hidden;
 }
 </style>
