@@ -43,16 +43,16 @@ export default {
     };
   },
   mounted(){
-    this.cekLoginStatus()
+    // this.cekLoginStatus()
   },
   methods: {
 
-    cekLoginStatus(){
-      if(localStorage.getItem('token_access') === null ){
-        this.$router.push('/masuk')
-      }
-    },
-    
+    // cekLoginStatus(){
+    //   if(localStorage.getItem('token_access') === null ){
+    //     this.$router.push('/masuk')
+    //   }
+    // },
+
     // Hide Sidebar opsi
     clickedToggle() {
       if (this.isActiveNav === true) {
