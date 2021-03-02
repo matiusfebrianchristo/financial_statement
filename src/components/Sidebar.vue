@@ -14,9 +14,13 @@
       />
       <div class="ms-2">
         <h5 class="fs-6 mb-0">
-          <a class="text-decoration-none" @click.prevent href=""><strong>Admin</strong></a>
+          <a class="text-decoration-none" @click.prevent href="">Halo, <strong>Admin</strong>.</a>
         </h5>
-        <p class="mt-1 mb-0">Selamat Datang di Dashboard anda.</p>
+        <button class="mt-3  mb-0 btn-logout-custom">
+          Keluar
+        </button>
+        
+
       </div>
     </div>
 
@@ -54,6 +58,19 @@ export default {
 </script>
 
 <style>
+
+.btn-logout-custom{
+  width: 90px;
+  height: 30px;
+  margin: 0 30px;
+  text-decoration: none;
+  border: 1px solid rgb(237, 33, 26);
+  border-radius: 10px;
+  font-weight: 500;
+  font-family:'Times New Roman', Times, serif;
+  background-color: rgba(245, 70, 64, 0.7);
+  color: white!important;
+}
 
 .sidebar-title{
   height: 65px;

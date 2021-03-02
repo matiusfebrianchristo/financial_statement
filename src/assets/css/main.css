@@ -32,7 +32,7 @@ body {
   /* background-color: #252c4a; */
   background-color: #ecf0f5;
   position: relative;
-  font-family: 'Montserrat';
+  font-family: 'Montserrat', sans-serif!important;
 }
 
 /* Scrollbar */
@@ -65,7 +65,7 @@ body {
 .sidebar {
   text-align: center;
   z-index: 999;
-  background-color: black!important;
+  background-color:var(--sidebar-bg-color);
 }
 
 .sidebar.hide {
