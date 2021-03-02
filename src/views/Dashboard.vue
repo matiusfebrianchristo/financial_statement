@@ -1,12 +1,12 @@
 <template>
-  <div class="content">
+  <main class="content">
 
     <!-- ====================================================== -->
     <!-- Header -->
 
-    <div class="content wrapper" :class="{ full: isActiveNav }">
+    <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
-        <div class="bg-custom content-header rounded m-5 p-1">
+        <div class="light-mode  content-header rounded m-5 p-1">
           <h2><strong>Welcome</strong></h2>
           <p>Hello admin, welcome to your dashboard.</p>
         </div>
@@ -23,7 +23,7 @@
         </div>
       </div> -->
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -34,6 +34,7 @@
 
 export default {
   name: "Dashboard",
+  props: ['isNav'],
   components: {
     // LineChart,
 

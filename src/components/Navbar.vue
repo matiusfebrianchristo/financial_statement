@@ -14,13 +14,22 @@
             </div>
           </div>
         </div>
+        <div class="d-lg-none button-close d-sm-block">
+        <div class="wrapper-nav" @click="onClickMobile" :class="{ close: isMActive === false }">
+          <div class="circle icon" >
+            <span class="line top"></span>
+            <span class="line middle"></span>
+            <span class="line bottom"></span>
+          </div>
+        </div>
+      </div>
         <!-- <router-link
           class="navbar-brand dash-p"
           :class="{ show: isActive === true }"
           to="/"
           ><strong>Dashboard</strong></router-link
         > -->
-        <button
+        <!-- <button
           class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
@@ -30,34 +39,34 @@
           aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
-        </button>
-        <div
+        </button> -->
+        <!-- <div
           class="collapse navbar-collapse justify-content-end"
           id="navbarSupportedContent"
         >
           <ul class="navbar-nav">
             <li class="nav-item">
-              <!-- <transition name="fade">
+              <transition name="fade">
     <img v-if="isActive" src="../assets/image/user4.png" alt="asd" class="img-svg ">
-  </transition> -->
+  </transition>
             </li>
             <li class="nav-item d-lg-none d-sm-block">
               <Sidebar />
             </li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </nav>
   </div>
 </template>
 
 <script>
-import Sidebar from "@/components/Sidebar.vue";
+// import Sidebar from "@/components/Sidebar.vue";
 
 export default {
-  props: ["isActive"],
+  props: ["isActive", "isMActive"],
   components: {
-    Sidebar,
+    // Sidebar,
   },
   data() {
     return {
@@ -68,56 +77,15 @@ export default {
     onClick() {
       this.$emit("clicked");
     },
+    onClickMobile(){
+      this.$emit("clickedMobile")
+    }
   },
 };
 </script>
 
 <style>
-.wrapper-nav {
-  /* background: rgba(30, 30, 30, 0.9); */
-  display: inline-block;
-  /* border: 1px solid rgba(30, 30, 30, 0.9); */
-  border-radius: 500px;
-  margin-left: 20px;
-  position: relative;
-  padding: 9px;
-  cursor: pointer;
-}
 
-.circle {
-  width: 25px;
-  height: 25px;
-  position: relative;
-}
-
-.line {
-  position: absolute;
-  height: 2px;
-  width: 100%;
-  background: #fff;
-  border-radius: 8px;
-  transition: all cubic-bezier(0.26, 0.1, 0.27, 1.55) 0.5s;
-}
-
-.top {
-  top: 18%;
-}
-.middle {
-  top: 48%;
-}
-.bottom {
-  top: 78%;
-}
-
-.icon.close .top {
-  transform: rotate(45deg);
-  top: 48%;
-}
-.icon.close .middle,
-.icon.close .bottom {
-  transform: rotate(-45deg);
-  top: 48%;
-}
 
 @media (min-width: 992px) {
 }
@@ -165,5 +133,13 @@ export default {
 
 .nav-item.hidepic {
   visibility: hidden;
+}
+
+
+/* =================================== */
+/* Button Close Mobile */
+
+.wrapper-nav.close{
+    visibility: hidden;
 }
 </style>

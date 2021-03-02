@@ -32,7 +32,7 @@ body {
   /* background-color: #252c4a; */
   background-color: #ecf0f5;
   position: relative;
-  font-family: 'Montserrat', sans-serif!important;
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 /* Scrollbar */
@@ -62,14 +62,22 @@ body {
 
 /* Sidebar */
 
+
+
+
 .sidebar {
   text-align: center;
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  transition: all .3s ease-in-out;
+  transform: translateX(0);
   z-index: 999;
-  background-color:var(--sidebar-bg-color);
+  background-color: var(--sidebar-bg-color);
 }
 
 .sidebar.hide {
-  transform: translateX(-210px);
+  transform: translateX(-250px);
   overflow: hidden;
 }
 
@@ -93,7 +101,7 @@ body {
 
 
 /* Navbar */
-.navbar{
+.navbar {
   background-color: var(--navbar-bg-color) !important;
 }
 
@@ -123,6 +131,27 @@ body {
     visibility: visible;
     transition: .3s ease-in-out;
   }
+
+  .sidebar.hide {
+    transform: translateX(-210px);
+    overflow: hidden;
+  }
+  
+  .sidebar.hide .link-container {
+    margin-left: 190px;
+  }
+  
+  .sidebar.hide span {
+    display: none;
+  }
+  
+  .sidebar.hide .sidebar-header {
+    visibility: hidden;
+  }
+  
+
+
+
 
   .navbar-customize {
     padding: 0;
@@ -233,4 +262,55 @@ a:hover {
 a,
 a:hover {
   text-decoration: none;
+}
+
+
+/* ====================================== */
+/* Wrapper sidebar and Navbar */
+.wrapper-nav {
+  /* background: rgba(30, 30, 30, 0.9); */
+  display: inline-block;
+  /* border: 1px solid rgba(30, 30, 30, 0.9); */
+  border-radius: 500px;
+  transition: .3s ease-in-out;
+  visibility: visible;
+  margin-left: 20px;
+  position: relative;
+  padding: 9px;
+  cursor: pointer;
+}
+
+.circle {
+  width: 25px;
+  height: 25px;
+  position: relative;
+}
+
+.line {
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  transition: all cubic-bezier(0.26, 0.1, 0.27, 1.55) 0.5s;
+}
+
+.top {
+  top: 18%;
+}
+.middle {
+  top: 48%;
+}
+.bottom {
+  top: 78%;
+}
+
+.icon.close .top {
+  transform: rotate(45deg);
+  top: 48%;
+}
+.icon.close .middle,
+.icon.close .bottom {
+  transform: rotate(-45deg);
+  top: 48%;
 }
