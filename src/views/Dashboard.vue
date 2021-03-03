@@ -1,18 +1,42 @@
 <template>
   <main class="content">
-
     <!-- ====================================================== -->
     <!-- Header -->
 
     <div class="content wrapper" :class="{ full: isNav }">
       <div class="title-page text-center mt-4">
-        <div class="light-mode  content-header rounded m-5 p-1">
-          <h2><strong>Welcome</strong></h2>
-          <p>Hello admin, welcome to your dashboard.</p>
+        <div class="light-mode content-header rounded m-5 p-1">
+          <h2><strong>Selamat Datang</strong></h2>
+          <p>Selamat datang di Dashboard. Silahkan cek, update, atau tambah data.</p>
         </div>
       </div>
 
-      
+      <!-- ============================================================================================= -->
+      <div class="list-data text-dark">
+
+        <div class="row d-flex justify-items-center justify-content-center  m-auto">
+          <div class="col-lg-3 text-center">
+            <div class="list">
+              <h1 class="mt-3">10</h1>
+              <h5 class="font-18">Jumlah data</h5>
+            </div>
+              
+          </div>
+          <div class="col-lg-3 text-center">
+              <div class="list">
+              <h1 class="mt-3">10</h1>
+              <h5 class="font-18">Jumlah data bulan ini</h5>
+            </div>
+
+          </div>
+          <div class="col-lg-3 text-center">
+              <div class="list">
+              <h1 class="mt-3">10</h1>
+              <h5 class="font-18">Jumlah data hari ini</h5>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- ============================================================================================= -->
       <!-- Content -->
@@ -34,10 +58,9 @@
 
 export default {
   name: "Dashboard",
-  props: ['isNav'],
+  props: ["isNav"],
   components: {
     // LineChart,
-
   },
   data() {
     return {
@@ -151,6 +174,22 @@ export default {
 </script>
 <style>
 /* Content */
+.list {
+  background-color: #f8f9fa;
+  padding: 20px 0;
+  margin-top: 10px;
+  border-radius: 40px;
+  box-shadow: 1px 1px 20px 1px rgba(10, 10, 10, 0.5);
+}
+
+.list-data h1 {
+  font-weight: 600;
+}
+.list-data h5 {
+  font-weight: 500;
+  font-size: 18px;
+  color: #2f495e;
+}
 
 .btn-add {
   float: right;

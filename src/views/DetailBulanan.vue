@@ -181,8 +181,8 @@ export default {
       cek: false,
       outcome: [],
       profit: [],
-      fullDataBulanan: [],
-      sortedDataBulanan: []
+      fullDataBulanan: null,
+      sortedDataBulanan: [],
     };
   },
   mounted() {
@@ -200,12 +200,14 @@ export default {
 
     // ============================
     // Get Data Bulaanan
-    getDataBulanan(){
-      const sorted = this.fullDataBulanan.slice()
-      const dataSorted = sorted.sort( (a, b) => {
-            return new Date(b[1].created_at) - new Date(a[1].created_at);
-          });
-        return dataSorted
+    getDataBulanan() {
+      if (this.fullDataBulanan !== null) {
+        const sorted = this.fullDataBulanan.slice();
+        const dataSorted = sorted.sort((a, b) => {
+          return new Date(b[1].created_at) - new Date(a[1].created_at);
+        });
+        return dataSorted;
+      }
     },
 
     // Status Method
@@ -245,10 +247,14 @@ export default {
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
+
+        console.log(value)
         // alert("Ok")
         await axios
           .post("administration/updateadministration/", value)
-          .then(() => {
+          .then(async() => {
+            await this.loadedData()
+
             this.$toast.success("Data berhasil di Edit!", {
               type: "success",
               position: "top-right",
@@ -262,9 +268,9 @@ export default {
             }
 
             // Set timeout for location reload
-            setTimeout(function () {
-              location.reload();
-            }, 2000);
+            // setTimeout(function () {
+            //   location.reload();
+            // }, 2000);
           })
           .catch((err) => console.log(err));
       } else {
@@ -292,19 +298,20 @@ export default {
       ) {
         await axios
           .post("administration/addadministration/", value)
-          .then((res) => {
-            this.$toast.success("Data berhasil ditambahkan!", {
+          .then(async (res) => {
+            await this.loadedData();
+
+              this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
               position: "top-right",
               duration: 3000,
               dismissible: true,
             });
-
             if (this.cek === true) {
               this.cek = false;
             }
 
-            console.log(JSON.parse(res.config.data))
+            console.log(JSON.parse(res.config.data));
 
             // Set timeout for location reload
             // setTimeout(function () {
@@ -358,16 +365,16 @@ export default {
         .delete(
           `https://glacial-coast-08306.herokuapp.com/api/v1/administration/deleteadministration/?administration_id=${value}`
         )
-        .then(() => {
+        .then(async () => {
+          await this.loadedData()
+
           this.$toast.success("Data berhasil dihapus!", {
             type: "success",
             position: "top-right",
             duration: 3000,
             dismissible: true,
           });
-          setTimeout(function () {
-            location.reload();
-          }, 2000);
+
         })
         .catch((err) => console.log(err));
     },
@@ -383,21 +390,40 @@ export default {
           },
         })
         .then((res) => {
-          let dataDetail;
-          // let dataDetailTemp
+          if (this.fullDataBulanan !== null) {
+            this.fullDataBulanan = [];
+            let dataDetail;
 
-          dataDetail = new Array(res.data);
-          // dataDetailTemp = new Array(dataDetail[0][0])
-          const hasil = Object.keys(dataDetail[0]).map((key) => [
-            Number(key),
-            dataDetail[0][key],
-          ]);
-          // for (let i = 0; i <= hasil.length - 1; i++) {
-          //   if(dataDetail[0][i] !== undefined ){
-          //   }
+            dataDetail = new Array(res.data);
 
-          this.fullDataBulanan = hasil;
-          // }
+            const hasil = Object.keys(dataDetail[0]).map((key) => [
+              Number(key),
+              dataDetail[0][key],
+            ]);
+
+            this.fullDataBulanan = hasil;
+
+            
+          } else {
+            this.fullDataBulanan = [];
+
+            let dataDetail;
+            // let dataDetailTemp
+            dataDetail = new Array(res.data);
+            // dataDetailTemp = new Array(dataDetail[0][0])
+            const hasil = Object.keys(dataDetail[0]).map((key) => [
+              Number(key),
+              dataDetail[0][key],
+            ]);
+            // for (let i = 0; i <= hasil.length - 1; i++) {
+            //   if(dataDetail[0][i] !== undefined ){
+            //   }
+
+            this.fullDataBulanan = hasil;
+            // }
+          }
+
+          console.log(this.fullDataBulanan);
         })
         .catch((err) => console.log(err));
     },

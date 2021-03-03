@@ -89,10 +89,10 @@
           >
             Close
           </button>
-          <button v-if="isEdit === false" type="button" class="btn btn-primary" @click="onClick">
+          <button v-if="isEdit === false" data-bs-dismiss="modal" type="button" class="btn btn-primary" @click="onClick">
             Add
           </button>
-          <button v-else type="button" class="btn btn-primary" @click="onClickSvData">
+          <button v-else type="button" data-bs-dismiss="modal"  class="btn btn-primary" @click="onClickSvData">
             Save
           </button>
         </div>

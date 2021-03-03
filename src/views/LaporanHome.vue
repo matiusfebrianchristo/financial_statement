@@ -124,7 +124,7 @@ export default {
       isEdited: false,
       // ===============================
       // For chartjs
-      fullDataChart: [],
+      fullDataChart: null,
       income: [],
       outcome: [],
       profit: [],
@@ -189,7 +189,9 @@ export default {
     };
   },
   mounted() {
-    this.loadedData();
+    if (localStorage.getItem("token_access") !== null) {
+      this.loadedData();
+    }
   },
   methods: {
     // =================
@@ -209,21 +211,31 @@ export default {
         await axios
           .post("administration/addadministration/", value)
           .then(() => {
-            this.$toast.success("Data berhasil ditambahkan!", {
-              type: "success",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
-            });
+            this.loadedData();
+
+            // const dataRes = JSON.parse(res.config.data)
+            // const checkMonth = moment(dataRes.created_at, 'YYYY/MM/DD')
+            // if(dataRes.tipe !== "pengeluaran"){
+
+            //  var filtered =  this.fullDataChart.filter((el) => {
+            //   return el.month == checkMonth.locale('id').format('MMMM')
+            // })
+
+            // } else{
+            //   const tambah = this.outcome + dataRes.nominal
+            //   this.outcome = tambah
+            //   this.profit = tambah - this.outcome
+            // }
+            // console.log(filtered)
 
             if (this.cek === true) {
               this.cek = false;
             }
 
             // Set timeout for location reload
-            setTimeout(function () {
-              location.reload();
-            }, 2000);
+            // setTimeout(function () {
+            //   console.log(res.config.data)
+            // }, 2000);
           })
           .catch((err) => {
             console.log(err);
@@ -281,20 +293,55 @@ export default {
           let bulan;
           this.dataMonth = hasil.length;
 
-          for (let i = 0; i < hasil.length; i++) {
-            bulan = hasil[i][0];
-            this.income.push(hasil[i][1].income);
-            this.outcome.push(hasil[i][1].outcome);
-            this.profit.push(hasil[i][1].profit);
-            this.fullDataChart.push({
-              income: this.income[i],
-              outcome: this.outcome[i],
-              profit: this.profit[i],
-              month: (hasil[i][1].month = moment()
-                .locale("id")
-                .month(bulan - 1)
-                .format("MMMM")),
+          // ================================
+          // Untuk tambah laporan keuangan
+          if (this.fullDataChart !== null) {
+            this.income = [];
+            this.outcome = [];
+            this.profit = [];
+            this.fullDataChart = [];
+
+            for (let i = 0; i < hasil.length; i++) {
+              bulan = hasil[i][0];
+              this.income.push(hasil[i][1].income);
+              this.outcome.push(hasil[i][1].outcome);
+              this.profit.push(hasil[i][1].profit);
+              this.fullDataChart.push({
+                income: this.income[i],
+                outcome: this.outcome[i],
+                profit: this.profit[i],
+                month: (hasil[i][1].month = moment()
+                  .locale("id")
+                  .month(bulan - 1)
+                  .format("MMMM")),
+              });
+            }
+            this.$toast.success("Data berhasil ditambahkan!", {
+              type: "success",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
             });
+          } 
+          // ====================================
+          // Untuk get data Asli
+          else {
+              this.fullDataChart = [];
+            for (let i = 0; i < hasil.length; i++) {
+              bulan = hasil[i][0];
+              this.income.push(hasil[i][1].income);
+              this.outcome.push(hasil[i][1].outcome);
+              this.profit.push(hasil[i][1].profit);
+              this.fullDataChart.push({
+                income: this.income[i],
+                outcome: this.outcome[i],
+                profit: this.profit[i],
+                month: (hasil[i][1].month = moment()
+                  .locale("id")
+                  .month(bulan - 1)
+                  .format("MMMM")),
+              });
+            }
           }
           // console.log(
           //   this.filterByValue(this.fullDataChart, "January", "pemasukan", 2000)

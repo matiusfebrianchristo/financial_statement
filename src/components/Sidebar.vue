@@ -99,10 +99,15 @@ export default {
   text-decoration: none;
   border: 1px solid rgb(237, 33, 26);
   border-radius: 10px;
+  transition: .5s ease-in-out;
   font-weight: 500;
   font-family: "Times New Roman", Times, serif;
   background-color: rgba(245, 70, 64, 0.7);
   color: rgb(255, 255, 255) !important;
+}
+
+.btn-logout-custom:hover{
+  background-color: rgba(245, 6, 34, 0.76);
 }
 
 .sidebar-title {
