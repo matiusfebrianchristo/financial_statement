@@ -73,6 +73,8 @@
               <input
                 class="form-control"
                 type="file"
+                ref="fileupload"
+                
                 @change="imageUpload"
                 id="formFile"
                 accept="image/*"
@@ -118,12 +120,21 @@ export default {
       created_at: moment().format("YYYY-MM-DD"),
       deskripsi: "",
       bukti: '',
-      cek: this.cekImg,
       id: null,
       data: new FormData(),
     };
   },
   methods: {
+    clearInput(){
+      this.nominal = null
+      this.status = null
+      this.created_at = moment().format("YYYY-MM-DD")
+      this.deskripsi = ""
+      this.id = null
+      this.$refs.fileupload.value=null
+    },
+
+
     getStatus(value) {
       if (value != null) {
         this.status = value.toLowerCase();
@@ -132,6 +143,7 @@ export default {
     },
     isEdited(value) {
       console.log(value);
+      this.cek = false
       this.id = value.administration_id
       this.nominal = value.nominal
       this.status = value.tipe
@@ -140,31 +152,18 @@ export default {
       this.bukti = value.bukti
     },
     cekData() {
-      console.log(this.cek)
-      if (this.cek === false) {
-        if(this.isEdit === true){
+      console.log(this.cekImg)
+      if (this.cekImg !== true ) {
+        if(this.isEdit !== true ){
+            return {
+            nominal: this.nominal,
+            tipe: this.status,
+            deskripsi: this.deskripsi,
+            created_at: this.created_at,
+          }
           
-          if(this.bukti !== "None"){
-            return {
-            administration_id: this.id,
-            nominal: this.nominal,
-            bukti: this.bukti.split("/").slice(-2).join("/"),
-            tipe: this.status,
-            deskripsi: this.deskripsi,
-            created_at: this.created_at,
-          }
-          } else {
-            return {
-            administration_id: this.id,
-            nominal: this.nominal,
-            tipe: this.status,
-            deskripsi: this.deskripsi,
-            created_at: this.created_at,
-          }
-          }
         } else {
           return {
-            administration_id: this.id,
             nominal: this.nominal,
             tipe: this.status,
             deskripsi: this.deskripsi,
@@ -173,28 +172,26 @@ export default {
         }
       } else {
         return this.data;
-      }
-    },
-    onClickSv() {
-      this.data.append("tipe", this.status);
-      this.data.append("nominal", this.nominal);
-      this.data.append("bukti", this.bukti);
-      this.data.append("deskripsi", this.deskripsi);
-      this.data.append("created_at", this.created_at);
-    },
-    imageUpload(event) {
-      this.cek = true;
-      console.log('Jalo')
-      if(this.isEdit === true ){
-        this.data.append("administration_id", this.id)
-      }
 
+      }
+    },
+    // onClickSv() {
+    //   this.data.append("tipe", this.status);
+    //   this.data.append("nominal", this.nominal);
+    //   this.data.append("bukti", this.bukti);
+    //   this.data.append("deskripsi", this.deskripsi);
+    //   this.data.append("created_at", this.created_at);
+    // },
+    imageUpload(event) {
+      this.$emit('cekImg')
       console.log(event.target.files[0])
       this.data.append("tipe", this.status);
       this.data.append("nominal", this.nominal);
       this.data.append("bukti", event.target.files[0]);
       this.data.append("deskripsi", this.deskripsi);
       this.data.append("created_at", this.created_at);
+
+      
     },
 
     onClick() {

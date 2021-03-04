@@ -50,6 +50,7 @@
 
       <Modals
         @clicked="addTransaksi"
+        @cekImg="rubahModeImg"
         @clickedSv="saveDataEdit"
         ref="editButton"
         :cekImg="cek"
@@ -83,6 +84,7 @@
                   <th scope="row">{{ index + 1 }}</th>
                   <td class="text-wrapper text-start">
                     Rp. {{ d[1].nominal }}
+                    <!-- <span v-if="dataBaru == true" class="badge bg-secondary"> New</span> -->
                   </td>
                   <td class="text-wrapper">
                     <p class="text-light" :class="CekStatus(d[1].tipe)">
@@ -175,12 +177,15 @@ export default {
       loaded: false,
       // For edited Data
       isEdited: false,
+      dataBaru: false,
       dataEdit: null,
       isActiveNav: false,
       income: [],
+      id: null,
       cek: false,
       outcome: [],
       profit: [],
+      oldFullDataBulanan: null,
       fullDataBulanan: null,
       sortedDataBulanan: [],
     };
@@ -189,6 +194,9 @@ export default {
     this.loadedData();
   },
   methods: {
+    rubahModeImg(){
+      this.cek = true
+    },
     getTgl() {
       console.log(this.tanggal);
     },
@@ -209,6 +217,21 @@ export default {
         return dataSorted;
       }
     },
+
+    // cekBaruDitambahkan(value) {
+    //   if(this.oldFullDataBulanan !== null ){
+    //     const fild = this.oldFullDataBulanan.slice();
+    //     const dataFilter = fild.filter((data) => {
+    //       return data[0] == value
+    //     })
+    //     if(dataFilter.length !== 0){
+    //       this.dataBaru = false
+    //     } else {
+    //       this.dataBaru = true
+    //     }
+    //   }
+
+    // },
 
     // Status Method
     CekStatus(value) {
@@ -241,19 +264,21 @@ export default {
     // Edit data Detail Bulanan
     async saveDataEdit(value) {
       console.log(value);
+
       if (
         value.nominal !== null &&
         value.status !== null &&
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
-
-        console.log(value)
+        console.log(value);
         // alert("Ok")
         await axios
-          .post("administration/updateadministration/", value)
-          .then(async() => {
-            await this.loadedData()
+          .patch(`administration/updateadministration/${this.id}/`, value)
+          .then(async () => {
+            this.$refs.editButton.clearInput()
+            
+            await this.loadedData();
 
             this.$toast.success("Data berhasil di Edit!", {
               type: "success",
@@ -261,16 +286,8 @@ export default {
               duration: 3000,
               dismissible: true,
             });
-
-            if (this.cek === true && this.isEdited === true) {
               this.cek = false;
               this.isEdited = false;
-            }
-
-            // Set timeout for location reload
-            // setTimeout(function () {
-            //   location.reload();
-            // }, 2000);
           })
           .catch((err) => console.log(err));
       } else {
@@ -297,21 +314,22 @@ export default {
         value.deskripsi !== null
       ) {
         await axios
-          .post("administration/addadministration/", value)
-          .then(async (res) => {
+          .post(`administration/addadministration/`, value)
+          .then(async () => {
+            this.$refs.editButton.clearInput()
             await this.loadedData();
 
-              this.$toast.success("Data berhasil ditambahkan!", {
+            this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
               position: "top-right",
               duration: 3000,
               dismissible: true,
             });
-            if (this.cek === true) {
+            
               this.cek = false;
-            }
+            
 
-            console.log(JSON.parse(res.config.data));
+            
 
             // Set timeout for location reload
             // setTimeout(function () {
@@ -345,8 +363,8 @@ export default {
     // Edit data bulanan
     editData(id, nominal, status, tanggal, deskripsi, bukti) {
       this.isEdited = true;
+      this.id = id
       const data = {
-        administration_id: id,
         nominal: nominal,
         tipe: status,
         created_at: tanggal,
@@ -366,7 +384,7 @@ export default {
           `https://glacial-coast-08306.herokuapp.com/api/v1/administration/deleteadministration/?administration_id=${value}`
         )
         .then(async () => {
-          await this.loadedData()
+          await this.loadedData();
 
           this.$toast.success("Data berhasil dihapus!", {
             type: "success",
@@ -374,7 +392,6 @@ export default {
             duration: 3000,
             dismissible: true,
           });
-
         })
         .catch((err) => console.log(err));
     },
@@ -391,6 +408,10 @@ export default {
         })
         .then((res) => {
           if (this.fullDataBulanan !== null) {
+            if (this.oldFullDataBulanan === null) {
+              this.oldFullDataBulanan = this.fullDataBulanan;
+            }
+
             this.fullDataBulanan = [];
             let dataDetail;
 
@@ -402,8 +423,6 @@ export default {
             ]);
 
             this.fullDataBulanan = hasil;
-
-            
           } else {
             this.fullDataBulanan = [];
 

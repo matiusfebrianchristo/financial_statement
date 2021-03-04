@@ -53,8 +53,8 @@
 <script>
 // @ is an alias to /src
 // import LineChart from "@/components/LineChart.vue";
-
-// import axios from "axios";
+import moment from 'moment'
+import axios from "axios";
 
 export default {
   name: "Dashboard",
@@ -67,6 +67,7 @@ export default {
       dataGraphic: {},
       datacollection: null,
       loaded: false,
+      fulldataDaily: null,
       isActiveNav: false,
       isMNavActive: false,
       chartOption: {
@@ -99,6 +100,7 @@ export default {
   },
   mounted() {
     this.filldata();
+    this.getDataDaily()
   },
   methods: {
     // Hide Sidebar opsi
@@ -117,6 +119,76 @@ export default {
         this.isMNavActive = true;
       }
     },
+    // ================================================
+    // Data Daily Report 
+
+  async getDataDaily(){
+    await axios
+        .get("administration/administrationdataperyear/")
+        .then((res) => {
+          const obj = res.data[new Date().getFullYear()];
+          const hasil = Object.keys(obj).map((key) => [Number(key), obj[key]]);
+          let bulan;
+          this.dataMonth = hasil.length;
+
+          // ================================
+          // Untuk tambah laporan keuangan
+          if (this.fullDataChart !== null) {
+            this.income = [];
+            this.outcome = [];
+            this.profit = [];
+            this.fullDataChart = [];
+
+            for (let i = 0; i < hasil.length; i++) {
+              bulan = hasil[i][0];
+              this.income.push(hasil[i][1].income);
+              this.outcome.push(hasil[i][1].outcome);
+              this.profit.push(hasil[i][1].profit);
+              this.fullDataChart.push({
+                income: this.income[i],
+                outcome: this.outcome[i],
+                profit: this.profit[i],
+                month: (hasil[i][1].month = moment()
+                  .locale("id")
+                  .month(bulan - 1)
+                  .format("MMMM")),
+              });
+            }
+            this.$toast.success("Data berhasil ditambahkan!", {
+              type: "success",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
+            });
+          } 
+          // ====================================
+          // Untuk get data Asli
+          else {
+              this.fullDataChart = [];
+            for (let i = 0; i < hasil.length; i++) {
+              bulan = hasil[i][0];
+              this.income.push(hasil[i][1].income);
+              this.outcome.push(hasil[i][1].outcome);
+              this.profit.push(hasil[i][1].profit);
+              this.fullDataChart.push({
+                income: this.income[i],
+                outcome: this.outcome[i],
+                profit: this.profit[i],
+                month: (hasil[i][1].month = moment()
+                  .locale("id")
+                  .month(bulan - 1)
+                  .format("MMMM")),
+              });
+            }
+          }
+          // console.log(
+          //   this.filterByValue(this.fullDataChart, "January", "pemasukan", 2000)
+          // );
+        })
+        .catch((err) => console.log(err));
+  },
+
+
 
     // Data graphic
     filldata() {
