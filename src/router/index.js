@@ -6,6 +6,7 @@ import DetailBulanan from '../views/DetailBulanan.vue'
 import BuktiDetailBulanan from '../views/BuktiDetailBulanan.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Masuk from '../views/Masuk.vue'
+import Tes from '../views/tes.vue'
 
 
 Vue.use(VueRouter)
@@ -43,6 +44,11 @@ const routes = [{
     path: '/masuk',
     name: 'Masuk',
     component: Masuk,
+  },
+  {
+    path: '/tes',
+    name: 'Tes',
+    component: Tes,
   },
   
 

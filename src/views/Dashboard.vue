@@ -7,18 +7,24 @@
       <div class="title-page text-center mt-4">
         <div class="light-mode content-header rounded m-5 p-1">
           <h2><strong>Selamat Datang</strong></h2>
-          <p>Selamat datang di Dashboard. Silahkan cek, update, atau tambah data.</p>
+          <p>
+            Selamat datang di Dashboard. Silahkan cek, update, atau tambah data.
+          </p>
         </div>
       </div>
+      <hr class="text-dark" />
 
       <!-- ============================================================================================= -->
-      <div class="list-data text-dark">
+      <div class="list-data mx-4">
+        <DashInfo :income="formatPrice(inTahunIni)" :outcome="formatPrice(outTahunIni)" :profit="formatPrice(proTahunIni)" />
+      </div>
+      <!-- <div class="list-data text-dark">
 
         <div class="row d-flex justify-items-center justify-content-center  m-auto">
           <div class="col-lg-3 text-center">
             <div class="list">
-              <h1 class="mt-3">10</h1>
-              <h5 class="font-18">Jumlah data</h5>
+              <h1 class="mt-3">{{ 'Rp. ' + formatPrice(inTahunIni) }}</h1>
+              <h5 class="font-18">Pemasukan Tahun ini</h5>
             </div>
               
           </div>
@@ -36,7 +42,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- ============================================================================================= -->
       <!-- Content -->
@@ -53,20 +59,26 @@
 <script>
 // @ is an alias to /src
 // import LineChart from "@/components/LineChart.vue";
-import moment from 'moment'
+import moment from "moment";
 import axios from "axios";
+import DashInfo from "@/components/DashInfo.vue";
+
 
 export default {
   name: "Dashboard",
   props: ["isNav"],
   components: {
     // LineChart,
+    DashInfo,
   },
   data() {
     return {
       dataGraphic: {},
       datacollection: null,
       loaded: false,
+      inTahunIni: 0,
+      outTahunIni: 0,
+      proTahunIni: 0,
       fulldataDaily: null,
       isActiveNav: false,
       isMNavActive: false,
@@ -100,9 +112,13 @@ export default {
   },
   mounted() {
     this.filldata();
-    this.getDataDaily()
+    this.getDataDaily();
   },
   methods: {
+    formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(".", ",");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
     // Hide Sidebar opsi
     clickedToggle() {
       if (this.isActiveNav === true) {
@@ -119,76 +135,83 @@ export default {
         this.isMNavActive = true;
       }
     },
+    rekapTahunIni() {
+      let data = null;
+      let dataBaru;
+      // Income
+      for (let i = 0; i < this.fulldataDaily.length; i++) {
+        if (data !== null) {
+          dataBaru = this.fulldataDaily[i].income;
+          data = data + dataBaru;
+        } else {
+          data = this.fulldataDaily[i].income;
+        }
+      }
+      this.inTahunIni = data;
+      //Outcome
+      data = null;
+      for (let i = 0; i < this.fulldataDaily.length; i++) {
+        
+        if (data !== null) {
+          dataBaru = this.fulldataDaily[i].outcome;
+          data = data + dataBaru;
+        } else {
+          data = this.fulldataDaily[i].outcome;
+        }
+      }
+      this.outTahunIni = data;
+      // Profit
+      data = null;
+      for (let i = 0; i < this.fulldataDaily.length; i++) {
+        if (data !== null) {
+          dataBaru = this.fulldataDaily[i].profit;
+          data = data + dataBaru;
+        } else {
+          data = this.fulldataDaily[i].profit;
+        }
+      }
+      this.proTahunIni = data;
+    },
     // ================================================
-    // Data Daily Report 
+    // Data Daily Report
 
-  async getDataDaily(){
-    await axios
+    async getDataDaily() {
+      await axios
         .get("administration/administrationdataperyear/")
-        .then((res) => {
+        .then(async (res) => {
           const obj = res.data[new Date().getFullYear()];
           const hasil = Object.keys(obj).map((key) => [Number(key), obj[key]]);
           let bulan;
           this.dataMonth = hasil.length;
+          const income = [];
+          const outcome = [];
+          const profit = [];
 
-          // ================================
-          // Untuk tambah laporan keuangan
-          if (this.fullDataChart !== null) {
-            this.income = [];
-            this.outcome = [];
-            this.profit = [];
-            this.fullDataChart = [];
-
-            for (let i = 0; i < hasil.length; i++) {
-              bulan = hasil[i][0];
-              this.income.push(hasil[i][1].income);
-              this.outcome.push(hasil[i][1].outcome);
-              this.profit.push(hasil[i][1].profit);
-              this.fullDataChart.push({
-                income: this.income[i],
-                outcome: this.outcome[i],
-                profit: this.profit[i],
-                month: (hasil[i][1].month = moment()
-                  .locale("id")
-                  .month(bulan - 1)
-                  .format("MMMM")),
-              });
-            }
-            this.$toast.success("Data berhasil ditambahkan!", {
-              type: "success",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
+          this.fulldataDaily = [];
+          for (let i = 0; i < hasil.length; i++) {
+            bulan = hasil[i][0];
+            income.push(hasil[i][1].income);
+            outcome.push(hasil[i][1].outcome);
+            profit.push(hasil[i][1].profit);
+            this.fulldataDaily.push({
+              income: income[i],
+              outcome: outcome[i],
+              profit: profit[i],
+              month: (hasil[i][1].month = moment()
+                .locale("id")
+                .month(bulan - 1)
+                .format("MMMM")),
             });
-          } 
-          // ====================================
-          // Untuk get data Asli
-          else {
-              this.fullDataChart = [];
-            for (let i = 0; i < hasil.length; i++) {
-              bulan = hasil[i][0];
-              this.income.push(hasil[i][1].income);
-              this.outcome.push(hasil[i][1].outcome);
-              this.profit.push(hasil[i][1].profit);
-              this.fullDataChart.push({
-                income: this.income[i],
-                outcome: this.outcome[i],
-                profit: this.profit[i],
-                month: (hasil[i][1].month = moment()
-                  .locale("id")
-                  .month(bulan - 1)
-                  .format("MMMM")),
-              });
-            }
           }
+          this.rekapTahunIni()
+          console.log(this.inTahunIni);
+          console.log(this.fulldataDaily);
           // console.log(
           //   this.filterByValue(this.fullDataChart, "January", "pemasukan", 2000)
           // );
         })
         .catch((err) => console.log(err));
-  },
-
-
+    },
 
     // Data graphic
     filldata() {
@@ -256,6 +279,7 @@ export default {
 
 .list-data h1 {
   font-weight: 600;
+  font-size: 25px;
 }
 .list-data h5 {
   font-weight: 500;

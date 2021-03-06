@@ -45,24 +45,19 @@
       </div>
     </div>
     <button
-        v-if="progress === true"
-        class="btn btn-primary btn-lg btn-block mt-3"
-        type="button"
-        disabled
-      >
-        <span
-          class="spinner-border spinner-border-sm"
-          role="status"
-          aria-hidden="true"
-        ></span>
-        <span class="visually-hidden">Loading...</span>
-      </button>
-      <button
-        v-else
-        class="btn btn-primary btn-lg btn-block mt-3"
-      >
-        Login
-      </button>
+      v-if="progress === true"
+      class="btn btn-primary btn-lg btn-block mt-3"
+      type="button"
+      disabled
+    >
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      <span class="visually-hidden">Loading...</span>
+    </button>
+    <button v-else class="btn btn-primary btn-lg btn-block mt-3">Login</button>
     <!-- <button
       type="button"
       @click.prevent="moveForm"
@@ -90,8 +85,9 @@ export default {
       this.$emit("clicked");
     },
     async login() {
-      this.progress = true
-      await axios
+      this.progress = true;
+      if(this.username !== "" && this.password !== ""){
+        await axios
         .post("accounts/usertoken/", {
           username: this.username,
           password: this.password,
@@ -99,14 +95,30 @@ export default {
         .then((res) => {
           localStorage.setItem("token_access", res.data.access);
           localStorage.setItem("token_refresh", res.data.refresh);
-          console.log(res)
+          console.log(res);
           this.$router.push("/");
-          this.progress = false
+          this.progress = false;
         })
-        .catch(err => {
-          this.progress = false
-          console.log(err)
-        })
+        .catch((err) => {
+          this.progress = false;
+          this.$toast.error("Username dan Password tidak valid", {
+            type: "error",
+            position: "top-right",
+            duration: 3000,
+            dismissible: true,
+          });
+          console.log(err);
+        });
+      } else {
+        this.progress = false;
+        this.$toast.error("Isi username dan password", {
+            type: "error",
+            position: "top-right",
+            duration: 3000,
+            dismissible: true,
+          });
+      }
+      
     },
   },
 };

@@ -191,6 +191,7 @@ export default {
     };
   },
   mounted() {
+     localStorage.setItem('tambah_transaksi', false)
     this.loadedData();
   },
   methods: {
@@ -204,6 +205,7 @@ export default {
     // =================
     clickAddTrans() {
       this.isEdited = false;
+       localStorage.setItem('tambah_transaksi', true)
     },
 
     // ============================
@@ -318,6 +320,7 @@ export default {
           .then(async () => {
             this.$refs.editButton.clearInput()
             await this.loadedData();
+             localStorage.setItem('tambah_transaksi', false)
 
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
@@ -408,7 +411,7 @@ export default {
         })
         .then((res) => {
           if (this.fullDataBulanan !== null) {
-            if (this.oldFullDataBulanan === null) {
+            if (this.oldFullDataBulanan === null ) {
               this.oldFullDataBulanan = this.fullDataBulanan;
             }
 
