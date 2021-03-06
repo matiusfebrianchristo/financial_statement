@@ -86,39 +86,40 @@ export default {
     },
     async login() {
       this.progress = true;
-      if(this.username !== "" && this.password !== ""){
+      if (this.username !== "" && this.password !== "") {
         await axios
-        .post("accounts/usertoken/", {
-          username: this.username,
-          password: this.password,
-        })
-        .then((res) => {
-          localStorage.setItem("token_access", res.data.access);
-          localStorage.setItem("token_refresh", res.data.refresh);
-          console.log(res);
-          this.$router.push("/");
-          this.progress = false;
-        })
-        .catch((err) => {
-          this.progress = false;
-          this.$toast.error("Username dan Password tidak valid", {
-            type: "error",
-            position: "top-right",
-            duration: 3000,
-            dismissible: true,
+          .post("accounts/usertoken/", {
+            username: this.username,
+            password: this.password,
+          })
+          .then((res) => {
+            localStorage.setItem("token_access", res.data.access);
+            localStorage.setItem("token_refresh", res.data.refresh);
+            console.log(res);
+            setTimeout(() => {
+              this.$router.push("/");
+              this.progress = false;
+            }, 1000);
+          })
+          .catch((err) => {
+            this.progress = false;
+            this.$toast.error("Username dan Password tidak valid", {
+              type: "error",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
+            });
+            console.log(err);
           });
-          console.log(err);
-        });
       } else {
         this.progress = false;
         this.$toast.error("Isi username dan password", {
-            type: "error",
-            position: "top-right",
-            duration: 3000,
-            dismissible: true,
-          });
+          type: "error",
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
       }
-      
     },
   },
 };
