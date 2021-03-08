@@ -1,125 +1,39 @@
 <template>
-  <div class="bg-grey text-dark container-fluid">
-    <section id="minimal-statistics">
-      <div class="row">
-        <div class="col-12 mt-3 mb-1">
-          <h4 class="text-uppercase">Minimal Statistics Cards</h4>
-          <p>Statistics on minimal cards.</p>
-        </div>
-      </div>
-      <div class="row d-flex justify-content-center">
-        <div class="col-lg-3 col-md-4 col-12">
-          <div class="card card-income">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="d-flex d-flex justify-content-between">
-                  <div class="align-self-center">
-                    <i
-                      style="font-size: 50px"
-                      class="text-success bi bi-journal-text"
-                    ></i>
-                  </div>
-                  <div class="text-end ">
-                    <h3>278</h3>
-                    <span class="text-success"
-                      ><i class="bi bi-arrow-up"></i> Income
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-12">
-          <div class="card card-outcome">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div class="align-self-center">
-                    <i
-                      style="font-size: 50px"
-                      class="bi bi-journal-text text-danger float-start"
-                    ></i>
-                  </div>
-                  <div class="text-end">
-                    <h3>156</h3>
-                    <span class="text-danger"
-                      ><i class="bi bi-arrow-down"></i> Outcome</span
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-12">
-          <div class="card card-profit">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <div class="align-self-center">
-                    <i
-                      style="font-size: 50px"
-                      class="bi bi-journal-text text-primary float-start"
-                    ></i>
-                  </div>
-                  <div class="text-end">
-                    <h3>64.89 %</h3>
-                    <span class="text-primary"
-                      ><i class="text-primary bi bi-arrow-down-up"></i> Bounce
-                      Rate</span
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div>
+  <div class="container"></div>
 </template>
 
 <script>
 // import PieChart from "@/components/PieChart.vue";
+import axios from "axios";
+
 export default {
   name: "Tes",
   components: {
     // PieChart,
   },
   data() {
-    return {
-      chartOption: {
-        legend: {
-          display: true,
-          labels: {
-            padding: 20,
-          },
-        },
-        tooltips: {
-          enabled: false,
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        segmentShowStroke: false,
-        animateScale: true,
-      },
-      loadedData: {
-        datasets: [
-          {
-            data: [133, 8, 52],
-            backgroundColor: ["red", "blue", "green"],
-          },
-        ],
-      },
-    };
+    return {};
   },
-  // methods: {
-  //   loadedData(){
+  mounted(){
+    this.getDataBaru()
+  },
+  methods: {
+    async getDataBaru() {
+      await axios
+        .get("administration/listadministration/")
+        .then((res) => {
+          const data = res.data;
 
-  //   }
-  // }
+          data.sort((a, b) => {
+            return parseFloat(a.id) - parseFloat(b.id)
+          })
+
+          console.log(data.slice(-5))
+
+        })
+        .catch((err) => console.log(err));
+    },
+  },
 };
 </script>
 

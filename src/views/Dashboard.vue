@@ -16,8 +16,59 @@
 
       <!-- ============================================================================================= -->
       <div class="list-data mx-4">
-        <DashInfo :income="formatPrice(inTahunIni)" :outcome="formatPrice(outTahunIni)" :profit="formatPrice(proTahunIni)" />
+        <DashInfo
+          :income="formatPrice(inTahunIni)"
+          :outcome="formatPrice(outTahunIni)"
+          :profit="formatPrice(proTahunIni)"
+        />
       </div>
+
+      <div class="dash-table row">
+        <div class="dash-table-title text-dark">
+          <div class="mt-3 mb-3 text-start">
+            <h4 class="text-uppercase">Data laporan yang baru ditambahkan</h4>
+          </div>
+        </div>
+        <div class="col-lg-6 col-12 bg-table shadow-lg table-responsive">
+          <table class="table text-center">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Nominal</th>
+                <th>Tipe</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(data, index) in dataBaru5" :key="data.id">
+                <th scope="row">{{ index + 1 }}</th>
+                <td class="text-wrapper">{{ data.nominal }}</td>
+                <td class="text-wrapper">
+                  <p class="text-light" :class="CekStatus(data.tipe)">
+                    {{ data.tipe }}
+                  </p>
+                </td>
+                <td class="text-wrapper">{{ GantiTgl(data.created_at) }}</td>
+
+                <!-- <td>
+                    <router-link
+                      class="btn btn-primary"
+                      :to="{
+                        name: 'DetailBulanan',
+                        params: { bulan: data.month, tahun: 2021 },
+                      }"
+                      >Detail</router-link
+                    >
+                  </td> -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-lg-6 col-12">
+          <h2>adasdad</h2>
+        </div>
+      </div>
+
       <!-- <div class="list-data text-dark">
 
         <div class="row d-flex justify-items-center justify-content-center  m-auto">
@@ -63,7 +114,6 @@ import moment from "moment";
 import axios from "axios";
 import DashInfo from "@/components/DashInfo.vue";
 
-
 export default {
   name: "Dashboard",
   props: ["isNav"],
@@ -76,12 +126,27 @@ export default {
       dataGraphic: {},
       datacollection: null,
       loaded: false,
+      outBulanIni: null,
+      inBulanIni: null,
+      proBulanIni: null,
       inTahunIni: 0,
+      dataBaru5: null,
       outTahunIni: 0,
       proTahunIni: 0,
       fulldataDaily: null,
       isActiveNav: false,
       isMNavActive: false,
+      op:{
+        options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+      },
       chartOption: {
         legend: {
           labels: {
@@ -111,9 +176,24 @@ export default {
     };
   },
   async created() {
-    await this.getDataDaily();
+    if (localStorage.getItem("login") !== false) {
+      await this.getDataDaily();
+      this.getDataBaru();
+      this.rekapBulanIni()
+    }
   },
   methods: {
+    CekStatus(value) {
+      if (value === "pemasukan") {
+        return value;
+      } else {
+        return value;
+      }
+    },
+    GantiTgl(value) {
+      return moment(value, "YYYY-MM-DD").format("Do MMMM YYYY");
+    },
+
     formatPrice(value) {
       let val = (value / 1).toFixed(2).replace(".", ",");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -134,6 +214,42 @@ export default {
         this.isMNavActive = true;
       }
     },
+
+    rekapBulanIni(){
+      const tgl = moment().format('DD-MM-YYYY');
+      const tahun = moment(tgl, 'DD-MM-YYYY').format('YYYY')
+      const bulan =moment(tgl, 'DD-MM-YYYY').format('M')
+      axios.get(`administration/administrationdetail/?year=${tahun}&month=${bulan}`)
+      .then(res=>{
+        const data = Object.keys(res.data).map((key) => [Number(key), res.data[key]])
+        let dataIn;
+        let oldDataIn = null
+        let dataOut;
+        let oldDataOut = null
+        for (let i = 0; i < data.length; i++) {
+          if(data[i][1].tipe !== 'pemasukan'){
+            if(oldDataOut !== null){
+            dataOut = data[i][1].nominal
+            oldDataOut = oldDataOut + dataOut
+            } else {
+              dataOut =  data[i][1].nominal
+            }
+          } else {
+            if(oldDataOut !== null){
+            dataIn = data[i][1].nominal
+            oldDataIn = oldDataIn + dataIn
+            } else {
+              dataIn =  data[i][1].nominal
+            }
+          }
+        }
+
+        this.outBulanIni = dataOut
+        this.inBulanIni = dataIn
+        this.proBulanIni = dataIn - dataOut
+      })
+    },
+
     rekapTahunIni() {
       let data = null;
       let dataBaru;
@@ -150,7 +266,6 @@ export default {
       //Outcome
       data = null;
       for (let i = 0; i < this.fulldataDaily.length; i++) {
-        
         if (data !== null) {
           dataBaru = this.fulldataDaily[i].outcome;
           data = data + dataBaru;
@@ -202,7 +317,7 @@ export default {
                 .format("MMMM")),
             });
           }
-          this.rekapTahunIni()
+          this.rekapTahunIni();
           console.log(this.inTahunIni);
           console.log(this.fulldataDaily);
           // console.log(
@@ -212,62 +327,85 @@ export default {
         .catch((err) => console.log(err));
     },
 
-    // Data graphic
+    // Get 5 Data Terbaru
+    // ============================================
+
+    async getDataBaru() {
+      await axios
+        .get("administration/listadministration/")
+        .then((res) => {
+          const data = res.data;
+
+          data.sort((a, b) => {
+            return parseFloat(a.id) - parseFloat(b.id);
+          });
+
+          this.dataBaru5 = data.slice(-5);
+        })
+        .catch((err) => console.log(err));
+    },
+
+    // Data Chartjs
+    // ================================================
     filldata() {
       this.datacollection = {
-        labels: [
-          "Januari",
-          "Februari",
-          "Maret",
-          "April",
-          "Mei",
-          "Juni",
-          "Juli",
-          "Agustus",
-          "September",
-          "Oktober",
-          "November",
-          "Desember",
-        ],
+        title: "Laporan Keuangan",
+        label: 'Persentase laporan bulan ini',
         datasets: [
           {
-            label: "In",
-            backgroundColor: "rgba(255, 0, 0, 0.2)",
-            borderColor: "lightpink",
-            pointBackgrounColor: "red",
-            borderWidth: 2,
-            pointBorderColor: "red",
-            fill: false,
+            backgroundColor: "rgba(0, 255, 0, 0.2)",
+            borderColor: "rgba(0, 255, 0, 0.8)",
+            pointBackgroundColor: "green",
+            borderWidth: 1,
             data: this.income,
           },
           {
-            label: "Out",
-            backgroundColor: "rgba(0, 255, 0, 0.2)",
-            borderColor: "lightgreen",
-            pointBackgroundColor: "green",
-            borderWidth: 2,
-            pointBorderColor: "green",
-            fill: false,
+            backgroundColor: "rgba(255, 0, 0, 0.2)",
+            borderColor: "rgba(255, 0, 0, 0.8)",
+            pointBackgroundColor: "red",
+            borderWidth: 1,
             data: this.outcome,
           },
           {
-            label: "Untung",
             backgroundColor: "rgba(0, 0, 255, 0.2)",
-            borderColor: "lightblue",
+            borderColor: "rgba(0, 0, 255, 0.7)",
             pointBackgroundColor: "blue",
-            borderWidth: 2,
+            borderWidth: 1,
             pointBorderColor: "blue",
-            fill: false,
             data: this.profit,
           },
         ],
       };
     },
+
   },
 };
 </script>
 <style>
 /* Content */
+
+.dash-table {
+  margin: 10px 37px !important;
+}
+.dash-table .table-responsive {
+  border-radius: 5px;
+}
+
+.dash-table-title {
+  /* color: black!important; */
+  margin: 60px 0px !important;
+  margin-bottom: 0 !important;
+}
+
+.dash-table-title h4::after{
+  content: "";
+  margin-top: 20px;
+  display: block;
+  width: 45%;
+  height: 1pt;
+  background-color: rgba(128, 128, 128, 0.589);
+}
+
 .list {
   background-color: #f8f9fa;
   padding: 20px 0;
