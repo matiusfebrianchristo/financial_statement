@@ -21,8 +21,13 @@ Vue.use(VueToast);
 
 
 
-axios.defaults.baseURL = 'https://glacial-coast-08306.herokuapp.com/api/v1/'
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token_access') ;
+
+axios.defaults.baseURL = 'https://glacial-coast-08306.herokuapp.com/api/v1/';
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token_access')
+// if(localStorage.getItem('token_access') !== null && localStorage.getItem('login') !== false){
+  
+// }
+
 
 Vue.config.productionTip = false
 

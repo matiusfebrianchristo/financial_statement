@@ -95,11 +95,15 @@ export default {
           .then((res) => {
             localStorage.setItem("token_access", res.data.access);
             localStorage.setItem("token_refresh", res.data.refresh);
+            localStorage.setItem("login", true);
+            const token = res.data.access;
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
             console.log(res);
             setTimeout(() => {
+              
               this.$router.push("/");
               this.progress = false;
-            }, 1000);
+            }, 2000);
           })
           .catch((err) => {
             this.progress = false;

@@ -110,9 +110,8 @@ export default {
       tanggal: "",
     };
   },
-  mounted() {
-    this.filldata();
-    this.getDataDaily();
+  async created() {
+    await this.getDataDaily();
   },
   methods: {
     formatPrice(value) {
@@ -178,7 +177,7 @@ export default {
     async getDataDaily() {
       await axios
         .get("administration/administrationdataperyear/")
-        .then(async (res) => {
+        .then((res) => {
           const obj = res.data[new Date().getFullYear()];
           const hasil = Object.keys(obj).map((key) => [Number(key), obj[key]]);
           let bulan;

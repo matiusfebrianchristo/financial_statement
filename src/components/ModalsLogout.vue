@@ -83,6 +83,7 @@ export default {
     clickLogout() {
       localStorage.removeItem("token_access");
       localStorage.removeItem("token_refresh");
+      localStorage.setItem('login', false)
         this.$router.push("/masuk")
     },
   },

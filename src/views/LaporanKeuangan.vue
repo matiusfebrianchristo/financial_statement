@@ -63,7 +63,7 @@ export default {
   methods: {
     cekLoginStatus() {
       if (localStorage.getItem("token_access") === null) {
-        localStorage.setItem('tendang', true)
+        
         this.$router.push("/masuk");
       }
     },
