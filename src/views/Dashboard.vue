@@ -65,7 +65,7 @@
           </table>
         </div>
         <div class="col-lg-6 col-12">
-          <h2>adasdad</h2>
+
         </div>
       </div>
 
@@ -109,7 +109,7 @@
 
 <script>
 // @ is an alias to /src
-// import LineChart from "@/components/LineChart.vue";
+
 import moment from "moment";
 import axios from "axios";
 import DashInfo from "@/components/DashInfo.vue";
@@ -118,13 +118,13 @@ export default {
   name: "Dashboard",
   props: ["isNav"],
   components: {
-    // LineChart,
+
     DashInfo,
   },
   data() {
     return {
       dataGraphic: {},
-      datacollection: null,
+      dataBulanIni: null,
       loaded: false,
       outBulanIni: null,
       inBulanIni: null,
@@ -136,42 +136,6 @@ export default {
       fulldataDaily: null,
       isActiveNav: false,
       isMNavActive: false,
-      op:{
-        options: {
-				scales: {
-					yAxes: [{
-						ticks: {
-							beginAtZero:true
-						}
-					}]
-				}
-			}
-      },
-      chartOption: {
-        legend: {
-          labels: {
-            fontColor: "#fff",
-          },
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                fontColor: "white",
-              },
-            },
-          ],
-          xAxes: [
-            {
-              ticks: {
-                fontColor: "white",
-              },
-            },
-          ],
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-      },
       tanggal: "",
     };
   },
@@ -179,9 +143,11 @@ export default {
     if (localStorage.getItem("login") !== false) {
       await this.getDataDaily();
       this.getDataBaru();
-      this.rekapBulanIni()
+      this.rekapBulanIni();
+      
     }
   },
+
   methods: {
     CekStatus(value) {
       if (value === "pemasukan") {
@@ -215,39 +181,49 @@ export default {
       }
     },
 
-    rekapBulanIni(){
-      const tgl = moment().format('DD-MM-YYYY');
-      const tahun = moment(tgl, 'DD-MM-YYYY').format('YYYY')
-      const bulan =moment(tgl, 'DD-MM-YYYY').format('M')
-      axios.get(`administration/administrationdetail/?year=${tahun}&month=${bulan}`)
-      .then(res=>{
-        const data = Object.keys(res.data).map((key) => [Number(key), res.data[key]])
-        let dataIn;
-        let oldDataIn = null
-        let dataOut;
-        let oldDataOut = null
-        for (let i = 0; i < data.length; i++) {
-          if(data[i][1].tipe !== 'pemasukan'){
-            if(oldDataOut !== null){
-            dataOut = data[i][1].nominal
-            oldDataOut = oldDataOut + dataOut
+    
+
+    rekapBulanIni() {
+      const tgl = moment().format("DD-MM-YYYY");
+      const tahun = moment(tgl, "DD-MM-YYYY").format("YYYY");
+      const bulan = moment(tgl, "DD-MM-YYYY").format("M");
+      axios
+        .get(
+          `administration/administrationdetail/?year=${tahun}&month=${bulan}`
+        )
+        .then((res) => {
+          const data = Object.keys(res.data).map((key) => [
+            Number(key),
+            res.data[key],
+          ]);
+          let dataIn;
+          let oldDataIn = null;
+          let dataOut;
+          let oldDataOut = null;
+          for (let i = 0; i < data.length; i++) {
+            if (data[i][1].tipe !== "pemasukan") {
+              if (oldDataOut !== null) {
+                dataOut = data[i][1].nominal;
+                oldDataOut = oldDataOut + dataOut;
+              } else {
+                dataOut = data[i][1].nominal;
+              }
             } else {
-              dataOut =  data[i][1].nominal
-            }
-          } else {
-            if(oldDataOut !== null){
-            dataIn = data[i][1].nominal
-            oldDataIn = oldDataIn + dataIn
-            } else {
-              dataIn =  data[i][1].nominal
+              if (oldDataOut !== null) {
+                dataIn = data[i][1].nominal;
+                oldDataIn = oldDataIn + dataIn;
+              } else {
+                dataIn = data[i][1].nominal;
+              }
             }
           }
-        }
 
-        this.outBulanIni = dataOut
-        this.inBulanIni = dataIn
-        this.proBulanIni = dataIn - dataOut
-      })
+          this.outBulanIni = dataOut;
+          this.inBulanIni = dataIn;
+          this.proBulanIni = dataIn - dataOut;
+        });
+
+        
     },
 
     rekapTahunIni() {
@@ -347,37 +323,7 @@ export default {
 
     // Data Chartjs
     // ================================================
-    filldata() {
-      this.datacollection = {
-        title: "Laporan Keuangan",
-        label: 'Persentase laporan bulan ini',
-        datasets: [
-          {
-            backgroundColor: "rgba(0, 255, 0, 0.2)",
-            borderColor: "rgba(0, 255, 0, 0.8)",
-            pointBackgroundColor: "green",
-            borderWidth: 1,
-            data: this.income,
-          },
-          {
-            backgroundColor: "rgba(255, 0, 0, 0.2)",
-            borderColor: "rgba(255, 0, 0, 0.8)",
-            pointBackgroundColor: "red",
-            borderWidth: 1,
-            data: this.outcome,
-          },
-          {
-            backgroundColor: "rgba(0, 0, 255, 0.2)",
-            borderColor: "rgba(0, 0, 255, 0.7)",
-            pointBackgroundColor: "blue",
-            borderWidth: 1,
-            pointBorderColor: "blue",
-            data: this.profit,
-          },
-        ],
-      };
-    },
-
+    
   },
 };
 </script>
@@ -397,7 +343,7 @@ export default {
   margin-bottom: 0 !important;
 }
 
-.dash-table-title h4::after{
+.dash-table-title h4::after {
   content: "";
   margin-top: 20px;
   display: block;
