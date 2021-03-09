@@ -317,6 +317,12 @@ export default {
           });
 
           this.dataBaru5 = data.slice(-5);
+
+          this.dataBaru5.sort((a, b) => {
+            return parseFloat(b.id) - parseFloat(a.id)
+          })
+
+          console.log(data)
         })
         .catch((err) => console.log(err));
     },
