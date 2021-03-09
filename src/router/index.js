@@ -19,17 +19,20 @@ const routes = [{
     children: [{
         path: '/dashboard',
         name: 'Dashboard',
-        component: Dashboard
+        component: Dashboard,
+        meta: { title: 'Dashboard' }
       },
       {
         path: '/laporan_keuangan',
         name: 'LaporanHome',
         component: LaporanHome,
+        meta: { title: 'Laporan Keuangan' }
       },
       {
         path: '/laporan_keuangan/:tahun-:bulan',
         name: 'DetailBulanan',
-        component: DetailBulanan
+        component: DetailBulanan,
+        meta: { title: 'Laporan Keuangan'  }
       },
       
     ]
@@ -44,6 +47,7 @@ const routes = [{
     path: '/masuk',
     name: 'Masuk',
     component: Masuk,
+    meta: { title: 'Masuk '  }
   },
   {
     path: '/tes',
@@ -64,5 +68,11 @@ const router = new VueRouter({
 //   console.log(to)
 //   console.log(from)
 // })
+
+router.beforeEach((to , from , next) => {
+  document.title = to.meta.title
+
+  next()
+});
 
 export default router
