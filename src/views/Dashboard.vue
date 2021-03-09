@@ -140,12 +140,13 @@ export default {
     };
   },
   async created() {
-    if (localStorage.getItem("login") !== false) {
+    console.log(typeof localStorage.getItem("login"))
+    if (localStorage.getItem("login") === "true") {
       await this.getDataDaily();
       this.getDataBaru();
       this.rekapBulanIni();
       
-    }
+    } 
   },
 
   methods: {
