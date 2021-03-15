@@ -74,16 +74,23 @@
                 class="form-control"
                 type="file"
                 ref="fileupload"
-                
                 @change="imageUpload"
                 id="formFile"
                 accept="image/*"
               />
-              <p v-if="isEdit === true" class="text-danger">*Isi field ini jika ingin menganti gambar!</p>
+              <p v-if="isEdit === true" class="text-danger">
+                *Isi field ini jika ingin menganti gambar!
+              </p>
             </div>
           </form>
         </div>
         <div class="modal-footer">
+          <button
+            ref="Close"
+            style="visibility: hidden"
+            type="button"
+            data-bs-dismiss="modal"
+          ></button>
           <button
             type="button"
             class="btn btn-secondary"
@@ -91,12 +98,40 @@
           >
             Close
           </button>
-          <button v-if="isEdit === false" data-bs-dismiss="modal" type="button" class="btn btn-primary" @click="onClick">
+          <button
+            v-if="onProgress === true"
+            class="btn btn-primary btn-lg btn-block "
+            type="button"
+            disabled
+          >
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span class="visually-hidden">Loading...</span>
+          </button>
+          <div v-else>
+            <button
+            v-if="isEdit === false"
+            type="button"
+            class="btn btn-primary"
+            id="btnModalsSv"
+            @click="onClick"
+          >
             Add
           </button>
-          <button v-else type="button" data-bs-dismiss="modal"  class="btn btn-primary" @click="onClickSvData">
+          <button
+            v-else
+            type="button"
+            class="btn btn-primary"
+            id="btnModalsAdd"
+            @click="onClickSvData"
+          >
             Save
           </button>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -109,7 +144,7 @@ import moment from "moment";
 
 export default {
   name: "Modals",
-  props: ["isEdit", "dataEdited", "cekImg"],
+  props: ["isEdit", "dataEdited", "cekImg", "isDone", "onProgress"],
   components: {
     DatePicker,
   },
@@ -119,21 +154,28 @@ export default {
       status: null,
       created_at: moment().format("YYYY-MM-DD"),
       deskripsi: "",
-      bukti: '',
+      bukti: "",
       id: null,
       data: new FormData(),
     };
   },
-  methods: {
-    clearInput(){
-      this.nominal = null
-      this.status = null
-      this.created_at = moment().format("YYYY-MM-DD")
-      this.deskripsi = ""
-      this.id = null
-      this.$refs.fileupload.value=null
+  watch: {
+    isDone: function (newValue, oldValue) {
+      console.log(newValue, oldValue);
+      if (newValue === true) {
+        this.$refs.Close.click();
+      }
     },
-
+  },
+  methods: {
+    clearInput() {
+      this.nominal = null;
+      this.status = null;
+      this.created_at = moment().format("YYYY-MM-DD");
+      this.deskripsi = "";
+      this.id = null;
+      this.$refs.fileupload.value = null;
+    },
 
     getStatus(value) {
       if (value != null) {
@@ -143,36 +185,36 @@ export default {
     },
     isEdited(value) {
       console.log(value);
-      this.cek = false
-      this.id = value.administration_id
-      this.nominal = value.nominal
-      this.status = value.tipe
-      this.created_at = moment(value.created_at, "YYYY-M-D").format("YYYY-MM-DD");
-      this.deskripsi = value.deskripsi
-      this.bukti = value.bukti
+      this.cek = false;
+      this.id = value.administration_id;
+      this.nominal = value.nominal;
+      this.status = value.tipe;
+      this.created_at = moment(value.created_at, "YYYY-M-D").format(
+        "YYYY-MM-DD"
+      );
+      this.deskripsi = value.deskripsi;
+      this.bukti = value.bukti;
     },
     cekData() {
-      console.log(this.cekImg)
-      if (this.cekImg !== true ) {
-        if(this.isEdit !== true ){
-            return {
+      console.log(this.cekImg);
+      if (this.cekImg !== true) {
+        if (this.isEdit !== true) {
+          return {
             nominal: this.nominal,
             tipe: this.status,
             deskripsi: this.deskripsi,
             created_at: this.created_at,
-          }
-          
+          };
         } else {
           return {
             nominal: this.nominal,
             tipe: this.status,
             deskripsi: this.deskripsi,
             created_at: this.created_at,
-          }
+          };
         }
       } else {
         return this.data;
-
       }
     },
     // onClickSv() {
@@ -183,15 +225,13 @@ export default {
     //   this.data.append("created_at", this.created_at);
     // },
     imageUpload(event) {
-      this.$emit('cekImg')
-      console.log(event.target.files[0])
+      this.$emit("cekImg");
+      console.log(event.target.files[0]);
       this.data.append("tipe", this.status);
       this.data.append("nominal", this.nominal);
       this.data.append("bukti", event.target.files[0]);
       this.data.append("deskripsi", this.deskripsi);
       this.data.append("created_at", this.created_at);
-
-      
     },
 
     onClick() {

@@ -42,7 +42,14 @@
       <!-- ====================================================================================== -->
       <!-- Modal -->
 
-      <Modals ref="addButton" @clicked="addTransaksi" :cekImg="cek" :isEdit="isEdited" />
+      <Modals
+        ref="addButton"
+        @clicked="addTransaksi"
+        :cekImg="cek"
+        :isEdit="isEdited"
+        :isDone="isDone"
+        :onProgress="progress"
+      />
 
       <!-- Akhir Button Add -->
 
@@ -50,8 +57,11 @@
       <!-- Content -->
       <!-- Grafik -->
       <div class="mx-md-5 mt-2">
-        <div class="col bg-graphic  line-chart text-light rounded" style="position: relative;  width:100%;">
-          <line-chart  :chart-data="datacollection" :options="chartOption" />
+        <div
+          class="col bg-graphic line-chart text-light rounded"
+          style="position: relative; width: 100%"
+        >
+          <line-chart :chart-data="datacollection" :options="chartOption" />
         </div>
       </div>
 
@@ -122,6 +132,8 @@ export default {
       dataGraphic: {},
       datacollection: null,
       isEdited: false,
+      isDone: true,
+      progress: false,
       // ===============================
       // For chartjs
       fullDataChart: null,
@@ -190,7 +202,7 @@ export default {
   },
   mounted() {
     if (localStorage.getItem("token_access") !== null) {
-      localStorage.setItem('tambah_transaksi', false)
+      localStorage.setItem("tambah_transaksi", false);
       this.loadedData();
     }
   },
@@ -198,7 +210,9 @@ export default {
     // =================
     clickAddTrans() {
       this.isEdited = false;
-      localStorage.setItem('tambah_transaksi', true)
+      this.isDone = false;
+      // console.log(this.isDone)
+      localStorage.setItem("tambah_transaksi", true);
     },
 
     //Add Transaksi
@@ -210,11 +224,12 @@ export default {
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
+        this.progress = true;
         await axios
           .post("administration/addadministration/", value)
           .then(async () => {
-            this.$refs.addButton.clearInput()
             await this.loadedData();
+            
 
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
@@ -222,6 +237,10 @@ export default {
               duration: 3000,
               dismissible: true,
             });
+
+            this.progress = false;
+            this.isDone = true;
+            this.$refs.addButton.clearInput();
 
             // const dataRes = JSON.parse(res.config.data)
             // const checkMonth = moment(dataRes.created_at, 'YYYY/MM/DD')
@@ -264,6 +283,8 @@ export default {
           duration: 3000,
           dismissible: true,
         });
+
+        // console.log(this.isDone)
       }
 
       if (this.cek === true) {
@@ -305,12 +326,15 @@ export default {
 
           // ================================
           // Untuk tambah laporan keuangan
-          if (this.fullDataChart !== null && localStorage.getItem('tambah_transaksi') !== false) {
+          if (
+            this.fullDataChart !== null &&
+            localStorage.getItem("tambah_transaksi") !== false
+          ) {
             this.income = [];
             this.outcome = [];
             this.profit = [];
             this.fullDataChart = [];
-            localStorage.setItem('tambah_transaksi', false)
+            localStorage.setItem("tambah_transaksi", false);
 
             for (let i = 0; i < hasil.length; i++) {
               bulan = hasil[i][0];
@@ -327,12 +351,10 @@ export default {
                   .format("MMMM")),
               });
             }
-            
           }
           // ====================================
           // Untuk get data Asli
           else {
-            
             this.fullDataChart = [];
             for (let i = 0; i < hasil.length; i++) {
               bulan = hasil[i][0];

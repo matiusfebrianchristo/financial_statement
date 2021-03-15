@@ -56,6 +56,8 @@
         :cekImg="cek"
         :isEdit="isEdited"
         :dataEdited="dataEdit"
+        :isDone="isDone"
+        :onProgress="progress"
       />
 
       <!-- Akhir Button Add -->
@@ -178,6 +180,8 @@ export default {
       // For edited Data
       isEdited: false,
       dataBaru: false,
+      isDone: true,
+      progress: false,
       dataEdit: null,
       isActiveNav: false,
       income: [],
@@ -191,12 +195,12 @@ export default {
     };
   },
   mounted() {
-     localStorage.setItem('tambah_transaksi', false)
+    localStorage.setItem("tambah_transaksi", false);
     this.loadedData();
   },
   methods: {
-    rubahModeImg(){
-      this.cek = true
+    rubahModeImg() {
+      this.cek = true;
     },
     getTgl() {
       console.log(this.tanggal);
@@ -205,7 +209,8 @@ export default {
     // =================
     clickAddTrans() {
       this.isEdited = false;
-       localStorage.setItem('tambah_transaksi', true)
+      this.isDone = false;
+      localStorage.setItem("tambah_transaksi", true);
     },
 
     // ============================
@@ -273,12 +278,12 @@ export default {
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
+        this.progress = true
         console.log(value);
         // alert("Ok")
         await axios
           .patch(`administration/updateadministration/${this.id}/`, value)
           .then(async () => {
-            this.$refs.editButton.clearInput()
             
             await this.loadedData();
 
@@ -288,8 +293,12 @@ export default {
               duration: 3000,
               dismissible: true,
             });
-              this.cek = false;
-              this.isEdited = false;
+            
+            this.isDone = true;
+            this.progress = false;
+            this.$refs.editButton.clearInput();
+            this.cek = false;
+            this.isEdited = false;
           })
           .catch((err) => console.log(err));
       } else {
@@ -315,12 +324,14 @@ export default {
         value.created_at !== null &&
         value.deskripsi !== null
       ) {
+        this.progress = true;
+
         await axios
           .post(`administration/addadministration/`, value)
           .then(async () => {
-            this.$refs.editButton.clearInput()
+            
             await this.loadedData();
-             localStorage.setItem('tambah_transaksi', false)
+            localStorage.setItem("tambah_transaksi", false);
 
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
@@ -328,11 +339,12 @@ export default {
               duration: 3000,
               dismissible: true,
             });
-            
-              this.cek = false;
-            
 
-            
+            this.isDone = true;
+            this.progress = false;
+            this.$refs.editButton.clearInput();
+
+            this.cek = false;
 
             // Set timeout for location reload
             // setTimeout(function () {
@@ -365,8 +377,9 @@ export default {
     // ==============================================
     // Edit data bulanan
     editData(id, nominal, status, tanggal, deskripsi, bukti) {
+      this.isDone = false
       this.isEdited = true;
-      this.id = id
+      this.id = id;
       const data = {
         nominal: nominal,
         tipe: status,
@@ -411,7 +424,7 @@ export default {
         })
         .then((res) => {
           if (this.fullDataBulanan !== null) {
-            if (this.oldFullDataBulanan === null ) {
+            if (this.oldFullDataBulanan === null) {
               this.oldFullDataBulanan = this.fullDataBulanan;
             }
 
