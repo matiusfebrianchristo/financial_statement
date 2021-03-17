@@ -139,8 +139,8 @@ export default {
       tanggal: "",
     };
   },
-  async created() {
-    console.log(typeof localStorage.getItem("login"))
+  async mounted() {
+    // console.log(typeof localStorage.getItem("login"))
     if (localStorage.getItem("login") === "true") {
       await this.getDataDaily();
       this.getDataBaru();

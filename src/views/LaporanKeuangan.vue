@@ -43,6 +43,7 @@
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import ModalsLogout from "@/components/ModalsLogout.vue";
+// import { mapGetters } from 'vuex';
 
 export default {
   name: "Dashboard",
@@ -58,12 +59,17 @@ export default {
     };
   },
   mounted() {
+    // console.log(this.token)
     this.cekLoginStatus();
+  },
+  computed:{
+    // ...mapGetters(['token'])
   },
   methods: {
     cekLoginStatus() {
       if (localStorage.getItem("token_access") === null) {
         
+        localStorage.setItem('tendang', true)
         this.$router.push("/masuk");
       }
     },

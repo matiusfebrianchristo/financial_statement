@@ -111,6 +111,8 @@ import moment from "moment";
 import Modals from "@/components/Modals.vue";
 import axios from "axios";
 
+
+
 export default {
   name: "LaporanHome",
   props: ["isNav"],
@@ -201,12 +203,16 @@ export default {
     };
   },
   mounted() {
+    
     if (localStorage.getItem("token_access") !== null) {
       localStorage.setItem("tambah_transaksi", false);
       this.loadedData();
     }
+
   },
+  
   methods: {
+
     // =================
     clickAddTrans() {
       this.isEdited = false;

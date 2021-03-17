@@ -39,12 +39,15 @@ export default {
     };
   },
   mounted() {
-    this.$toast.error("Login dahulu", {
-      type: "error",
-      position: "top-right",
-      duration: 3000,
-      dismissible: true,
-    });
+    if (localStorage.getItem("tendang") === "true") {
+      this.$toast.error("Login dahulu", {
+        type: "error",
+        position: "top-right",
+        duration: 3000,
+        dismissible: true,
+      });
+      localStorage.setItem("tendang", false);
+    }
   },
   methods: {
     moveForm() {
