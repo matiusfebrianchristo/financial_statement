@@ -1,27 +1,17 @@
 <script>
 import { Line, mixins } from "vue-chartjs";
 const { reactiveProp } = mixins;
+import { mapState } from "vuex"
 
 
 export default {
   extends: Line,
   mixins: [ reactiveProp ],
-  props: {
-    opsi:{
-      type: String,
-      default: 'Line'
-    },
-    chartData: {
-        type: Object,
-        default: null
-    },
-    options: {
-        type: Object,
-        default: null
-    }
+  computed:{
+    ...mapState(['graphic'])
   },
   mounted(){
-      this.renderChart(this.chartData, this.options)
+      this.renderChart(this.graphic.data, this.graphic.option)
   }
 }
 </script>

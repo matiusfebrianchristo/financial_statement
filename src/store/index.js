@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import moment from 'moment'
+
+// import login from './masuk/masuk.js'
 
 
 Vue.use(Vuex)
@@ -8,22 +11,50 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        tahun: new Date().getFullYear(),
         dataTahunIni: [],
         dataBulanIni: [],
         detailDataTahunan: [],
-        incomeResult: null,
-        outcomeResult: null,
-        profitResult: null,
+        fullDataTahunan: [],
+        resultTahunan: null,
+        graphic: null,
         dataBaru5: null,
         user: null,
         tokenAPI: null,
     },
     getters: {
+        allResultTahunan: state =>{
+            if (state.resultTahunan !== null) {
+                return state.resultTahunan
+            } else {
+                return {
+                    income: 0,
+                    outcome: 0,
+                    profit: 0
+                }
+            }
+        },
+
+        fullDataTahunIni: state =>{
+            if (state.fullDataTahunan  !== null) {
+                return state.fullDataTahunan.fullData
+            }
+        },
+
+
+
         token: state => {
             // const data = state.tokenAPI;
-            return {
-                token_refresh: state.tokenAPI.token_refresh,
-                token_access: state.tokenAPI.token_access
+            if(state.tokenAPI !== null){
+                return {
+                    token_refresh: state.tokenAPI.token_refresh,
+                    token_access: state.tokenAPI.token_access
+                }
+            } else {
+                return {
+                    token_access: localStorage.getItem('token_access'),
+                    token_refresh: localStorage.getItem('token_refresh')
+                }
             }
         },
         dataBaru: state => {
@@ -40,18 +71,52 @@ export default new Vuex.Store({
     },
     actions: {
         getDataTahunIni({
-            commit
+            commit, state
         }) {
             return new Promise((resolve, reject) => {
                 axios.get("administration/administrationdataperyear/")
                     .then(res => {
-                        const obj = res.data[new Date().getFullYear()];
+                        
+                        const obj = res.data[state.tahun];
                         const hasil = Object.keys(obj).map((key) => [Number(key), obj[key]]);
                         commit('setDataTahunIni', hasil)
                         resolve(hasil)
                     })
                     .catch(err => reject(err))
             })
+        },
+        setFullDataTahunIni({commit}, data){
+        let bulan;
+          const income = [];
+          const outcome = [];
+          const profit = [];
+
+          const fulldataDaily = [];
+          for (let i = 0; i < data.length; i++) {
+            bulan = data[i][0];
+            income.push(data[i][1].income);
+            outcome.push(data[i][1].outcome);
+            profit.push(data[i][1].profit);
+            fulldataDaily.push({
+              income: income[i],
+              outcome: outcome[i],
+              profit: profit[i],
+              month: (data[i][1].month = moment()
+                .locale("id")
+                .month(bulan - 1)
+                .format("MMMM")),
+            })
+
+            const result =  {
+                fullData: fulldataDaily,
+                income: income,
+                outcome: outcome,
+                profit: profit,
+            }
+
+            commit('setFullDataTahunan', result)
+          }
+        // this.fillDataGraph(this.filldata(moment.months(), income, outcome, profit))
         },
         getDataBulanIni({
             commit
@@ -95,9 +160,8 @@ export default new Vuex.Store({
         getInOutPro({
             commit
         }, data) {
-            commit('getInTahunan', data.income)
-            commit('getOutTahunan', data.outcome)
-            commit('getProTahunan', data.profit)
+            // console.log(data)
+            commit('getInOutPro', data)
         },
 
         getLimaDataBaru({
@@ -108,13 +172,14 @@ export default new Vuex.Store({
                     .then(res => {
                         commit('getLimaDataBaru', res.data)
                         resolve(res.data)
-                        
-                        
+
                     })
                     .catch(err => reject(err))
             })
-                
-            
+        },
+
+        fillDataGraph({commit}, data){
+            commit('setDataGraphic', data)
         }
 
     },
@@ -131,17 +196,18 @@ export default new Vuex.Store({
         setDataTahunIni(state, data) {
             state.dataTahunIni = data
         },
-        getInTahunan(state, data) {
-            state.incomeResult = data
-        },
-        getOutTahunan(state, data) {
-            state.outcomeResult = data
-        },
-        getProTahunan(state, data) {
-            state.profitResult = data
+        getInOutPro(state, data){
+            state.resultTahunan = data
         },
         getLimaDataBaru(state, data){
             state.dataBaru5 = data
+        },
+        setDataGraphic(state, data){
+            state.graphic = data
+        },
+        setFullDataTahunan(state, data){
+            state.fullDataTahunan = data
         }
-    }
+    },
+    
 })

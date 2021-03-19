@@ -117,10 +117,6 @@ export default {
         })
 
 
-        setTimeout(() => {
-          this.$router.push("/");
-          this.progress = false;
-        }, 2000);
       } else {
         this.progress = false;
         this.$toast.error("Isi username dan password", {

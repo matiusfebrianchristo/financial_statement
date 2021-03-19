@@ -61,7 +61,9 @@
           class="col bg-graphic line-chart text-light rounded"
           style="position: relative; width: 100%"
         >
-          <line-chart :chart-data="datacollection" :options="chartOption" />
+          <line-chart v-if="graphic"/>
+          <line-chart-load v-else />
+          
         </div>
       </div>
 
@@ -80,7 +82,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="data in fullDataChart" :key="data.id">
+                <tr v-for="data in fullDataTahunIni" :key="data.id">
                   <th scope="row">{{ data.month }}</th>
                   <td>Rp. {{ data.income }}</td>
                   <td>Rp. {{ data.outcome }}</td>
@@ -107,17 +109,19 @@
 
 <script>
 import LineChart from "@/components/LineChart.vue";
+import LineChartLoad from "@/components/LineChartLoad.vue";
 import moment from "moment";
 import Modals from "@/components/Modals.vue";
 import axios from "axios";
-
-
+// import moment from "moment"
+import { mapActions, mapState, mapGetters } from "vuex";
 
 export default {
   name: "LaporanHome",
   props: ["isNav"],
   components: {
     LineChart,
+    LineChartLoad,
     Modals,
   },
   data() {
@@ -202,16 +206,28 @@ export default {
       },
     };
   },
-  mounted() {
-    
-    if (localStorage.getItem("token_access") !== null) {
+  async mounted() {
+    if (localStorage.getItem("login") === "true") {
       localStorage.setItem("tambah_transaksi", false);
-      this.loadedData();
+      await this.loadedData();
     }
-
   },
-  
+  computed: {
+    ...mapState(["dataTahunIni", "fullDataTahunan", 'graphic']),
+    ...mapGetters(["fullDataTahunIni"]),
+  },
+  watch: {
+    // dataTahunIni(newValue){
+    //   return newValue
+    // }
+  },
   methods: {
+    ...mapActions([
+      "getDataTahunIni",
+      "getDataBulanIni",
+      "fillDataGraph",
+      "setFullDataTahunIni",
+    ]),
 
     // =================
     clickAddTrans() {
@@ -235,7 +251,6 @@ export default {
           .post("administration/addadministration/", value)
           .then(async () => {
             await this.loadedData();
-            
 
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
@@ -322,77 +337,33 @@ export default {
     // =======================================
 
     async loadedData() {
-      await axios
-        .get("administration/administrationdataperyear/")
-        .then((res) => {
-          const obj = res.data[new Date().getFullYear()];
-          const hasil = Object.keys(obj).map((key) => [Number(key), obj[key]]);
-          let bulan;
-          this.dataMonth = hasil.length;
+      await this.getDataTahunIni().then((res) => {
+        this.setFullDataTahunIni(res);
 
-          // ================================
-          // Untuk tambah laporan keuangan
-          if (
-            this.fullDataChart !== null &&
-            localStorage.getItem("tambah_transaksi") !== false
-          ) {
-            this.income = [];
-            this.outcome = [];
-            this.profit = [];
-            this.fullDataChart = [];
-            localStorage.setItem("tambah_transaksi", false);
+        const fillData = {
+          data: this.filldata(
+            moment.months(),
+            this.fullDataTahunan.income,
+            this.fullDataTahunan.outcome,
+            this.fullDataTahunan.profit
+          ),
+          option: this.chartOption,
+        };
+        this.fillDataGraph(fillData);
+      });
+      // .catch(err=> console.log(err))
+    },
 
-            for (let i = 0; i < hasil.length; i++) {
-              bulan = hasil[i][0];
-              this.income.push(hasil[i][1].income);
-              this.outcome.push(hasil[i][1].outcome);
-              this.profit.push(hasil[i][1].profit);
-              this.fullDataChart.push({
-                income: this.income[i],
-                outcome: this.outcome[i],
-                profit: this.profit[i],
-                month: (hasil[i][1].month = moment()
-                  .locale("id")
-                  .month(bulan - 1)
-                  .format("MMMM")),
-              });
-            }
-          }
-          // ====================================
-          // Untuk get data Asli
-          else {
-            this.fullDataChart = [];
-            for (let i = 0; i < hasil.length; i++) {
-              bulan = hasil[i][0];
-              this.income.push(hasil[i][1].income);
-              this.outcome.push(hasil[i][1].outcome);
-              this.profit.push(hasil[i][1].profit);
-              this.fullDataChart.push({
-                income: this.income[i],
-                outcome: this.outcome[i],
-                profit: this.profit[i],
-                month: (hasil[i][1].month = moment()
-                  .locale("id")
-                  .month(bulan - 1)
-                  .format("MMMM")),
-              });
-            }
-          }
-          // console.log(
-          //   this.filterByValue(this.fullDataChart, "January", "pemasukan", 2000)
-          // );
-        })
-        .catch((err) => console.log(err));
-
-      this.filldata();
+    cekerrt() {
+      console.log("hore");
     },
 
     // Data Chartjs
     // ================================================
-    filldata() {
-      this.datacollection = {
+    filldata(month, income, outcome, profit) {
+      return {
         title: "Laporan Keuangan",
-        labels: this.month,
+        labels: month,
         datasets: [
           {
             label: "In",
@@ -402,7 +373,7 @@ export default {
             borderWidth: 2,
             pointBorderColor: "green",
             fill: false,
-            data: this.income,
+            data: income,
           },
           {
             label: "Out",
@@ -412,7 +383,7 @@ export default {
             borderWidth: 2,
             pointBorderColor: "red",
             fill: false,
-            data: this.outcome,
+            data: outcome,
           },
           {
             label: "Untung",
@@ -422,7 +393,7 @@ export default {
             borderWidth: 2,
             pointBorderColor: "blue",
             fill: false,
-            data: this.profit,
+            data: profit,
           },
         ],
       };

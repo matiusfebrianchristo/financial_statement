@@ -16,11 +16,7 @@
 
       <!-- ============================================================================================= -->
       <div class="list-data mx-4">
-        <DashInfo
-          :income="formatPrice(incomeResult)"
-          :outcome="formatPrice(outcomeResult)"
-          :profit="formatPrice(profitResult)"
-        />
+        <DashInfo/>
       </div>
 
       <div class="dash-table row">
@@ -100,6 +96,7 @@ export default {
     // console.log(typeof localStorage.getItem("login"))
     if (localStorage.getItem("login") === "true") {
       await this.getDataDaily();
+      this.rekapTahunIni();
       this.getLimaDataBaru();
       // this.rekapBulanIni();
     }
@@ -107,9 +104,6 @@ export default {
   computed: {
     ...mapState([
       "dataTahunIni",
-      "incomeResult",
-      "outcomeResult",
-      "profitResult",
     ]),
     ...mapGetters(["dataBaru"]),
   },
@@ -133,10 +127,7 @@ export default {
       return moment(value, "YYYY-MM-DD").format("Do MMMM YYYY");
     },
 
-    formatPrice(value) {
-      let val = (value / 1).toFixed(2).replace(".", ",");
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    },
+    
     // Hide Sidebar opsi
     clickedToggle() {
       if (this.isActiveNav === true) {
@@ -255,10 +246,10 @@ export default {
                 .locale("id")
                 .month(bulan - 1)
                 .format("MMMM")),
-            });
+            })
           }
 
-          this.rekapTahunIni();
+          
         })
         .catch((err) => console.log(err));
     },
