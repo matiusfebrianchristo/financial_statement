@@ -42,14 +42,7 @@
       <!-- ====================================================================================== -->
       <!-- Modal -->
 
-      <Modals
-        ref="addButton"
-        @clicked="addTransaksi"
-        :cekImg="cek"
-        :isEdit="isEdited"
-        :isDone="isDone"
-        :onProgress="progress"
-      />
+      <Modals />
 
       <!-- Akhir Button Add -->
 
@@ -61,8 +54,7 @@
           class="col bg-graphic line-chart text-light rounded"
           style="position: relative; width: 100%"
         >
-          <line-chart v-if="graphic"/>
-          <line-chart-load v-else />
+          <line-chart />
           
         </div>
       </div>
@@ -109,7 +101,6 @@
 
 <script>
 import LineChart from "@/components/LineChart.vue";
-import LineChartLoad from "@/components/LineChartLoad.vue";
 import moment from "moment";
 import Modals from "@/components/Modals.vue";
 import axios from "axios";
@@ -121,7 +112,6 @@ export default {
   props: ["isNav"],
   components: {
     LineChart,
-    LineChartLoad,
     Modals,
   },
   data() {
@@ -263,29 +253,9 @@ export default {
             this.isDone = true;
             this.$refs.addButton.clearInput();
 
-            // const dataRes = JSON.parse(res.config.data)
-            // const checkMonth = moment(dataRes.created_at, 'YYYY/MM/DD')
-            // if(dataRes.tipe !== "pengeluaran"){
-
-            //  var filtered =  this.fullDataChart.filter((el) => {
-            //   return el.month == checkMonth.locale('id').format('MMMM')
-            // })
-
-            // } else{
-            //   const tambah = this.outcome + dataRes.nominal
-            //   this.outcome = tambah
-            //   this.profit = tambah - this.outcome
-            // }
-            // console.log(filtered)
-
             if (this.cek === true) {
               this.cek = false;
             }
-
-            // Set timeout for location reload
-            // setTimeout(function () {
-            //   console.log(res.config.data)
-            // }, 2000);
           })
           .catch((err) => {
             console.log(err);
@@ -312,29 +282,6 @@ export default {
         this.cek = false;
       }
     },
-
-    // ======================================
-    // Filter Data
-    // filterByValue(array, string, action, value) {
-    //   var data = array.filter(function (hero) {
-    //     return hero.month == string;
-    //   });
-
-    //   if (action == "pemasukan") {
-    //     return {
-    //       income: data[0].income + value,
-    //       outcome: data[0].outcome,
-    //       profit: data[0].profit,
-    //       month: string
-    //     }
-    //   } else {
-    //     data[0].outcome + value;
-    //     data[0].profit = data[0].income - data[0].outcome;
-    //   }
-    // },
-
-    // Data graphic
-    // =======================================
 
     async loadedData() {
       await this.getDataTahunIni().then((res) => {
