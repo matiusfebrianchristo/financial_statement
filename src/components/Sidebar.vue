@@ -79,14 +79,22 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
   name: "Sidebar",
-  props: ["isActive"],
+  computed:{
+    ...mapState({
+      isActive: state => state.isMNavActive
+    })
+  },
   methods: {
+    ...mapActions(['isMNavActive']),
     onClick() {
-      this.$emit("clicked");
+      this.isMNavActive();
       console.log(this.isActive)
     },
+    
   },
 };
 </script>

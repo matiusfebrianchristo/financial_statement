@@ -4,20 +4,6 @@
       <div class="title-page text-center mt-4">
         <!-- <h2 class="title">Administrator</h2> -->
         <div class="light-mode content-header rounded m-md-5 p-1">
-          <!-- <nav
-            class="road"
-            style="--bs-breadcrumb-divider: '>'"
-            aria-label="breadcrumb"
-          >
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <router-link to="/">Home</router-link>
-              </li>
-              <li class="breadcrumb-item " aria-current="page">
-                <router-link  @click.prevent to="/">Laporan Keuangan</router-link>
-              </li>
-            </ol>
-          </nav> -->
           <h2>
             <strong>Tahun {{ new Date().getFullYear() }}</strong>
           </h2>
@@ -103,13 +89,10 @@
 import LineChart from "@/components/LineChart.vue";
 import moment from "moment";
 import Modals from "@/components/Modals.vue";
-import axios from "axios";
-// import moment from "moment"
 import { mapActions, mapState, mapGetters } from "vuex";
 
 export default {
   name: "LaporanHome",
-  props: ["isNav"],
   components: {
     LineChart,
     Modals,
@@ -203,7 +186,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(["dataTahunIni", "fullDataTahunan", 'graphic']),
+    ...mapState({
+      dataTahunIni: state =>  state.dataTahunIni,
+      fullDataTahunan: state => state.fullDataTahunan,
+      graphic: state => state.graphic,
+      isNav: state => state.isNavActive
+    }),
     ...mapGetters(["fullDataTahunIni"]),
   },
   watch: {
@@ -217,76 +205,18 @@ export default {
       "getDataBulanIni",
       "fillDataGraph",
       "setFullDataTahunIni",
+      'isAction'
     ]),
 
     // =================
     clickAddTrans() {
-      this.isEdited = false;
-      this.isDone = false;
-      // console.log(this.isDone)
-      localStorage.setItem("tambah_transaksi", true);
+      this.isAction('add')
     },
 
-    //Add Transaksi
-    // ================================-===========
-    async addTransaksi(value) {
-      if (
-        value.nominal !== null &&
-        value.status !== null &&
-        value.created_at !== null &&
-        value.deskripsi !== null
-      ) {
-        this.progress = true;
-        await axios
-          .post("administration/addadministration/", value)
-          .then(async () => {
-            await this.loadedData();
-
-            this.$toast.success("Data berhasil ditambahkan!", {
-              type: "success",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
-            });
-
-            this.progress = false;
-            this.isDone = true;
-            this.$refs.addButton.clearInput();
-
-            if (this.cek === true) {
-              this.cek = false;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            this.$toast.error("Terjadi kesalahan", {
-              type: "error",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
-            });
-          });
-      } else {
-        console.log(value);
-        this.$toast.error("Lengkapi Data!!", {
-          type: "error",
-          position: "top-right",
-          duration: 3000,
-          dismissible: true,
-        });
-
-        // console.log(this.isDone)
-      }
-
-      if (this.cek === true) {
-        this.cek = false;
-      }
-    },
 
     async loadedData() {
       await this.getDataTahunIni().then((res) => {
         this.setFullDataTahunIni(res);
-
         const fillData = {
           data: this.filldata(
             moment.months(),

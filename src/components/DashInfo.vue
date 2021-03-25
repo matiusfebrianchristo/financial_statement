@@ -22,7 +22,7 @@
                     ></i>
                   </div>
                   <div class="text-end">
-                    <h3>{{ formatPrice(allResultTahunan.income) }}</h3>
+                    <h3 >{{ formatPrice(allResultTahunan.income) }}</h3>
                     <span class="text-success"
                       ><i class="bi bi-arrow-up"></i> Income
                     </span>
@@ -56,7 +56,7 @@
         </div>
         <div class="col-lg-4 col-md-4 col-12">
           <div class="card card-profit">
-            <div class="card-content">
+            <div class="card-content overflow-hidden">
               <div class="card-body">
                 <div class="d-flex justify-content-between">
                   <div class="align-self-center">

@@ -16,7 +16,7 @@
 
       <!-- ============================================================================================= -->
       <div class="list-data mx-4">
-        <DashInfo/>
+        <DashInfo />
       </div>
 
       <div class="dash-table row">
@@ -38,7 +38,7 @@
             <tbody>
               <tr v-for="(data, index) in dataBaru" :key="data.id">
                 <th scope="row">{{ index + 1 }}</th>
-                <td class="text-wrapper">{{ data.nominal }}</td>
+                <td class="text-wrapper" >{{ data.nominal }}</td>
                 <td class="text-wrapper">
                   <p class="text-light" :class="CekStatus(data.tipe)">
                     {{ data.tipe }}
@@ -46,16 +46,7 @@
                 </td>
                 <td class="text-wrapper">{{ GantiTgl(data.created_at) }}</td>
 
-                <!-- <td>
-                    <router-link
-                      class="btn btn-primary"
-                      :to="{
-                        name: 'DetailBulanan',
-                        params: { bulan: data.month, tahun: 2021 },
-                      }"
-                      >Detail</router-link
-                    >
-                  </td> -->
+
               </tr>
             </tbody>
           </table>
@@ -75,7 +66,6 @@ import { mapActions, mapState, mapGetters } from "vuex";
 
 export default {
   name: "Dashboard",
-  props: ["isNav"],
   components: {
     DashInfo,
   },
@@ -102,9 +92,10 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      "dataTahunIni",
-    ]),
+    ...mapState({
+      dataTahunIni: state => state.dataTahunIni,
+      isNav: state =>  state.isNavActive
+    }),
     ...mapGetters(["dataBaru"]),
   },
 
@@ -127,7 +118,6 @@ export default {
       return moment(value, "YYYY-MM-DD").format("Do MMMM YYYY");
     },
 
-    
     // Hide Sidebar opsi
     clickedToggle() {
       if (this.isActiveNav === true) {
@@ -246,10 +236,8 @@ export default {
                 .locale("id")
                 .month(bulan - 1)
                 .format("MMMM")),
-            })
+            });
           }
-
-          
         })
         .catch((err) => console.log(err));
     },

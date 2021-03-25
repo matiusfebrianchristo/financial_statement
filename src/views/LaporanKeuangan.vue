@@ -4,7 +4,7 @@
     <transition name="slide-fade">
       <div
         class="d-lg-block d-none fixed sidebar"
-        :class="{ hide: isActiveNav, show: isMNavActive }"
+        :class="{ hide:isActiveNav, show:isActiveNav }"
       >
         <Sidebar />
       </div>
@@ -12,9 +12,9 @@
     <transition name="slide-fade">
       <div
         class="d-sm-block d-lg-none position-absolute fixed sidebar"
-        :class="{ hide: isMNavActive, show: isMNavActive }"
+        :class="{ hide:isActiveNavMobile, show:isActiveNavMobile }"
       >
-        <Sidebar :isActive="isMNavActive" @clicked="clickedToggleMobile"  />
+        <Sidebar  />
       </div>
     </transition>
 
@@ -23,17 +23,13 @@
 
     <!-- Navbar  -->
     <Navbar
-      :isActive="isActiveNav"
-      :isMActive="isMNavActive"
       :class="{ full: isActiveNav }"
-      @clicked="clickedToggle"
-      @clickedMobile="clickedToggleMobile"
     />
 
     <!-- ====================================================== -->
     <!-- Header -->
     <main>
-      <router-view :isNav="isActiveNav" />
+      <router-view  />
     </main>
   </div>
 </template>
@@ -43,7 +39,7 @@
 import Sidebar from "@/components/Sidebar.vue";
 import Navbar from "@/components/Navbar.vue";
 import ModalsLogout from "@/components/ModalsLogout.vue";
-// import { mapGetters } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: "Dashboard",
@@ -54,18 +50,23 @@ export default {
   },
   data() {
     return {
-      isActiveNav: false,
-      isMNavActive: true,
+
+
     };
+  },
+  computed:{
+    ...mapState({
+      isActiveNav: state => state.isNavActive,
+      isActiveNavMobile: state => state.isMNavActive
+      })
   },
   mounted() {
     // console.log(this.token)
     this.cekLoginStatus();
   },
-  computed:{
-    // ...mapGetters(['token'])
-  },
+
   methods: {
+    ...mapActions(['isNavActive', 'isMNavActive']),
     cekLoginStatus() {
       if (localStorage.getItem("token_access") === null) {
         
@@ -76,16 +77,10 @@ export default {
 
     // Hide Sidebar opsi
     clickedToggle() {
-      if (this.isActiveNav === true) {
-        this.isActiveNav = false;
-      } else {
-        this.isActiveNav = true;
-      }
+      this.isNavActive()
     },
 
-    clickedToggleMobile() {
-      this.isMNavActive = !this.isMNavActive
-    },
+    
   },
 };
 </script>
