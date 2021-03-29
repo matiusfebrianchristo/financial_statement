@@ -43,19 +43,7 @@ export const dataBaru = state => {
         }
 
 export const allDataBulanIni = state => {
-    let dataDetail;
-    
-    dataDetail = new Array(state.dataBulanIni);
-
-    const hasil = Object.keys(dataDetail[0]).map((key) => [
-    Number(key),
-    dataDetail[0][key],
-    ]);
-    const sorted = hasil.slice();
-        const dataSorted = sorted.sort((a, b) => {
-          return new Date(b[1].created_at) - new Date(a[1].created_at);
-        });
-        return dataSorted;
+    return state.dataBulanIni
 
 }
 

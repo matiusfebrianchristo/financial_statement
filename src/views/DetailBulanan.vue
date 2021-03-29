@@ -48,17 +48,7 @@
       <!-- ====================================================================================== -->
       <!-- Modal -->
 
-      <Modals
-        @clicked="addTransaksi"
-        @cekImg="rubahModeImg"
-        @clickedSv="saveDataEdit"
-        ref="editButton"
-        :cekImg="cek"
-        :isEdit="isEdited"
-        :dataEdited="dataEdit"
-        :isDone="isDone"
-        :onProgress="progress"
-      />
+      <Modals />
 
       <!-- Akhir Button Add -->
 
@@ -205,7 +195,7 @@ export default {
     ...mapGetters(['allDataBulanIni'])
   },
   methods: {
-    ...mapActions(['isNavActive', 'dataBulanIni']),
+    ...mapActions(['isNavActive', 'dataBulanIni', 'isAction', 'deleteTransaksi', 'getTransaksi']),
     rubahModeImg() {
       this.cek = true;
     },
@@ -383,10 +373,9 @@ export default {
     // ==============================================
     // Edit data bulanan
     editData(id, nominal, status, tanggal, deskripsi, bukti) {
-      this.isDone = false
-      this.isEdited = true;
-      this.id = id;
+      this.isAction('edit')
       const data = {
+        id: id,
         nominal: nominal,
         tipe: status,
         created_at: tanggal,
@@ -394,28 +383,24 @@ export default {
         bukti: bukti,
       };
 
-      this.$refs.editButton.isEdited(data);
+      this.getTransaksi(data)
+
+
     },
 
     // ==============================================
     // Delete Data Bulanan
-    deleteData(value) {
-      // console.log(value)
-      axios
-        .delete(
-          `https://glacial-coast-08306.herokuapp.com/api/v1/administration/deleteadministration/?administration_id=${value}`
-        )
-        .then(async () => {
-          await this.loadedData();
-
-          this.$toast.success("Data berhasil dihapus!", {
+    deleteData(id) {
+      this.deleteTransaksi(id)
+      .then(() => {
+        this.$toast.success("Data berhasil dihapus!", {
             type: "success",
             position: "top-right",
             duration: 3000,
             dismissible: true,
           });
-        })
-        .catch((err) => console.log(err));
+      })
+      .catch(err => console.log(err))
     },
 
     // Data AXIOS

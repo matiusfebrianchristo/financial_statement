@@ -9,6 +9,7 @@ export default{
         fullDataTahunan: [],
         resultTahunan: null,
         dataTransaksi: null,
+        tempTransaksi: null,
         isAction: 'add',
         graphic: null,
         dataBaru5: null,

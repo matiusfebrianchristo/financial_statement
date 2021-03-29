@@ -78,7 +78,7 @@
                 id="formFile"
                 accept="image/*"
               />
-              <p v-if="isAction === true" class="text-danger">
+              <p v-if="isAction === 'edit'" class="text-danger">
                 *Isi field ini jika ingin menganti gambar!
               </p>
             </div>
@@ -99,7 +99,7 @@
             Close
           </button>
           <button
-            v-if="onProgress === true"
+            v-if="progress === true"
             class="btn btn-primary btn-lg btn-block"
             type="button"
             disabled
@@ -144,7 +144,6 @@ import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Modals",
-  props: ["isEdit", "dataEdited", "isDone", "onProgress"],
   components: {
     DatePicker,
   },
@@ -153,8 +152,8 @@ export default {
       nominal: null,
       status: null,
       created_at: moment().format("YYYY-MM-DD"),
-      deskripsi: "",
-      bukti: "",
+      deskripsi: null,
+      bukti: null,
       id: null,
       cekImg: false,
       progress: false,
@@ -162,18 +161,36 @@ export default {
     };
   },
   computed: {
-    ...mapState(["isAction"]),
+    ...mapState(["isAction", 'tempTransaksi']),
   },
-  // watch: {
-  //   isDone: function (newValue, oldValue) {
-  //     console.log(newValue, oldValue);
-  //     if (newValue === true) {
-  //       this.$refs.Close.click();
-  //     }
-  //   },
-  // },
+  watch:{
+    isAction(newValue){
+      if(newValue){
+        if(newValue === 'add'){
+          this.clearInput()
+        }
+      }
+    },
+    tempTransaksi(newValue){
+      if(newValue){
+        if(this.isAction === 'edit'){
+          if(this.tempTransaksi !== null){
+          this.id = this.tempTransaksi.id;
+          this.nominal = this.tempTransaksi.nominal;
+          this.status = this.tempTransaksi.tipe;
+          this.created_at = moment(this.tempTransaksi.created_at, "YYYY-M-D").format(
+          "YYYY-MM-DD"
+        );
+          this.deskripsi = this.tempTransaksi.deskripsi;
+          this.bukti = this.tempTransaksi.bukti;
+
+        }
+        }
+      }
+    }
+  },
   methods: {
-    ...mapActions(["addTransaksi"]),
+    ...mapActions(["addTransaksi", 'dataBulanIni', 'saveTransaksi']),
 
     clearInput() {
       this.nominal = null;
@@ -205,7 +222,7 @@ export default {
     cekData() {
       console.log(this.cekImg);
       if (this.cekImg !== true) {
-        if (this.isEdit !== true) {
+        if (this.isAction !== 'edit') {
           this.progress = true;
 
           const data = {
@@ -221,13 +238,26 @@ export default {
           })
             .then(() => {
               this.progress = false;
-              localStorage.setItem("tambah_transaksi", false)
+              if (
+                this.$route.params.tahun !== undefined &&
+                this.$route.params.bulan !== undefined
+              ) {
+                this.dataBulanIni({
+                  params: {
+                    year: this.$route.params.tahun,
+                    month: moment().month(this.$route.params.bulan).format("M"),
+                  },
+                });
+              }
+              localStorage.setItem("tambah_transaksi", false);
+
               this.$toast.success("Data berhasil ditambahkan!", {
                 type: "success",
                 position: "top-right",
                 duration: 3000,
                 dismissible: true,
               });
+
               this.$refs.Close.click();
               this.clearInput();
             })
@@ -242,12 +272,16 @@ export default {
               });
             });
         } else {
-          return {
-            nominal: this.nominal,
-            tipe: this.status,
-            deskripsi: this.deskripsi,
-            created_at: this.created_at,
+          const data = {
+            id:this.id,
+            data : {
+              nominal: this.nominal,
+              tipe: this.status,
+              deskripsi: this.deskripsi,
+              created_at: this.created_at,
+            }
           };
+          this.saveTransaksi(data)
         }
       } else {
         this.progress = true;
@@ -257,7 +291,18 @@ export default {
         })
           .then(() => {
             this.progress = false;
-            localStorage.setItem("tambah_transaksi", false)
+            if (
+                this.$route.params.tahun !== undefined &&
+                this.$route.params.bulan !== undefined
+              ) {
+                this.dataBulanIni({
+                  params: {
+                    year: this.$route.params.tahun,
+                    month: moment().month(this.$route.params.bulan).format("M"),
+                  },
+                });
+              } 
+            localStorage.setItem("tambah_transaksi", false);
             this.$toast.success("Data berhasil ditambahkan!", {
               type: "success",
               position: "top-right",
@@ -305,7 +350,21 @@ export default {
       }
     },
     onClickSvData() {
-      this.$emit("clickedSv", this.cekData());
+      if (
+        this.status !== null &&
+        this.deskripsi !== null &&
+        this.nominal !== null &&
+        this.created_at !== null
+      ) {
+        this.cekData();
+      } else {
+        this.$toast.error("Lengkapi Data!!", {
+          type: "error",
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
+      }
     },
   },
 };

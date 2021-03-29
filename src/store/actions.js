@@ -1,6 +1,32 @@
 import axios from 'axios'
 import moment from 'moment'
 
+
+// =====================
+// Login 
+export const login = ({
+    commit,
+    getters
+}, form) => {
+    return new Promise((resolve, reject) => {
+        axios.post('accounts/usertoken/', form)
+            .then((res) => {
+                // console.log(res)
+                // console.log(data)
+                commit('setToken', res)
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + getters.token.token_access
+                resolve(res)
+
+            })
+            .catch(() => reject())
+    })
+
+}
+
+
+// =======================================
+// Data Tahunan
+
 export const getDataTahunIni = ({
     commit,
     state
@@ -52,6 +78,47 @@ export const setFullDataTahunIni = ({
     }
     // this.fillDataGraph(this.filldata(moment.months(), income, outcome, profit))
 }
+
+
+
+
+
+// Income, outcome, profit Tahunan
+export const getInOutPro = ({
+    commit
+}, data) => {
+    // console.log(data)
+    commit('getInOutPro', data)
+}
+
+// Dashboard - 5 Data Terbaru
+export const getLimaDataBaru = ({
+    commit
+}) => {
+    new Promise((resolve, reject) => {
+        axios.get("administration/listadministration/")
+            .then(res => {
+                commit('getLimaDataBaru', res.data)
+                resolve(res.data)
+
+            })
+            .catch(err => reject(err))
+    })
+}
+
+// Grapic
+export const fillDataGraph = ({
+    commit
+}, data) => {
+    commit('setDataGraphic', data)
+}
+
+
+
+// ====================
+// Data Bulanan
+
+// Dashboard
 export const getDataBulanIni = ({
     commit
 }, tanggal) => {
@@ -69,51 +136,46 @@ export const getDataBulanIni = ({
             .catch(err => reject(err))
     })
 }
-export const login = ({
-    commit,
-    getters
-}, form) => {
-    return new Promise((resolve, reject) => {
-        axios.post('accounts/usertoken/', form)
-            .then((res) => {
-                // console.log(res)
-                // console.log(data)
-                commit('setToken', res)
-                axios.defaults.headers.common['Authorization'] = 'Bearer ' + getters.token.token_access
-                resolve(res)
 
-            })
-            .catch(() => reject())
-    })
+// Detail Bulanan
+export const dataBulanIni = ({ commit, state }, data) => {
 
-    // console.log(user, pass)
-
-
-}
-export const getInOutPro = ({
-    commit
-}, data) => {
-    // console.log(data)
-    commit('getInOutPro', data)
-}
-export const getLimaDataBaru = ({
-    commit
-}) => {
+    if(localStorage.getItem('tambah_transaksi') !== 'true' && state.isAction !== 'edit' ){
+        commit('clearDataBulanan')
+    }
     new Promise((resolve, reject) => {
-        axios.get("administration/listadministration/")
-            .then(res => {
-                commit('getLimaDataBaru', res.data)
-                resolve(res.data)
-
-            })
-            .catch(err => reject(err))
+        return axios.get('administration/administrationdetail/', data)
+        .then(res => {
+            commit('dataBulanIni', res.data)
+            resolve(res.data)
+        })
+        .catch(err => reject(err))
     })
 }
-export const fillDataGraph = ({
+
+// Dibutuhkan untuk add dan edit transaksi
+export const isAction = ({
     commit
 }, data) => {
-    commit('setDataGraphic', data)
+    commit('isAction', data)
 }
+
+// Delete Transaksi
+export const deleteTransaksi = ({commit}, id) => {
+
+    new Promise((resolve, reject) => {
+        return axios.delete(`administration/deleteadministration/?administration_id=${id}`)
+        .then(() => {
+            commit('deleteTransaksi', id)
+            resolve(true)
+        })
+        .catch(err => reject(err))
+    })
+}
+
+// ============================
+// add Transaksi 
+
 
 export const addTransaksi = ({
     commit
@@ -141,25 +203,29 @@ export const addTransaksi = ({
     })
 }
 
-export const dataBulanIni = ({ commit }, data) => {
-    new Promise((resolve, reject) => {
-        return axios.get('administration/administrationdetail/', data)
-        .then(res => {
-            commit('dataBulanIni', res.data)
-            resolve(res.data)
-        })
-        .catch(err => reject(err))
-    })
+// Edit Transaksi
+// GET
+export const getTransaksi = ({ commit }, data) => {
+    commit('getTransaksi', data)
 }
 
-
-export const isAction = ({
-    commit
-}, data) => {
-    commit('isAction', data)
+// SAVE
+export const saveTransaksi = ({ commit }, result) => {
+    console.log(result)
+    commit('saveTransaksi', result.data)
+    // new Promise((resolve, reject) => {
+    //     return axios
+    //     .patch(`administration/updateadministration/${result.id}/`, result.data)
+    //     .then(res => {
+    //         commit('saveTransaksi', result.data)
+    //         resolve(res)
+    //     })
+    //     .catch(err => reject(err))
+    // })
 }
 
-
+// ==============================
+// Nav Wraper
 export const isNavActive = ({ commit }) => {
     commit('isNavActive')
 }
