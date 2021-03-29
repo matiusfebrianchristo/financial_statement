@@ -13,8 +13,44 @@ export const setToken = (state, token) => {
 // Dashboard
 
 // Set Data Tahunan
-export const setDataTahunIni = (state, data) => {
-    state.dataTahunIni = data
+// get Income, Outcome, profit tahunan
+export const getInOutPro = (state, result) => {
+    let data = null;
+      let dataBaru;
+      let obj = {};
+      // Income
+      for (let i = 0; i < result.length; i++) {
+        if (data !== null) {
+          dataBaru = result[i][1].income;
+          data = data + dataBaru;
+        } else {
+          data = result[i][1].income;
+        }
+      }
+      obj.income = data
+      //Outcome
+      data = null;
+      for (let i = 0; i < result.length; i++) {
+        if (result !== null) {
+          dataBaru = result[i][1].outcome;
+          data = data + dataBaru;
+        } else {
+          data = result[i][1].outcome;
+        }
+      }
+      obj.outcome = data;
+      // Profit
+      data = null;
+      for (let i = 0; i < result.length; i++) {
+        if (result !== null) {
+          dataBaru =result[i][1].profit;
+          data = data + dataBaru;
+        } else {
+          data = result[i][1].profit;
+        }
+      }
+      obj.profit = data;
+      state.dataTahunIni = obj
 }
 
 
@@ -26,10 +62,7 @@ export const setDataBulanIni = (state, data) => {
     state.dataBulanIni = data
 }
 
-// get Income, Outcome, profit tahunan
-export const getInOutPro = (state, data) => {
-    state.resultTahunan = data
-}
+
 
 // Get 5 Data terbaru
 export const getLimaDataBaru = (state, data) => {
@@ -52,7 +85,6 @@ export const setFullDataTahunan = (state, data) => {
 //  tambah transaksi
 export const addTransaksi = (state, data) => {
     if (state.fullDataTahunan.fullData !== undefined) {
-
         const main = state.fullDataTahunan.fullData
         const month = moment(data.created_at, 'DD-MM-YYYY').format('MMMM')
         const nominal = parseInt(data.nominal)
@@ -67,9 +99,6 @@ export const addTransaksi = (state, data) => {
                 }
             }
         }
-
-
-
     }
     state.dataTransaksi = data
 }
@@ -124,6 +153,18 @@ export const getTransaksi = (state, data) => {
 
 // Save
 
+export const saveTransaksi = (state, result) => {
+    state.tempTransaksi = null
+    console.log(result)
+    // state.dataBulanIni.forEach(e => {
+    //     if(e[0] === result.id){
+    //         e[1].nominal = result.data.nominal
+    //         e[1].created_at = result.data.created_at
+    //         e[1].tipe = result.data.tipe
+    //         e[1].deskripsi = result.data.deskripsi
+    //     }
+    // });
+}
 
 
 

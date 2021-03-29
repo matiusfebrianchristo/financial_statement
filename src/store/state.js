@@ -3,7 +3,7 @@ export default{
         isNavActive: false,
         isMNavActive: false,
         tahun: new Date().getFullYear(),
-        dataTahunIni: [],
+        dataTahunIni: null,
         dataBulanIni: [],
         detailDataTahunan: [],
         fullDataTahunan: [],

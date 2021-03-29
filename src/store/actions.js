@@ -37,12 +37,13 @@ export const getDataTahunIni = ({
 
                 const obj = res.data[state.tahun];
                 const hasil = Object.keys(obj).map((key) => [Number(key), obj[key]]);
-                commit('setDataTahunIni', hasil)
+                commit('getInOutPro', hasil)
                 resolve(hasil)
-            })
+            }) 
             .catch(err => reject(err))
     })
 }
+
 export const setFullDataTahunIni = ({
     commit
 }, data) => {
@@ -80,22 +81,11 @@ export const setFullDataTahunIni = ({
 }
 
 
-
-
-
-// Income, outcome, profit Tahunan
-export const getInOutPro = ({
-    commit
-}, data) => {
-    // console.log(data)
-    commit('getInOutPro', data)
-}
-
 // Dashboard - 5 Data Terbaru
 export const getLimaDataBaru = ({
     commit
 }) => {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         axios.get("administration/listadministration/")
             .then(res => {
                 commit('getLimaDataBaru', res.data)
@@ -143,8 +133,8 @@ export const dataBulanIni = ({ commit, state }, data) => {
     if(localStorage.getItem('tambah_transaksi') !== 'true' && state.isAction !== 'edit' ){
         commit('clearDataBulanan')
     }
-    new Promise((resolve, reject) => {
-        return axios.get('administration/administrationdetail/', data)
+    return new Promise((resolve, reject) => {
+        axios.get('administration/administrationdetail/', data)
         .then(res => {
             commit('dataBulanIni', res.data)
             resolve(res.data)
@@ -163,8 +153,8 @@ export const isAction = ({
 // Delete Transaksi
 export const deleteTransaksi = ({commit}, id) => {
 
-    new Promise((resolve, reject) => {
-        return axios.delete(`administration/deleteadministration/?administration_id=${id}`)
+    return new Promise((resolve, reject) => {
+        axios.delete(`administration/deleteadministration/?administration_id=${id}`)
         .then(() => {
             commit('deleteTransaksi', id)
             resolve(true)
@@ -180,16 +170,14 @@ export const deleteTransaksi = ({commit}, id) => {
 export const addTransaksi = ({
     commit
 }, data) => {
-    console.log(data.isImg, typeof(isImg))
-    new Promise((resolve, reject) => {
-        return axios.post('administration/addadministration/', data.obj)
+    return new Promise((resolve, reject) => {
+        axios.post('administration/addadministration/', data.obj)
             .then(res => {
                 
                 const objData = {}
                 if (data.isImg !== false ) {
                     for (var pair of data.obj.entries()) {
                         objData[pair[0]] = pair[1]
-                        console.log(objData)
                     }
                     commit('addTransaksi', objData)
                 } else {
@@ -211,17 +199,16 @@ export const getTransaksi = ({ commit }, data) => {
 
 // SAVE
 export const saveTransaksi = ({ commit }, result) => {
-    console.log(result)
-    commit('saveTransaksi', result.data)
-    // new Promise((resolve, reject) => {
-    //     return axios
-    //     .patch(`administration/updateadministration/${result.id}/`, result.data)
-    //     .then(res => {
-    //         commit('saveTransaksi', result.data)
-    //         resolve(res)
-    //     })
-    //     .catch(err => reject(err))
-    // })
+    
+    return new Promise((resolve, reject) => {
+        axios
+        .patch(`administration/updateadministration/${result.id}/`, result.data)
+        .then(res => {
+            commit('saveTransaksi', result.data)
+            resolve(res)
+        })
+        .catch(err => reject(err))
+    })
 }
 
 // ==============================

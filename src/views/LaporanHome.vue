@@ -183,6 +183,7 @@ export default {
     if (localStorage.getItem("login") === "true") {
       localStorage.setItem("tambah_transaksi", false);
       await this.loadedData();
+      this.getDataTahunIni()
     }
   },
   computed: {
@@ -195,8 +196,21 @@ export default {
     ...mapGetters(["fullDataTahunIni"]),
   },
   watch: {
-    // dataTahunIni(newValue){
-    //   return newValue
+    // 'fullDataTahunan.profit': function(newValue){
+    //   if(newValue){
+
+    //     console.log(newValue)
+    //     const fillData = {
+    //         data: this.filldata(
+    //           moment.months(),
+    //           this.fullDataTahunan.income,
+    //           this.fullDataTahunan.outcome,
+    //           this.fullDataTahunan.profit
+    //         ),
+    //         option: this.chartOption,
+    //       };
+    //       this.fillDataGraph(fillData);
+    //   }
     // }
   },
   methods: {

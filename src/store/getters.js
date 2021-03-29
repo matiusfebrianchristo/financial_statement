@@ -1,6 +1,6 @@
 export const allResultTahunan =  state =>{
-            if (state.resultTahunan !== null) {
-                return state.resultTahunan
+            if (state.dataTahunIni !== null) {
+                return state.dataTahunIni
             } else {
                 return {
                     income: 0,
