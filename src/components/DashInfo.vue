@@ -22,7 +22,7 @@
                     ></i>
                   </div>
                   <div class="text-end">
-                    <h3>Rp. {{ income }}</h3>
+                    <h3 >{{ formatPrice(allResultTahunan.income) }}</h3>
                     <span class="text-success"
                       ><i class="bi bi-arrow-up"></i> Income
                     </span>
@@ -44,7 +44,7 @@
                     ></i>
                   </div>
                   <div class="text-end">
-                    <h3>Rp. {{ outcome }}</h3>
+                    <h3>{{ formatPrice(allResultTahunan.outcome) }}</h3>
                     <span class="text-danger"
                       ><i class="bi bi-arrow-down"></i> Outcome</span
                     >
@@ -56,7 +56,7 @@
         </div>
         <div class="col-lg-4 col-md-4 col-12">
           <div class="card card-profit">
-            <div class="card-content">
+            <div class="card-content overflow-hidden">
               <div class="card-body">
                 <div class="d-flex justify-content-between">
                   <div class="align-self-center">
@@ -66,7 +66,7 @@
                     ></i>
                   </div>
                   <div class="text-end">
-                    <h3>Rp. {{ profit }}</h3>
+                    <h3>{{ formatPrice(allResultTahunan.profit) }}</h3>
                     <span class="text-primary"
                       ><i class="text-primary bi bi-arrow-down-up"></i>
                       Profit</span
@@ -83,9 +83,25 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  props: ["income", "outcome", "profit"],
   name: "DashInfo",
+  computed: {
+    ...mapGetters(["allResultTahunan"]),
+  },
+
+  methods: {
+    formatPrice(value) {
+      const formatter = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 2,
+      });
+
+      return formatter.format(value)
+    },
+  },
 };
 </script>
 

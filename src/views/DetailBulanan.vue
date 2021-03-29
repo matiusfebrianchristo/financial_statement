@@ -82,7 +82,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(d, index) in getDataBulanan()" :key="d.id">
+                <tr v-for="(d, index) in allDataBulanIni" :key="d.id">
                   <th scope="row">{{ index + 1 }}</th>
                   <td class="text-wrapper text-start">
                     Rp. {{ d[1].nominal }}
@@ -166,10 +166,10 @@
 import Modals from "@/components/Modals.vue";
 import moment from "moment";
 import axios from "axios";
+import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
   name: "DetailBulanan",
-  props: ["isNav"],
   components: {
     Modals,
   },
@@ -198,7 +198,14 @@ export default {
     localStorage.setItem("tambah_transaksi", false);
     this.loadedData();
   },
+  computed:{
+    ...mapState({
+      isNav: state => state.isNavActive
+    }),
+    ...mapGetters(['allDataBulanIni'])
+  },
   methods: {
+    ...mapActions(['isNavActive', 'dataBulanIni']),
     rubahModeImg() {
       this.cek = true;
     },
@@ -208,8 +215,7 @@ export default {
 
     // =================
     clickAddTrans() {
-      this.isEdited = false;
-      this.isDone = false;
+      this.isAction('add')
       localStorage.setItem("tambah_transaksi", true);
     },
 
@@ -415,53 +421,13 @@ export default {
     // Data AXIOS
     // =====================================
     async loadedData() {
-      await axios
-        .get("administration/administrationdetail/", {
+      await this.dataBulanIni({
           params: {
-            year: "2021",
+            year: this.$route.params.tahun,
             month: moment().month(this.$route.params.bulan).format("M"),
           },
-        })
-        .then((res) => {
-          if (this.fullDataBulanan !== null) {
-            if (this.oldFullDataBulanan === null) {
-              this.oldFullDataBulanan = this.fullDataBulanan;
-            }
-
-            this.fullDataBulanan = [];
-            let dataDetail;
-
-            dataDetail = new Array(res.data);
-
-            const hasil = Object.keys(dataDetail[0]).map((key) => [
-              Number(key),
-              dataDetail[0][key],
-            ]);
-
-            this.fullDataBulanan = hasil;
-          } else {
-            this.fullDataBulanan = [];
-
-            let dataDetail;
-            // let dataDetailTemp
-            dataDetail = new Array(res.data);
-            // dataDetailTemp = new Array(dataDetail[0][0])
-            const hasil = Object.keys(dataDetail[0]).map((key) => [
-              Number(key),
-              dataDetail[0][key],
-            ]);
-            // for (let i = 0; i <= hasil.length - 1; i++) {
-            //   if(dataDetail[0][i] !== undefined ){
-            //   }
-
-            this.fullDataBulanan = hasil;
-            // }
-          }
-
-          console.log(this.fullDataBulanan);
-        })
-        .catch((err) => console.log(err));
-    },
+      })
+    }
   },
 };
 </script>

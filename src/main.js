@@ -12,6 +12,7 @@ import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css';
+import store from './store/index.js'
 
 
 
@@ -23,16 +24,15 @@ Vue.use(VueToast);
 
 
 axios.defaults.baseURL = 'https://glacial-coast-08306.herokuapp.com/api/v1/';
+console.log(store)
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + store.getters.token.token_access
 
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token_access')
-// if(localStorage.getItem('token_access') !== null && localStorage.getItem('login') !== false){
-  
-// }
 
 
 Vue.config.productionTip = false
 
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount('#app')

@@ -78,7 +78,7 @@
                 id="formFile"
                 accept="image/*"
               />
-              <p v-if="isEdit === true" class="text-danger">
+              <p v-if="isAction === true" class="text-danger">
                 *Isi field ini jika ingin menganti gambar!
               </p>
             </div>
@@ -100,7 +100,7 @@
           </button>
           <button
             v-if="onProgress === true"
-            class="btn btn-primary btn-lg btn-block "
+            class="btn btn-primary btn-lg btn-block"
             type="button"
             disabled
           >
@@ -113,25 +113,24 @@
           </button>
           <div v-else>
             <button
-            v-if="isEdit === false"
-            type="button"
-            class="btn btn-primary"
-            id="btnModalsSv"
-            @click="onClick"
-          >
-            Add
-          </button>
-          <button
-            v-else
-            type="button"
-            class="btn btn-primary"
-            id="btnModalsAdd"
-            @click="onClickSvData"
-          >
-            Save
-          </button>
+              v-if="isAction === 'add'"
+              type="button"
+              class="btn btn-primary"
+              id="btnModalsSv"
+              @click="onClick"
+            >
+              Add
+            </button>
+            <button
+              v-else
+              type="button"
+              class="btn btn-primary"
+              id="btnModalsAdd"
+              @click="onClickSvData"
+            >
+              Save
+            </button>
           </div>
-          
         </div>
       </div>
     </div>
@@ -141,10 +140,11 @@
 <script>
 import DatePicker from "vue2-datepicker";
 import moment from "moment";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Modals",
-  props: ["isEdit", "dataEdited", "cekImg", "isDone", "onProgress"],
+  props: ["isEdit", "dataEdited", "isDone", "onProgress"],
   components: {
     DatePicker,
   },
@@ -156,23 +156,30 @@ export default {
       deskripsi: "",
       bukti: "",
       id: null,
+      cekImg: false,
+      progress: false,
       data: new FormData(),
     };
   },
-  watch: {
-    isDone: function (newValue, oldValue) {
-      console.log(newValue, oldValue);
-      if (newValue === true) {
-        this.$refs.Close.click();
-      }
-    },
+  computed: {
+    ...mapState(["isAction"]),
   },
+  // watch: {
+  //   isDone: function (newValue, oldValue) {
+  //     console.log(newValue, oldValue);
+  //     if (newValue === true) {
+  //       this.$refs.Close.click();
+  //     }
+  //   },
+  // },
   methods: {
+    ...mapActions(["addTransaksi"]),
+
     clearInput() {
       this.nominal = null;
       this.status = null;
       this.created_at = moment().format("YYYY-MM-DD");
-      this.deskripsi = "";
+      this.deskripsi = null;
       this.id = null;
       this.$refs.fileupload.value = null;
     },
@@ -199,12 +206,41 @@ export default {
       console.log(this.cekImg);
       if (this.cekImg !== true) {
         if (this.isEdit !== true) {
-          return {
+          this.progress = true;
+
+          const data = {
             nominal: this.nominal,
             tipe: this.status,
             deskripsi: this.deskripsi,
             created_at: this.created_at,
           };
+
+          this.addTransaksi({
+            obj: data,
+            isImg: false,
+          })
+            .then(() => {
+              this.progress = false;
+              localStorage.setItem("tambah_transaksi", false)
+              this.$toast.success("Data berhasil ditambahkan!", {
+                type: "success",
+                position: "top-right",
+                duration: 3000,
+                dismissible: true,
+              });
+              this.$refs.Close.click();
+              this.clearInput();
+            })
+            .catch((err) => {
+              console.log(err);
+              this.progress = false;
+              this.$toast.error("Terjadi kesalahan", {
+                type: "error",
+                position: "top-right",
+                duration: 3000,
+                dismissible: true,
+              });
+            });
         } else {
           return {
             nominal: this.nominal,
@@ -214,7 +250,24 @@ export default {
           };
         }
       } else {
-        return this.data;
+        this.progress = true;
+        this.addTransaksi({
+          obj: this.data,
+          isImg: true,
+        })
+          .then(() => {
+            this.progress = false;
+            localStorage.setItem("tambah_transaksi", false)
+            this.$toast.success("Data berhasil ditambahkan!", {
+              type: "success",
+              position: "top-right",
+              duration: 3000,
+              dismissible: true,
+            });
+            this.$refs.Close.click();
+            this.clearInput();
+          })
+          .catch((err) => console.log(err));
       }
     },
     // onClickSv() {
@@ -225,7 +278,7 @@ export default {
     //   this.data.append("created_at", this.created_at);
     // },
     imageUpload(event) {
-      this.$emit("cekImg");
+      this.cekImg = true;
       console.log(event.target.files[0]);
       this.data.append("tipe", this.status);
       this.data.append("nominal", this.nominal);
@@ -235,7 +288,21 @@ export default {
     },
 
     onClick() {
-      this.$emit("clicked", this.cekData());
+      if (
+        this.status !== null &&
+        this.deskripsi !== null &&
+        this.nominal !== null &&
+        this.created_at !== null
+      ) {
+        this.cekData();
+      } else {
+        this.$toast.error("Lengkapi Data!!", {
+          type: "error",
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
+      }
     },
     onClickSvData() {
       this.$emit("clickedSv", this.cekData());

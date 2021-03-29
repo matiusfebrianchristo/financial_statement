@@ -3,14 +3,14 @@
     class="w-75 login-page needs-validation"
     novalidate
     :class="{ pageHidden: isLogin === false }"
-    @submit.prevent="login"
+    @submit.prevent="masuk(data)"
   >
     <h2 class="fw-bolder header-masuk">Login</h2>
     <hr />
     <div class="mb-3">
       <label for="exampleFormControlInput1" class="form-label">Username</label>
       <input
-        v-model="username"
+        v-model="data.username"
         type="text"
         class="form-control"
         id="exampleFormControlInput1"
@@ -21,7 +21,7 @@
     <div class="mb-3">
       <label for="exampleFormControlInput2" class="form-label">Password</label>
       <input
-        v-model="password"
+        v-model="data.password"
         type="password"
         class="form-control"
         id="exampleFormControlInput2"
@@ -69,52 +69,54 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import { mapActions } from "vuex";
+// import axios from 'axios'
+
 export default {
   name: "Login",
   props: ["isLogin"],
   data() {
     return {
-      username: "",
-      password: "",
+      data: {},
       progress: false,
     };
+  },
+  computed:{
+    // ...mapGetters(['token'])
   },
   methods: {
     moveForm() {
       this.$emit("clicked");
     },
-    async login() {
-      this.progress = true;
-      if (this.username !== "" && this.password !== "") {
-        await axios
-          .post("accounts/usertoken/", {
-            username: this.username,
-            password: this.password,
-          })
-          .then((res) => {
-            localStorage.setItem("token_access", res.data.access);
-            localStorage.setItem("token_refresh", res.data.refresh);
-            localStorage.setItem("login", true);
-            const token = res.data.access;
-  axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-            console.log(res);
-            setTimeout(() => {
-              
-              this.$router.push("/");
-              this.progress = false;
-            }, 2000);
-          })
-          .catch((err) => {
-            this.progress = false;
-            this.$toast.error("Username dan Password tidak valid", {
-              type: "error",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
-            });
-            console.log(err);
-          });
+    ...mapActions(['login']),
+     masuk(data) {
+      
+      // this.progress = true;
+      if (data.username !== "" && data.password !== "") {
+        this.progress = true;
+        this.login(data)
+        .then((res) => {
+          this.progress = false
+          localStorage.setItem("login", true);
+          localStorage.setItem('token_access', res.data.access)
+          localStorage.setItem('token_refresh', res.data.refresh)
+
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // Harus diperbaiki
+          this.$router.push("/");
+        })
+        .catch(err => {
+          console.log(err)
+          this.$toast.error("Isi username dan password", {
+          type: "error",
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
+        })
+
+
       } else {
         this.progress = false;
         this.$toast.error("Isi username dan password", {
@@ -125,7 +127,9 @@ export default {
         });
       }
     },
+    
   },
+  
 };
 </script>
 

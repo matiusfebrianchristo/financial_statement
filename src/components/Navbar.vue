@@ -2,12 +2,12 @@
   <div class="navbar-customize">
     <nav
       class="navbar wrapper navbar-expand-lg navbar-dark"
-      :class="{ full: isActive }"
+      :class="{ full: isActiveNav }"
     >
       <div class="container-fluid">
         <div class="d-none button-close d-lg-block">
           <div class="wrapper-nav" @click="onClick">
-            <div class="circle icon" :class="{ close: isActive === false }">
+            <div class="circle icon" :class="{ close: isActiveNav === false }">
               <span class="line top"></span>
               <span class="line middle"></span>
               <span class="line bottom"></span>
@@ -15,78 +15,55 @@
           </div>
         </div>
         <div class="d-lg-none button-close d-sm-block">
-        <div class="wrapper-nav" @click="onClickMobile" :class="{ close: isMActive === false }">
-          <div class="circle icon" >
-            <span class="line top"></span>
-            <span class="line middle"></span>
-            <span class="line bottom"></span>
+          <div
+            class="wrapper-nav"
+            @click="onClickMobile"
+            :class="{ close: isActiveNavMobile === false }"
+          >
+            <div class="circle icon">
+              <span class="line top"></span>
+              <span class="line middle"></span>
+              <span class="line bottom"></span>
+            </div>
           </div>
         </div>
-      </div>
-        <!-- <router-link
-          class="navbar-brand dash-p"
-          :class="{ show: isActive === true }"
-          to="/"
-          ><strong>Dashboard</strong></router-link
-        > -->
-        <!-- <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button> -->
-        <!-- <div
-          class="collapse navbar-collapse justify-content-end"
-          id="navbarSupportedContent"
-        >
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <transition name="fade">
-    <img v-if="isActive" src="../assets/image/user4.png" alt="asd" class="img-svg ">
-  </transition>
-            </li>
-            <li class="nav-item d-lg-none d-sm-block">
-              <Sidebar />
-            </li>
-          </ul>
-        </div> -->
       </div>
     </nav>
   </div>
 </template>
 
 <script>
-// import Sidebar from "@/components/Sidebar.vue";
+import { mapState, mapActions } from "vuex";
 
 export default {
-  props: ["isActive", "isMActive"],
   components: {
     // Sidebar,
   },
+  computed: {
+    ...mapState({
+      isActiveNav: state => state.isNavActive,
+      isActiveNavMobile: state => state.isMNavActive
+    }),
+  },
   data() {
-    return {
-      isActiveNav: this.isActive,
-    };
+    return{
+      
+    }
   },
   methods: {
+    ...mapActions(["isNavActive", "isMNavActive"]),
+
     onClick() {
-      this.$emit("clicked");
+      this.isNavActive();
     },
-    onClickMobile(){
-      this.$emit("clickedMobile")
-    }
+    onClickMobile() {
+      this.isMNavActive();
+    },
   },
 };
 </script>
 
 <style>
-
-
 @media (min-width: 992px) {
 }
 .dash-p {
@@ -135,11 +112,10 @@ export default {
   visibility: hidden;
 }
 
-
 /* =================================== */
 /* Button Close Mobile */
 
-.wrapper-nav.close{
-    visibility: hidden;
+.wrapper-nav.close {
+  visibility: hidden;
 }
 </style>

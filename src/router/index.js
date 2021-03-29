@@ -15,7 +15,7 @@ const routes = [{
     path: '/',
     name: 'LaporanKeuangan',
     component: LaporanKeuangan,
-    redirect: '/dashboard',
+    redirect: {name: 'Dashboard'},
     children: [{
         path: '/dashboard',
         name: 'Dashboard',
