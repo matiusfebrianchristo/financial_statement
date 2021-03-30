@@ -83,12 +83,10 @@ export default {
     };
   },
   async mounted() {
-    // console.log(typeof localStorage.getItem("login"))
     if (localStorage.getItem("login") === "true") {
       await this.getDataDaily();
-      this.rekapTahunIni();
       this.getLimaDataBaru();
-      // this.rekapBulanIni();
+
     }
   },
   computed: {
@@ -135,111 +133,12 @@ export default {
       }
     },
 
-    // rekapBulanIni() {
-    //   const tgl = moment().format("DD-MM-YYYY");
-    //   const tahun = moment(tgl, "DD-MM-YYYY").format("YYYY");
-    //   const bulan = moment(tgl, "DD-MM-YYYY").format("M");
-
-    //   // console.log(tahun)
-    //   this.getDataBulanIni({ bulan, tahun }).then((res) => {
-    //     console.log(res, "q");
-    //     let dataIn;
-    //     let oldDataIn = null;
-    //     let dataOut;
-    //     let oldDataOut = null;
-    //     for (let i = 0; i < res.length; i++) {
-    //       if (res[i][1].tipe !== "pemasukan") {
-    //         if (oldDataOut !== null) {
-    //           dataOut = res[i][1].nominal;
-    //           oldDataOut = oldDataOut + dataOut;
-    //         } else {
-    //           dataOut = res[i][1].nominal;
-    //         }
-    //       } else {
-    //         if (oldDataOut !== null) {
-    //           dataIn = res[i][1].nominal;
-    //           oldDataIn = oldDataIn + dataIn;
-    //         } else {
-    //           dataIn = res[i][1].nominal;
-    //         }
-    //       }
-    //     }
-
-    //     this.outBulanIni = dataOut;
-    //     this.inBulanIni = dataIn;
-    //     this.proBulanIni = dataIn - dataOut;
-    //   });
-    // },
-
-    rekapTahunIni() {
-      let data = null;
-      let dataBaru;
-      let obj = {};
-      // Income
-      for (let i = 0; i < this.dataTahunIni.length; i++) {
-        if (data !== null) {
-          dataBaru = this.dataTahunIni[i][1].income;
-          data = data + dataBaru;
-        } else {
-          data = this.dataTahunIni[i][1].income;
-        }
-      }
-      obj.income = data;
-      //Outcome
-      data = null;
-      for (let i = 0; i < this.dataTahunIni.length; i++) {
-        if (data !== null) {
-          dataBaru = this.dataTahunIni[i][1].outcome;
-          data = data + dataBaru;
-        } else {
-          data = this.dataTahunIni[i][1].outcome;
-        }
-      }
-      obj.outcome = data;
-      // Profit
-      data = null;
-      for (let i = 0; i < this.dataTahunIni.length; i++) {
-        if (data !== null) {
-          dataBaru = this.dataTahunIni[i][1].profit;
-          data = data + dataBaru;
-        } else {
-          data = this.dataTahunIni[i][1].profit;
-        }
-      }
-      obj.profit = data;
-
-      this.getInOutPro(obj);
-    },
+    
     // ================================================
     // Data Daily Report
 
     async getDataDaily() {
       await this.getDataTahunIni()
-        .then((res) => {
-          let bulan;
-          this.dataMonth = res.length;
-          const income = [];
-          const outcome = [];
-          const profit = [];
-
-          const fulldataDaily = [];
-          for (let i = 0; i < res.length; i++) {
-            bulan = res[i][0];
-            income.push(res[i][1].income);
-            outcome.push(res[i][1].outcome);
-            profit.push(res[i][1].profit);
-            fulldataDaily.push({
-              income: income[i],
-              outcome: outcome[i],
-              profit: profit[i],
-              month: (res[i][1].month = moment()
-                .locale("id")
-                .month(bulan - 1)
-                .format("MMMM")),
-            });
-          }
-        })
-        .catch((err) => console.log(err));
     },
 
     // Get 5 Data Terbaru

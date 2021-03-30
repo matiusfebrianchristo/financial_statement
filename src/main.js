@@ -24,7 +24,6 @@ Vue.use(VueToast);
 
 
 axios.defaults.baseURL = 'https://glacial-coast-08306.herokuapp.com/api/v1/';
-console.log(store)
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + store.getters.token.token_access
 
 

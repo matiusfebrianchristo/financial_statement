@@ -1,7 +1,7 @@
 <template>
   <div class="navbar-customize">
     <nav
-      class="navbar wrapper navbar-expand-lg navbar-dark"
+      class="navbar wrapper navbar-expand-lg navbar-dark "
       :class="{ full: isActiveNav }"
     >
       <div class="container-fluid">
@@ -18,9 +18,9 @@
           <div
             class="wrapper-nav"
             @click="onClickMobile"
-            :class="{ close: isActiveNavMobile === false }"
+            
           >
-            <div class="circle icon">
+            <div class="circle icon" :class="{ close: isActiveNavMobile === false }">
               <span class="line top"></span>
               <span class="line middle"></span>
               <span class="line bottom"></span>

@@ -2,20 +2,21 @@
 import { Line } from "vue-chartjs";
 import moment from "moment";
 
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   extends: Line,
 
   computed: {
     ...mapState(["graphic"]),
+    ...mapGetters(['allResultTahunan'])
   },
   watch:{
     graphic: function(newValue){
       if(newValue){
-        this.renderChart(this.graphic.data, this.graphic.option);
+          this.renderChart(this.graphic.data, this.graphic.option);
       }
-    }
+    },
   },
   data() {
     return {
@@ -97,7 +98,12 @@ export default {
     }
   },
   mounted() {
+    if(this.graphic === null){
+
       this.renderChart(this.dataset, this.chartOption);
+    } else {
+      this.renderChart(this.graphic.data, this.graphic.option);
+    }
   },
 };
 </script>

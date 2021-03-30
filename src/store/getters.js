@@ -1,6 +1,6 @@
 export const allResultTahunan =  state =>{
-            if (state.resultTahunan !== null) {
-                return state.resultTahunan
+            if (state.dataTahunIni !== null) {
+                return state.dataTahunIni
             } else {
                 return {
                     income: 0,
@@ -15,6 +15,9 @@ export const fullDataTahunIni = state =>{
                 return state.fullDataTahunan.fullData
             }
         }
+
+
+
 export const token = state => {
             // const data = state.tokenAPI;
             if(state.tokenAPI !== null){
@@ -23,16 +26,17 @@ export const token = state => {
                     token_access: state.tokenAPI.token_access
                 }
             } else {
-                console.log(localStorage.getItem('token_access'))
                 return {
                     token_access: localStorage.getItem('token_access'),
                     token_refresh: localStorage.getItem('token_refresh')
                 }
             }
         }
+
+
 export const dataBaru = state => {
             if(state.dataBaru5 !== null){
-
+                
                 return state.dataBaru5.sort((a, b) => {
                     return parseFloat(a.id) - parseFloat(b.id);
                 }).slice(-5).sort((a, b) => {
@@ -43,19 +47,9 @@ export const dataBaru = state => {
         }
 
 export const allDataBulanIni = state => {
-    let dataDetail;
-    
-    dataDetail = new Array(state.dataBulanIni);
-
-    const hasil = Object.keys(dataDetail[0]).map((key) => [
-    Number(key),
-    dataDetail[0][key],
-    ]);
-    const sorted = hasil.slice();
-        const dataSorted = sorted.sort((a, b) => {
-          return new Date(b[1].created_at) - new Date(a[1].created_at);
-        });
-        return dataSorted;
+    return state.dataBulanIni
 
 }
+
+
 

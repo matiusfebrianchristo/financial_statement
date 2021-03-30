@@ -78,7 +78,7 @@
                 id="formFile"
                 accept="image/*"
               />
-              <p v-if="isAction === true" class="text-danger">
+              <p v-if="isAction === 'edit'" class="text-danger">
                 *Isi field ini jika ingin menganti gambar!
               </p>
             </div>
@@ -99,7 +99,7 @@
             Close
           </button>
           <button
-            v-if="onProgress === true"
+            v-if="progress === true"
             class="btn btn-primary btn-lg btn-block"
             type="button"
             disabled
@@ -140,11 +140,10 @@
 <script>
 import DatePicker from "vue2-datepicker";
 import moment from "moment";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
   name: "Modals",
-  props: ["isEdit", "dataEdited", "isDone", "onProgress"],
   components: {
     DatePicker,
   },
@@ -153,8 +152,8 @@ export default {
       nominal: null,
       status: null,
       created_at: moment().format("YYYY-MM-DD"),
-      deskripsi: "",
-      bukti: "",
+      deskripsi: null,
+      bukti: null,
       id: null,
       cekImg: false,
       progress: false,
@@ -162,19 +161,47 @@ export default {
     };
   },
   computed: {
-    ...mapState(["isAction"]),
+    ...mapState(["isAction", "tempTransaksi"]),
+    ...mapGetters(['fullDataTahunIni'])
   },
-  // watch: {
-  //   isDone: function (newValue, oldValue) {
-  //     console.log(newValue, oldValue);
-  //     if (newValue === true) {
-  //       this.$refs.Close.click();
-  //     }
-  //   },
-  // },
-  methods: {
-    ...mapActions(["addTransaksi"]),
+  watch: {
+    // Ketika isAction = add bersihkan semua data inputan
+    isAction(newValue) {
+      if (newValue) {
+        if (newValue === "add") {
+          this.clearInput();
+        }
+      }
+    },
 
+    // Ketika tempTransaksi diisi akan otomatis ditambahkan ke Data()
+    tempTransaksi(newValue) {
+      if (newValue) {
+        if (this.isAction === "edit") {
+          if (this.tempTransaksi !== null) {
+            this.id = this.tempTransaksi.id;
+            this.nominal = this.tempTransaksi.nominal;
+            this.status = this.tempTransaksi.tipe;
+            this.created_at = moment(
+              this.tempTransaksi.created_at,
+              "YYYY-M-D"
+            ).format("YYYY-MM-DD");
+            this.deskripsi = this.tempTransaksi.deskripsi;
+            this.bukti = this.tempTransaksi.bukti;
+          }
+        }
+      }
+    },
+  },
+  methods: {
+    ...mapActions([
+      "addTransaksi",
+      "dataBulanIni",
+      "saveTransaksi",
+      "getDataTahunIni",
+    ]),
+
+    // Clear Form
     clearInput() {
       this.nominal = null;
       this.status = null;
@@ -184,29 +211,20 @@ export default {
       this.$refs.fileupload.value = null;
     },
 
+    // Untuk value Select form Status
     getStatus(value) {
       if (value != null) {
         this.status = value.toLowerCase();
       }
-      console.log(this.status);
     },
-    isEdited(value) {
-      console.log(value);
-      this.cek = false;
-      this.id = value.administration_id;
-      this.nominal = value.nominal;
-      this.status = value.tipe;
-      this.created_at = moment(value.created_at, "YYYY-M-D").format(
-        "YYYY-MM-DD"
-      );
-      this.deskripsi = value.deskripsi;
-      this.bukti = value.bukti;
-    },
+
+    // Apakah Data edit/add dan dengan gambar/tidak
     cekData() {
-      console.log(this.cekImg);
+      // Untuk Add atau edit tanpa Gambar ============>
       if (this.cekImg !== true) {
-        if (this.isEdit !== true) {
+        // Untuk Add Data Tanpa Gambar ======================>
           this.progress = true;
+        if (this.isAction !== "edit") {
 
           const data = {
             nominal: this.nominal,
@@ -220,8 +238,101 @@ export default {
             isImg: false,
           })
             .then(() => {
+              this.getDataTahunIni();
               this.progress = false;
-              localStorage.setItem("tambah_transaksi", false)
+              if (
+                this.$route.params.tahun !== undefined &&
+                this.$route.params.bulan !== undefined
+              ) {
+                this.dataBulanIni({
+                  params: {
+                    year: this.$route.params.tahun,
+                    month: moment().month(this.$route.params.bulan).format("M"),
+                  },
+                });
+              }
+              localStorage.setItem("tambah_transaksi", false);
+
+              this.$toast.success("Data berhasil ditambahkan!", {
+                type: "success",
+                position: "top-right",
+                duration: 3000,
+                dismissible: true,
+              });
+
+              this.$refs.Close.click();
+              this.clearInput();
+            })
+            .catch((err) => {
+              console.log(err);
+               
+              this.progress = false;
+              this.$toast.error("Terjadi kesalahan", {
+                type: "error",
+                position: "top-right",
+                duration: 3000,
+                dismissible: true,
+              });
+            });
+        }
+        // Untuk Edit Data ===================>
+        else {
+          const data = {
+            id: this.id,
+            data: {
+              nominal: this.nominal,
+              tipe: this.status,
+              deskripsi: this.deskripsi,
+              created_at: this.created_at,
+            },
+          };
+          this.saveTransaksi(data)
+            .then(() => {
+              this.progress = false;
+              this.$toast.success("Data berhasil di Edit!", {
+                type: "success",
+                position: "top-right",
+                duration: 3000,
+                dismissible: true,
+              });
+              this.$refs.Close.click();
+              this.clearInput();
+            })
+            .catch(() => {
+              this.$toast.error("Lengkapi Data!!", {
+                type: "error",
+                position: "top-right",
+                duration: 3000,
+                dismissible: true,
+              });
+            });
+        }
+      }
+
+      // Untuk Add/Edit Data dengan Gambar ==============>
+      else {
+        this.progress = true;
+        // Untuk Add
+        if (this.isAction === "add") {
+          this.addTransaksi({
+            obj: this.data,
+            isImg: true,
+          })
+            .then(() => {
+              this.progress = false;
+              this.getDataTahunIni();
+              if (
+                this.$route.params.tahun !== undefined &&
+                this.$route.params.bulan !== undefined
+              ) {
+                this.dataBulanIni({
+                  params: {
+                    year: this.$route.params.tahun,
+                    month: moment().month(this.$route.params.bulan).format("M"),
+                  },
+                });
+              }
+              localStorage.setItem("tambah_transaksi", false);
               this.$toast.success("Data berhasil ditambahkan!", {
                 type: "success",
                 position: "top-right",
@@ -231,55 +342,41 @@ export default {
               this.$refs.Close.click();
               this.clearInput();
             })
-            .catch((err) => {
-              console.log(err);
+            .catch((err) => console.log(err));
+        }
+        // Untuk Save ====================>
+        else {
+          const data = {
+            id: this.id,
+            data: this.data,
+          };
+          this.saveTransaksi(data)
+            .then(() => {
               this.progress = false;
-              this.$toast.error("Terjadi kesalahan", {
+              this.$toast.success("Data berhasil di Edit!", {
+                type: "success",
+                position: "top-right",
+                duration: 3000,
+                dismissible: true,
+              });
+              this.$refs.Close.click();
+              this.clearInput();
+            })
+            .catch(() => {
+              this.$toast.error("Lengkapi Data!!", {
                 type: "error",
                 position: "top-right",
                 duration: 3000,
                 dismissible: true,
               });
             });
-        } else {
-          return {
-            nominal: this.nominal,
-            tipe: this.status,
-            deskripsi: this.deskripsi,
-            created_at: this.created_at,
-          };
         }
-      } else {
-        this.progress = true;
-        this.addTransaksi({
-          obj: this.data,
-          isImg: true,
-        })
-          .then(() => {
-            this.progress = false;
-            localStorage.setItem("tambah_transaksi", false)
-            this.$toast.success("Data berhasil ditambahkan!", {
-              type: "success",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
-            });
-            this.$refs.Close.click();
-            this.clearInput();
-          })
-          .catch((err) => console.log(err));
       }
     },
-    // onClickSv() {
-    //   this.data.append("tipe", this.status);
-    //   this.data.append("nominal", this.nominal);
-    //   this.data.append("bukti", this.bukti);
-    //   this.data.append("deskripsi", this.deskripsi);
-    //   this.data.append("created_at", this.created_at);
-    // },
+
+    // Untuk Upload Gambar
     imageUpload(event) {
       this.cekImg = true;
-      console.log(event.target.files[0]);
       this.data.append("tipe", this.status);
       this.data.append("nominal", this.nominal);
       this.data.append("bukti", event.target.files[0]);
@@ -287,6 +384,7 @@ export default {
       this.data.append("created_at", this.created_at);
     },
 
+    // Click Add
     onClick() {
       if (
         this.status !== null &&
@@ -304,8 +402,24 @@ export default {
         });
       }
     },
+
+    // Click Save
     onClickSvData() {
-      this.$emit("clickedSv", this.cekData());
+      if (
+        this.status !== null &&
+        this.deskripsi !== null &&
+        this.nominal !== null &&
+        this.created_at !== null
+      ) {
+        this.cekData();
+      } else {
+        this.$toast.error("Lengkapi Data!!", {
+          type: "error",
+          position: "top-right",
+          duration: 3000,
+          dismissible: true,
+        });
+      }
     },
   },
 };

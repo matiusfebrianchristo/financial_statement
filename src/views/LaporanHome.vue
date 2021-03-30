@@ -183,6 +183,7 @@ export default {
     if (localStorage.getItem("login") === "true") {
       localStorage.setItem("tambah_transaksi", false);
       await this.loadedData();
+      this.getDataTahunIni()
     }
   },
   computed: {
@@ -192,12 +193,14 @@ export default {
       graphic: state => state.graphic,
       isNav: state => state.isNavActive
     }),
-    ...mapGetters(["fullDataTahunIni"]),
+    ...mapGetters(["fullDataTahunIni", 'allResultTahunan']),
   },
   watch: {
-    // dataTahunIni(newValue){
-    //   return newValue
-    // }
+    'allResultTahunan.profit': function(newValue){
+      if(newValue){
+        this.loadGraph()
+      }
+    }
   },
   methods: {
     ...mapActions([
@@ -205,7 +208,7 @@ export default {
       "getDataBulanIni",
       "fillDataGraph",
       "setFullDataTahunIni",
-      'isAction'
+      'isAction',
     ]),
 
     // =================
@@ -213,6 +216,18 @@ export default {
       this.isAction('add')
     },
 
+    loadGraph(){
+      const fillData = {
+            data: this.filldata(
+              moment.months(),
+              this.fullDataTahunan.income,
+              this.fullDataTahunan.outcome,
+              this.fullDataTahunan.profit
+            ),
+            option: this.chartOption,
+          };
+          this.fillDataGraph(fillData);
+    },
 
     async loadedData() {
       await this.getDataTahunIni().then((res) => {
@@ -228,12 +243,8 @@ export default {
         };
         this.fillDataGraph(fillData);
       });
-      // .catch(err=> console.log(err))
     },
 
-    cekerrt() {
-      console.log("hore");
-    },
 
     // Data Chartjs
     // ================================================
