@@ -68,12 +68,24 @@ body {
 
 .sidebar {
   text-align: center;
-  width: var(--sidebar-width);
+  /* margin-top: -24px!important; */
+  width: 150%;
   height: 100vh;
-  position: fixed;
+  position: fixed!important;
   transition: all .3s ease-in-out;
   transform: translateX(0);
-  z-index: 999!important;
+  z-index: 99999!important;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.sidebar .sidebar {
+  text-align: center;
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed!important;
+  transition: all .3s ease-in-out;
+  transform: translateX(0);
+  z-index: 99999!important;
   background-color: var(--sidebar-bg-color);
 }
 
@@ -82,7 +94,7 @@ body {
 
 .sidebar.hide {
   transform: translateX(-250px);
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .sidebar.hide .link-container {
@@ -107,6 +119,9 @@ body {
 /* Navbar */
 .navbar {
   background-color: var(--navbar-bg-color) !important;
+  /* width: 100%;
+  position: fixed;
+  top: 0; */
 }
 
 /* Wrapper */
@@ -123,6 +138,7 @@ body {
 
 @media (min-width: 992px) {
   .sidebar {
+    margin-top: 0!important;
     width: var(--sidebar-width);
     height: 100%;
     transition: all .3s ease-in-out;
@@ -154,7 +170,9 @@ body {
   }
   
 
-
+  .navbar{
+    position: relative;
+  }
 
 
   .navbar-customize {

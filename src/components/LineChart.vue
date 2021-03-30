@@ -16,7 +16,7 @@ export default {
       if(newValue){
           this.renderChart(this.graphic.data, this.graphic.option);
       }
-    }
+    },
   },
   data() {
     return {

@@ -6,6 +6,7 @@ export default{
         dataTahunIni: null,
         dataBulanIni: [],
         detailDataTahunan: [],
+        params: null,
         fullDataTahunan: [],
         resultTahunan: null,
         dataTransaksi: null,

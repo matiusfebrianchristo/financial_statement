@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <transition name="slide-fade">
       <div
-        class="d-lg-block d-none fixed sidebar"
+        class="d-lg-block d-none fixed sidebar main-side"
         :class="{ hide:isActiveNav, show:isActiveNav }"
       >
         <Sidebar />
@@ -11,8 +11,8 @@
     </transition>
     <transition name="slide-fade">
       <div
-        class="d-sm-block d-lg-none position-absolute fixed sidebar"
-        :class="{ hide:isActiveNavMobile, show:isActiveNavMobile }"
+        class="d-sm-block d-lg-none position-absolute fixed sidebar main-side"
+        :class="{ hide:isActiveMobile, show:isActiveMobile }"
       >
         <Sidebar  />
       </div>
@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-
+      isActiveMobile: false
 
     };
   },
@@ -60,8 +60,19 @@ export default {
       isActiveNavMobile: state => state.isMNavActive
       })
   },
+  watch: {
+    isActiveNavMobile: function(newValue){
+      const main = document.querySelectorAll('.main-side')
+      if(newValue){
+            setTimeout(() => {
+            main[1].style.setProperty('display', 'none', 'important')
+             }, 500)
+      } else {
+        main[1].style.display = 'block'
+      }
+    },
+  },
   mounted() {
-    // console.log(this.token)
     this.cekLoginStatus();
   },
 

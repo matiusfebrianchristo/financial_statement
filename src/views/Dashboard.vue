@@ -83,7 +83,6 @@ export default {
     };
   },
   async mounted() {
-    // console.log(typeof localStorage.getItem("login"))
     if (localStorage.getItem("login") === "true") {
       await this.getDataDaily();
       this.getLimaDataBaru();

@@ -1,6 +1,5 @@
 import moment from "moment"
 
-
 // set Token JWT
 export const setToken = (state, token) => {
     state.tokenAPI = {
@@ -99,6 +98,17 @@ export const addTransaksi = (state, data) => {
                 }
             }
         }
+        for (let i = 0; i < main.length; i++) {
+            if(i === (moment(data.created_at, "YYYY-MM-DD").format('M') - 1)){
+                if(data.tipe === 'pemasukan'){
+                    state.fullDataTahunan.income[i] = state.fullDataTahunan.income[i] + nominal;
+                    state.fullDataTahunan.profit[i] = state.fullDataTahunan.income[i] - state.fullDataTahunan.outcome[i]
+                } else {
+                    state.fullDataTahunan.outcome[i] = state.fullDataTahunan.outcome[i] + nominal;
+                    state.fullDataTahunan.profit[i] = state.fullDataTahunan.income[i] - state.fullDataTahunan.outcome[i]
+                }
+            }
+        }
     }
     state.dataTransaksi = data
 }
@@ -110,6 +120,11 @@ export const isAction = (state, data) => {
 
 // ==================================
 // Detail Bulanan
+
+// GET Params
+export const getParams = (state, data) => {
+    state.params = data
+}
 
 // Clear Data
 export const clearDataBulanan = (state) => {
@@ -136,10 +151,8 @@ export const dataBulanIni = (state, data) => {
 // delete Transaksi
 
 export const deleteTransaksi = (state, id) => {
-    console.log(state.dataBulanIni)
     for (let i = 0; i < state.dataBulanIni.length; i++) {
         if (state.dataBulanIni[i][0] === id) {
-            console.log(state.dataBulanIni[i])
             state.dataBulanIni.splice(i, 1)
         }
     }
@@ -153,17 +166,8 @@ export const getTransaksi = (state, data) => {
 
 // Save
 
-export const saveTransaksi = (state, result) => {
+export const saveTransaksi = (state) => {
     state.tempTransaksi = null
-    console.log(result)
-    // state.dataBulanIni.forEach(e => {
-    //     if(e[0] === result.id){
-    //         e[1].nominal = result.data.nominal
-    //         e[1].created_at = result.data.created_at
-    //         e[1].tipe = result.data.tipe
-    //         e[1].deskripsi = result.data.deskripsi
-    //     }
-    // });
 }
 
 

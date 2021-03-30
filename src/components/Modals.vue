@@ -140,7 +140,7 @@
 <script>
 import DatePicker from "vue2-datepicker";
 import moment from "moment";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
   name: "Modals",
@@ -162,6 +162,7 @@ export default {
   },
   computed: {
     ...mapState(["isAction", "tempTransaksi"]),
+    ...mapGetters(['fullDataTahunIni'])
   },
   watch: {
     // Ketika isAction = add bersihkan semua data inputan
@@ -215,12 +216,10 @@ export default {
       if (value != null) {
         this.status = value.toLowerCase();
       }
-      console.log(this.status);
     },
 
     // Apakah Data edit/add dan dengan gambar/tidak
     cekData() {
-      console.log(this.cekImg);
       // Untuk Add atau edit tanpa Gambar ============>
       if (this.cekImg !== true) {
         // Untuk Add Data Tanpa Gambar ======================>
@@ -289,18 +288,6 @@ export default {
           };
           this.saveTransaksi(data)
             .then(() => {
-              if (
-                this.$route.params.tahun !== undefined &&
-                this.$route.params.bulan !== undefined
-              ) {
-                this.dataBulanIni({
-                  params: {
-                    year: this.$route.params.tahun,
-                    month: moment().month(this.$route.params.bulan).format("M"),
-                  },
-                });
-              }
-              
               this.progress = false;
               this.$toast.success("Data berhasil di Edit!", {
                 type: "success",
@@ -357,7 +344,7 @@ export default {
             })
             .catch((err) => console.log(err));
         }
-        // Untuk Save
+        // Untuk Save ====================>
         else {
           const data = {
             id: this.id,
@@ -390,7 +377,6 @@ export default {
     // Untuk Upload Gambar
     imageUpload(event) {
       this.cekImg = true;
-      console.log(event.target.files[0]);
       this.data.append("tipe", this.status);
       this.data.append("nominal", this.nominal);
       this.data.append("bukti", event.target.files[0]);

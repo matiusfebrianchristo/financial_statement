@@ -6,7 +6,6 @@ import DetailBulanan from '../views/DetailBulanan.vue'
 import BuktiDetailBulanan from '../views/BuktiDetailBulanan.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Masuk from '../views/Masuk.vue'
-import Tes from '../views/tes.vue'
 
 
 Vue.use(VueRouter)
@@ -49,11 +48,7 @@ const routes = [{
     component: Masuk,
     meta: { title: 'Masuk '  }
   },
-  {
-    path: '/tes',
-    name: 'Tes',
-    component: Tes,
-  },
+
   
 
 ]
@@ -64,10 +59,6 @@ const router = new VueRouter({
   routes
 })
 
-// router.beforeEach((to, from) => {
-//   console.log(to)
-//   console.log(from)
-// })
 
 router.beforeEach((to , from , next) => {
   document.title = to.meta.title

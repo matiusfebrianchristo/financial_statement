@@ -72,7 +72,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(d, index) in allDataBulanIni" :key="d.id">
+                <tr v-for="(d, index) in getDataBulanan()" :key="d.id">
                   <th scope="row">{{ index + 1 }}</th>
                   <td class="text-wrapper text-start">
                     Rp. {{ d[1].nominal }}
@@ -155,7 +155,6 @@
 // @ is an alias to /src
 import Modals from "@/components/Modals.vue";
 import moment from "moment";
-import axios from "axios";
 import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -195,12 +194,10 @@ export default {
     ...mapGetters(['allDataBulanIni'])
   },
   methods: {
-    ...mapActions(['isNavActive', 'dataBulanIni', 'isAction', 'deleteTransaksi', 'getTransaksi']),
+    ...mapActions(['isNavActive', 'dataBulanIni', 'isAction', 'deleteTransaksi', 'getTransaksi', 'getParams']),
+    
     rubahModeImg() {
       this.cek = true;
-    },
-    getTgl() {
-      console.log(this.tanggal);
     },
 
     // =================
@@ -212,29 +209,17 @@ export default {
     // ============================
     // Get Data Bulaanan
     getDataBulanan() {
-      if (this.fullDataBulanan !== null) {
-        const sorted = this.fullDataBulanan.slice();
-        const dataSorted = sorted.sort((a, b) => {
+      if (this.allDataBulanIni !== null) {
+        const sorted = this.allDataBulanIni.slice();
+        return sorted.sort((a,b) => {
+            return b[0] - a[0]
+         }).sort((a, b) => {
           return new Date(b[1].created_at) - new Date(a[1].created_at);
-        });
-        return dataSorted;
+        })
+        
       }
     },
 
-    // cekBaruDitambahkan(value) {
-    //   if(this.oldFullDataBulanan !== null ){
-    //     const fild = this.oldFullDataBulanan.slice();
-    //     const dataFilter = fild.filter((data) => {
-    //       return data[0] == value
-    //     })
-    //     if(dataFilter.length !== 0){
-    //       this.dataBaru = false
-    //     } else {
-    //       this.dataBaru = true
-    //     }
-    //   }
-
-    // },
 
     // Status Method
     CekStatus(value) {
@@ -244,6 +229,7 @@ export default {
         return value;
       }
     },
+
     // Get image name
     getImgName(value) {
       let str = value.split("/").slice(-1).join(" ");
@@ -254,6 +240,7 @@ export default {
     GantiTgl(value) {
       return moment(value, "YYYY-MM-DD").format("Do MMMM YYYY");
     },
+    
     // Hide Sidebar opsi
     clickedToggle() {
       if (this.isActiveNav === true) {
@@ -265,111 +252,10 @@ export default {
 
     // ===================================================
     // Edit data Detail Bulanan
-    async saveDataEdit(value) {
-      console.log(value);
-
-      if (
-        value.nominal !== null &&
-        value.status !== null &&
-        value.created_at !== null &&
-        value.deskripsi !== null
-      ) {
-        this.progress = true
-        console.log(value);
-        // alert("Ok")
-        await axios
-          .patch(`administration/updateadministration/${this.id}/`, value)
-          .then(async () => {
-            
-            await this.loadedData();
-
-            this.$toast.success("Data berhasil di Edit!", {
-              type: "success",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
-            });
-            
-            this.isDone = true;
-            this.progress = false;
-            this.$refs.editButton.clearInput();
-            this.cek = false;
-            this.isEdited = false;
-          })
-          .catch((err) => console.log(err));
-      } else {
-        this.$toast.error("Lengkapi Data!!", {
-          type: "error",
-          position: "top-right",
-          duration: 3000,
-          dismissible: true,
-        });
-
-        if (this.cek === true && this.isEdited === true) {
-          this.cek = false;
-          this.isEdited = false;
-        }
-      }
-    },
+   
 
     // Add Laporan Keuangan
-    async addTransaksi(value) {
-      if (
-        value.nominal !== null &&
-        value.status !== null &&
-        value.created_at !== null &&
-        value.deskripsi !== null
-      ) {
-        this.progress = true;
-
-        await axios
-          .post(`administration/addadministration/`, value)
-          .then(async () => {
-            
-            await this.loadedData();
-            localStorage.setItem("tambah_transaksi", false);
-
-            this.$toast.success("Data berhasil ditambahkan!", {
-              type: "success",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
-            });
-
-            this.isDone = true;
-            this.progress = false;
-            this.$refs.editButton.clearInput();
-
-            this.cek = false;
-
-            // Set timeout for location reload
-            // setTimeout(function () {
-            //   location.reload();
-            // }, 2000);
-          })
-          .catch((err) => {
-            console.log(err);
-            this.$toast.error("Terjadi kesalahan", {
-              type: "error",
-              position: "top-right",
-              duration: 3000,
-              dismissible: true,
-            });
-          });
-      } else {
-        console.log(value);
-        this.$toast.error("Lengkapi Data!!", {
-          type: "error",
-          position: "top-right",
-          duration: 3000,
-          dismissible: true,
-        });
-      }
-
-      if (this.cek === true) {
-        this.cek = false;
-      }
-    },
+    
     // ==============================================
     // Edit data bulanan
     editData(id, nominal, status, tanggal, deskripsi, bukti) {
@@ -400,18 +286,27 @@ export default {
             dismissible: true,
           });
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        this.$toast.success("Terjadi Kesalahan!", {
+            type: "error",
+            position: "top-right",
+            duration: 3000,
+            dismissible: true,
+          });
+      })
     },
 
     // Data AXIOS
     // =====================================
     async loadedData() {
-      await this.dataBulanIni({
+      await this.getParams({
           params: {
             year: this.$route.params.tahun,
             month: moment().month(this.$route.params.bulan).format("M"),
           },
       })
+      this.dataBulanIni()
     }
   },
 };
